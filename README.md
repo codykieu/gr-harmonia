@@ -16,8 +16,11 @@ The following features have been implemented:
 
 To install gr-harmonia system-wide, you should first install
 [plasma-dsp](https://github.com/ShaneFlandermeyer/plasma-dsp) and [gr-plasma](https://github.com/ShaneFlandermeyer/gr-plasma) using the
-instructions in their README. Additional required dependencies should be installed as:
-
+instructions in their README. 
+**NOTE**: The following versions were used in developing this code:
+Ubuntu 24.0
+UHD 4.7
+GNURadio 
 
 Next, run the following from the top-level directory of the module:
 
