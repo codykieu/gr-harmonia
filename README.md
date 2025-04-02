@@ -8,6 +8,7 @@ The following features have been implemented:
 - PDU Clock Drift Estimator
 - PDU Time and Phase Estimator
 - PDU Frequency Sink
+- PDU System of Equations Solver
 
 **NOTE**: 
 
