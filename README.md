@@ -2,9 +2,12 @@
 
 The following features have been implemented:
 
-- 
-- 
-- 
+- PDU FFT
+- PDU Complex to Magnitude
+- PDU Frequency Peak Estimator
+- PDU Clock Drift Estimator
+- PDU Time and Phase Estimator
+- PDU Frequency Sink
 
 **NOTE**: 
 
