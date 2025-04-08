@@ -14,23 +14,20 @@
   and will be overwritten during the build process
  */
 
+static const char *__doc_gr_harmonia_frequency_pk_est = R"doc()doc";
 
-static const char* __doc_gr_harmonia_frequency_pk_est = R"doc()doc";
+static const char *__doc_gr_harmonia_frequency_pk_est_frequency_pk_est_0 =
+    R"doc()doc";
 
+static const char *__doc_gr_harmonia_frequency_pk_est_frequency_pk_est_1 =
+    R"doc()doc";
 
-static const char* __doc_gr_harmonia_frequency_pk_est_frequency_pk_est_0 = R"doc()doc";
+static const char *__doc_gr_harmonia_frequency_pk_est_make = R"doc()doc";
 
+static const char *__doc_gr_harmonia_frequency_pk_est_set_msg_queue_depth =
+    R"doc()doc";
 
-static const char* __doc_gr_harmonia_frequency_pk_est_frequency_pk_est_1 = R"doc()doc";
+static const char *__doc_gr_harmonia_frequency_pk_est_set_backend = R"doc()doc";
 
-
-static const char* __doc_gr_harmonia_frequency_pk_est_make = R"doc()doc";
-
-
-static const char* __doc_gr_harmonia_frequency_pk_est_set_msg_queue_depth = R"doc()doc";
-
-
-static const char* __doc_gr_harmonia_frequency_pk_est_set_backend = R"doc()doc";
-
-
-static const char* __doc_gr_harmonia_frequency_pk_est_set_metadata_keys = R"doc()doc";
+static const char *__doc_gr_harmonia_frequency_pk_est_set_metadata_keys =
+    R"doc()doc";
