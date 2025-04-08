@@ -4,7 +4,7 @@ category: '[harmonia]'
 
 parameters:
 - id: nfft
-  label: FFT size
+  label: FFT Ratio
   dtype: int
   default: "1024"
 - id: pulse_width
@@ -52,6 +52,8 @@ inputs:
 outputs:
 -   domain: message
     id: out
+-   domain: message
+    id: f_est
 
 templates:
   imports: from gnuradio import harmonia

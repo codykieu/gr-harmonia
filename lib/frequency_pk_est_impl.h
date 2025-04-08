@@ -31,6 +31,7 @@ private:
     // Message Ports
     pmt::pmt_t d_out_port;
     pmt::pmt_t d_in_port;
+    pmt::pmt_t d_f_est_port;
 
     // Waveform object and IQ data
     pmt::pmt_t d_data;

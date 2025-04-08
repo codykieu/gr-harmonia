@@ -8,6 +8,7 @@ static const pmt::pmt_t PMT_HARMONIA_OUT = pmt::intern("out");
 static const pmt::pmt_t PMT_HARMONIA_TX = pmt::intern("tx");
 static const pmt::pmt_t PMT_HARMONIA_RX = pmt::intern("rx");
 static const pmt::pmt_t PMT_HARMONIA_PDU = pmt::intern("pdu");
+static const pmt::pmt_t PMT_HARMONIA_F_EST = pmt::intern("f_est");
 
 // SigMF core
 static const pmt::pmt_t PMT_HARMONIA_GLOBAL = pmt::intern("global");
