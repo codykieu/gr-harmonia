@@ -11,7 +11,7 @@ The following features have been implemented:
 - PDU System of Equations Solver
 
 **NOTE**: 
-
+*When transmitting a waveform in UHD via tx_streamer, the samples in the pulse must be a multiple of the maximum transfer size. This can be done by either zero-padding or changing the pulse width.
 ## Installation
 
 To install gr-harmonia system-wide, you should first install
