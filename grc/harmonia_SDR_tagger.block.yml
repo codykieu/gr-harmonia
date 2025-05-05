@@ -1,0 +1,27 @@
+id: harmonia_SDR_tagger
+label: SDR Number Tagger
+category: '[harmonia]'
+
+parameters:
+# Metadata fields
+- id: sdr_num_key
+  label: SDR Number Key
+  dtype: string
+  category: Metadata
+  hide: part
+  default: sync:sdr_one
+
+inputs:
+-   domain: message
+    id: in
+
+outputs:
+-   domain: message
+    id: out
+
+templates:
+  imports: from gnuradio import harmonia
+  make: harmonia.SDR_tagger(${sdr_num_key})
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1

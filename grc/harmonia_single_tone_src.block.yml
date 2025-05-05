@@ -1,0 +1,87 @@
+id: harmonia_single_tone_src
+label: Single Tone Source
+category: '[harmonia]'
+
+parameters:
+  # Waveform parameters
+  - id: frequency
+    label: Frequency
+    dtype: float
+    default: "frequency"
+  - id: phase
+    label: Phase
+    dtype: float
+    default: "phase"
+  - id: pulse_width
+    label: Pulse width
+    dtype: float
+    default: "10e-6"
+  - id: samp_rate
+    label: Sample rate
+    dtype: float
+    default: "samp_rate"
+  - id: prf
+    label: PRF
+    dtype: float
+    default: 0
+    hide: ${ ('part' if prf == 0 else 'none') }
+  # Metadata fields
+  - id: frequency_key
+    label: Frequency Key
+    dtype: string
+    category: Metadata
+    hide: part
+    default: radar:frequency
+  - id: phase_key
+    label: Sweep offset Key
+    dtype: string
+    category: Metadata
+    hide: part
+    default: radar:phase
+  - id: duration_key
+    label: Duration Key
+    dtype: string
+    category: Metadata
+    hide: part
+    default: radar:duration
+  - id: sample_rate_key
+    label: Sample Rate Key
+    dtype: string
+    category: Metadata
+    hide: part
+    default: core:sample_rate
+  - id: label_key
+    label: Label Key
+    dtype: string
+    category: Metadata
+    hide: part
+    default: core:label
+  - id: prf_key
+    label: PRF Key
+    dtype: string
+    category: Metadata
+    hide: part
+    default: radar:prf
+
+inputs:
+  - domain: message
+    id: in
+    optional: true
+    
+outputs:
+  - domain: message
+    id: out
+    optional: false
+
+templates:
+  imports: from gnuradio import harmonia
+  make: |-
+    harmonia.single_tone_src(${frequency}, ${phase}, ${pulse_width}, ${samp_rate}, ${prf})
+    self.${id}.init_meta_dict(${frequency_key}, ${phase_key}, ${duration_key}, ${sample_rate_key}, ${label_key}, ${prf_key})
+
+documentation: |-
+  Generates a single-tone radar waveform.
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1

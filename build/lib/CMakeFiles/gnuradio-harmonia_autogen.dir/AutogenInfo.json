@@ -1,0 +1,183 @@
+{
+	"BUILD_DIR" : "/home/cody/gr-harmonia/build/lib/gnuradio-harmonia_autogen",
+	"CMAKE_BINARY_DIR" : "/home/cody/gr-harmonia/build",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/cody/gr-harmonia/build/lib",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/cody/gr-harmonia/lib",
+	"CMAKE_EXECUTABLE" : "/usr/bin/cmake",
+	"CMAKE_LIST_FILES" : 
+	[
+		"/home/cody/gr-harmonia/lib/CMakeLists.txt",
+		"/usr/local/lib/cmake/gnuradio/GrPlatform.cmake",
+		"/usr/local/lib/cmake/gnuradio/GrMiscUtils.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakePackageConfigHelpers.cmake",
+		"/usr/share/cmake-3.28/Modules/WriteBasicConfigVersionFile.cmake",
+		"/home/cody/gr-harmonia/cmake/Modules/targetConfig.cmake.in",
+		"/usr/local/lib/cmake/gnuradio/GrTest.cmake"
+	],
+	"CMAKE_SOURCE_DIR" : "/home/cody/gr-harmonia",
+	"DEP_FILE" : "/home/cody/gr-harmonia/build/lib/gnuradio-harmonia_autogen/deps",
+	"DEP_FILE_RULE_NAME" : "gnuradio-harmonia_autogen/timestamp",
+	"HEADERS" : 
+	[
+		[
+			"/home/cody/gr-harmonia/lib/SDR_tagger_impl.h",
+			"Mu",
+			"EWIEGA46WW/moc_SDR_tagger_impl.cpp",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/lib/buffer_corrector_impl.h",
+			"Mu",
+			"EWIEGA46WW/moc_buffer_corrector_impl.cpp",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/lib/clock_drift_est_impl.h",
+			"Mu",
+			"EWIEGA46WW/moc_clock_drift_est_impl.cpp",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/lib/frequency_pk_est_impl.h",
+			"Mu",
+			"EWIEGA46WW/moc_frequency_pk_est_impl.cpp",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/lib/pdu_complex_to_mag_impl.h",
+			"Mu",
+			"EWIEGA46WW/moc_pdu_complex_to_mag_impl.cpp",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/lib/pdu_fft_impl.h",
+			"Mu",
+			"EWIEGA46WW/moc_pdu_fft_impl.cpp",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/lib/single_tone_src_impl.h",
+			"Mu",
+			"EWIEGA46WW/moc_single_tone_src_impl.cpp",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/lib/time_pk_est_impl.h",
+			"Mu",
+			"EWIEGA46WW/moc_time_pk_est_impl.cpp",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/lib/usrp_radar_2_impl.h",
+			"Mu",
+			"EWIEGA46WW/moc_usrp_radar_2_impl.cpp",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/lib/usrp_radar_all_impl.h",
+			"Mu",
+			"EWIEGA46WW/moc_usrp_radar_all_impl.cpp",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/lib/usrp_radar_rx_impl.h",
+			"Mu",
+			"EWIEGA46WW/moc_usrp_radar_rx_impl.cpp",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/lib/usrp_radar_tx_impl.h",
+			"Mu",
+			"EWIEGA46WW/moc_usrp_radar_tx_impl.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "/home/cody/gr-harmonia/build/lib/gnuradio-harmonia_autogen/include",
+	"MOC_COMPILATION_FILE" : "/home/cody/gr-harmonia/build/lib/gnuradio-harmonia_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : 
+	[
+		"BOOST_ATOMIC_DYN_LINK",
+		"BOOST_ATOMIC_NO_LIB",
+		"BOOST_THREAD_DYN_LINK",
+		"BOOST_THREAD_NO_LIB",
+		"ENABLE_PYTHON",
+		"FMT_SHARED",
+		"GR_MPLIB_GMP",
+		"GR_PERFORMANCE_COUNTERS",
+		"QT_CORE_LIB",
+		"QT_GUI_LIB",
+		"QT_NO_DEBUG",
+		"QT_WIDGETS_LIB",
+		"SPDLOG_COMPILED_LIB",
+		"SPDLOG_FMT_EXTERNAL",
+		"SPDLOG_SHARED_LIB",
+		"gnuradio_harmonia_EXPORTS"
+	],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"/home/cody/gr-harmonia/include",
+		"/usr/include/x86_64-linux-gnu/qt5",
+		"/usr/include/x86_64-linux-gnu/qt5/QtWidgets",
+		"/usr/include/x86_64-linux-gnu/qt5/QtGui",
+		"/usr/include/x86_64-linux-gnu/qt5/QtCore",
+		"/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++",
+		"/usr/include/qwt",
+		"/usr/include/python3.12",
+		"/opt/arrayfire/include",
+		"/usr/local/include",
+		"/usr/include",
+		"/usr/include/c++/11",
+		"/usr/include/x86_64-linux-gnu/c++/11",
+		"/usr/include/c++/11/backward",
+		"/usr/lib/gcc/x86_64-linux-gnu/11/include",
+		"/usr/include/x86_64-linux-gnu"
+	],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : 
+	[
+		"/usr/bin/c++",
+		"-std=c++17",
+		"-dM",
+		"-E",
+		"-c",
+		"/usr/share/cmake-3.28/Modules/CMakeCXXCompilerABI.cpp"
+	],
+	"MOC_PREDEFS_FILE" : "/home/cody/gr-harmonia/build/lib/gnuradio-harmonia_autogen/moc_predefs.h",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 16,
+	"PARSE_CACHE_FILE" : "/home/cody/gr-harmonia/build/lib/CMakeFiles/gnuradio-harmonia_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "/usr/lib/qt5/bin/moc",
+	"QT_UIC_EXECUTABLE" : "",
+	"QT_VERSION_MAJOR" : 5,
+	"QT_VERSION_MINOR" : 15,
+	"SETTINGS_FILE" : "/home/cody/gr-harmonia/build/lib/CMakeFiles/gnuradio-harmonia_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[ "/home/cody/gr-harmonia/lib/SDR_tagger_impl.cc", "Mu", null ],
+		[ "/home/cody/gr-harmonia/lib/buffer_corrector_impl.cc", "Mu", null ],
+		[ "/home/cody/gr-harmonia/lib/clock_drift_est_impl.cc", "Mu", null ],
+		[ "/home/cody/gr-harmonia/lib/device.cc", "Mu", null ],
+		[ "/home/cody/gr-harmonia/lib/frequency_pk_est_impl.cc", "Mu", null ],
+		[ "/home/cody/gr-harmonia/lib/pdu_complex_to_mag_impl.cc", "Mu", null ],
+		[ "/home/cody/gr-harmonia/lib/pdu_fft_impl.cc", "Mu", null ],
+		[ "/home/cody/gr-harmonia/lib/single_tone_src_impl.cc", "Mu", null ],
+		[ "/home/cody/gr-harmonia/lib/time_pk_est_impl.cc", "Mu", null ],
+		[ "/home/cody/gr-harmonia/lib/usrp_radar_2_impl.cc", "Mu", null ],
+		[ "/home/cody/gr-harmonia/lib/usrp_radar_all_impl.cc", "Mu", null ],
+		[ "/home/cody/gr-harmonia/lib/usrp_radar_rx_impl.cc", "Mu", null ],
+		[ "/home/cody/gr-harmonia/lib/usrp_radar_tx_impl.cc", "Mu", null ]
+	],
+	"VERBOSITY" : 0
+}

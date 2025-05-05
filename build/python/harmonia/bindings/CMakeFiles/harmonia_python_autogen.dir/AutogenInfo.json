@@ -1,0 +1,179 @@
+{
+	"BUILD_DIR" : "/home/cody/gr-harmonia/build/python/harmonia/bindings/harmonia_python_autogen",
+	"CMAKE_BINARY_DIR" : "/home/cody/gr-harmonia/build",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/cody/gr-harmonia/build/python/harmonia/bindings",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/cody/gr-harmonia/python/harmonia/bindings",
+	"CMAKE_EXECUTABLE" : "/usr/bin/cmake",
+	"CMAKE_LIST_FILES" : 
+	[
+		"/home/cody/gr-harmonia/python/harmonia/bindings/CMakeLists.txt",
+		"/usr/local/lib/cmake/gnuradio/GrPybind.cmake",
+		"/usr/local/lib/cmake/gnuradio/GrPython.cmake",
+		"/usr/local/share/cmake/pybind11/pybind11ConfigVersion.cmake",
+		"/usr/local/share/cmake/pybind11/pybind11Config.cmake",
+		"/home/cody/gr-harmonia/docs/doxygen/pydoc_macros.h"
+	],
+	"CMAKE_SOURCE_DIR" : "/home/cody/gr-harmonia",
+	"DEP_FILE" : "/home/cody/gr-harmonia/build/python/harmonia/bindings/harmonia_python_autogen/deps",
+	"DEP_FILE_RULE_NAME" : "harmonia_python_autogen/timestamp",
+	"HEADERS" : [],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "/home/cody/gr-harmonia/build/python/harmonia/bindings/harmonia_python_autogen/include",
+	"MOC_COMPILATION_FILE" : "/home/cody/gr-harmonia/build/python/harmonia/bindings/harmonia_python_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : 
+	[
+		"BOOST_ATOMIC_DYN_LINK",
+		"BOOST_ATOMIC_NO_LIB",
+		"BOOST_DATE_TIME_DYN_LINK",
+		"BOOST_DATE_TIME_NO_LIB",
+		"BOOST_PROGRAM_OPTIONS_DYN_LINK",
+		"BOOST_PROGRAM_OPTIONS_NO_LIB",
+		"BOOST_REGEX_DYN_LINK",
+		"BOOST_REGEX_NO_LIB",
+		"BOOST_SYSTEM_DYN_LINK",
+		"BOOST_SYSTEM_NO_LIB",
+		"BOOST_THREAD_DYN_LINK",
+		"BOOST_THREAD_NO_LIB",
+		"BOOST_UNIT_TEST_FRAMEWORK_DYN_LINK",
+		"BOOST_UNIT_TEST_FRAMEWORK_NO_LIB",
+		"ENABLE_PYTHON",
+		"FMT_SHARED",
+		"GR_MPLIB_GMP",
+		"GR_PERFORMANCE_COUNTERS",
+		"QT_CORE_LIB",
+		"QT_GUI_LIB",
+		"QT_NO_DEBUG",
+		"QT_WIDGETS_LIB",
+		"SPDLOG_COMPILED_LIB",
+		"SPDLOG_FMT_EXTERNAL",
+		"SPDLOG_SHARED_LIB",
+		"harmonia_python_EXPORTS"
+	],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"/home/cody/gr-harmonia/build/python/harmonia/bindings",
+		"/home/cody/gr-harmonia/lib",
+		"/home/cody/gr-harmonia/include",
+		"/home/cody/gr-harmonia/include",
+		"/usr/include/python3.12",
+		"/usr/lib/python3/dist-packages/numpy/core/include",
+		"/usr/include/x86_64-linux-gnu/qt5",
+		"/usr/include/x86_64-linux-gnu/qt5/QtWidgets",
+		"/usr/include/x86_64-linux-gnu/qt5/QtGui",
+		"/usr/include/x86_64-linux-gnu/qt5/QtCore",
+		"/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++",
+		"/usr/include/qwt",
+		"/opt/arrayfire/include",
+		"/usr/local/include",
+		"/usr/include",
+		"/usr/include/c++/11",
+		"/usr/include/x86_64-linux-gnu/c++/11",
+		"/usr/include/c++/11/backward",
+		"/usr/lib/gcc/x86_64-linux-gnu/11/include",
+		"/usr/include/x86_64-linux-gnu"
+	],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : 
+	[
+		"/usr/bin/c++",
+		"-std=c++17",
+		"-dM",
+		"-E",
+		"-c",
+		"/usr/share/cmake-3.28/Modules/CMakeCXXCompilerABI.cpp"
+	],
+	"MOC_PREDEFS_FILE" : "/home/cody/gr-harmonia/build/python/harmonia/bindings/harmonia_python_autogen/moc_predefs.h",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 16,
+	"PARSE_CACHE_FILE" : "/home/cody/gr-harmonia/build/python/harmonia/bindings/CMakeFiles/harmonia_python_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "/usr/lib/qt5/bin/moc",
+	"QT_UIC_EXECUTABLE" : "",
+	"QT_VERSION_MAJOR" : 5,
+	"QT_VERSION_MINOR" : 15,
+	"SETTINGS_FILE" : "/home/cody/gr-harmonia/build/python/harmonia/bindings/CMakeFiles/harmonia_python_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[
+			"/home/cody/gr-harmonia/python/harmonia/bindings/SDR_tagger_python.cc",
+			"Mu",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/python/harmonia/bindings/buffer_corrector_python.cc",
+			"Mu",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/python/harmonia/bindings/clock_drift_est_python.cc",
+			"Mu",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/python/harmonia/bindings/device_python.cc",
+			"Mu",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/python/harmonia/bindings/frequency_pk_est_python.cc",
+			"Mu",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/python/harmonia/bindings/pdu_complex_to_mag_python.cc",
+			"Mu",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/python/harmonia/bindings/pdu_fft_python.cc",
+			"Mu",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/python/harmonia/bindings/python_bindings.cc",
+			"Mu",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/python/harmonia/bindings/single_tone_src_python.cc",
+			"Mu",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/python/harmonia/bindings/time_pk_est_python.cc",
+			"Mu",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_2_python.cc",
+			"Mu",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_all_python.cc",
+			"Mu",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_rx_python.cc",
+			"Mu",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_tx_python.cc",
+			"Mu",
+			null
+		]
+	],
+	"VERBOSITY" : 0
+}
