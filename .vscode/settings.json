@@ -71,6 +71,11 @@
         "*.ipp": "cpp",
         "forward_list": "cpp",
         "unordered_set": "cpp",
-        "text_encoding": "cpp"
+        "text_encoding": "cpp",
+        "any": "cpp",
+        "strstream": "cpp",
+        "codecvt": "cpp",
+        "set": "cpp",
+        "numeric": "cpp"
     }
 }

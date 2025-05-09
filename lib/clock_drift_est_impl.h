@@ -33,6 +33,7 @@ namespace gr
       double samp_rate;
       double pulse_width;
       double SNR;
+      double freq_val;
       af::array A_mat;
       
       // Object and data
@@ -40,6 +41,8 @@ namespace gr
 
       // Metadata fields
       pmt::pmt_t meta;
+      pmt::pmt_t key;
+      pmt::pmt_t freq_val_pmt;
 
       void handle_msg(pmt::pmt_t msg);
 

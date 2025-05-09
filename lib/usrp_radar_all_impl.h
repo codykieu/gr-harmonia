@@ -81,7 +81,7 @@ class usrp_radar_all_impl : public usrp_radar_all {
                        bool verbose);
       void receive(uhd::usrp::multi_usrp::sptr usrp_rx,
                    uhd::rx_streamer::sptr rx_stream,
-                   double start_time);
+                   double start_time, int sdr_id, bool TDMA_done);
       void transmit_bursts(uhd::usrp::multi_usrp::sptr usrp_tx,
                            uhd::tx_streamer::sptr tx_stream,
                            double start_time);

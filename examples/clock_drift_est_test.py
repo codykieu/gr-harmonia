@@ -73,7 +73,7 @@ class clock_drift_est_test(gr.top_block, Qt.QWidget):
         ##################################################
 
         self.harmonia_clock_drift_est_0 = harmonia.clock_drift_est(3, 2, 1e6, 1e9, samp_rate, pulse_width, 30)
-        self.blocks_message_strobe_0 = blocks.message_strobe(pmt.cons(pmt.intern("sync:sdr_one"), pmt.from_float(1900000.0)), 4000)
+        self.blocks_message_strobe_0 = blocks.message_strobe(pmt.cons(pmt.intern("sdr1"), pmt.from_float(1000000.0)), 4000)
         self.blocks_message_debug_0 = blocks.message_debug(True, gr.log_levels.info)
 
 

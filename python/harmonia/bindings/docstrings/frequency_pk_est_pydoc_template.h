@@ -28,6 +28,3 @@ static const char *__doc_gr_harmonia_frequency_pk_est_set_msg_queue_depth =
     R"doc()doc";
 
 static const char *__doc_gr_harmonia_frequency_pk_est_set_backend = R"doc()doc";
-
-static const char *__doc_gr_harmonia_frequency_pk_est_init_metadata_keys =
-    R"doc()doc";

@@ -92,7 +92,7 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    msg: pmt.cons(pmt.intern("sync:sdr_one"), pmt.from_float(1900000.0))
+    msg: pmt.cons(pmt.intern("sdr1"), pmt.from_float(1000000.0))
     period: '4000'
   states:
     bus_sink: false

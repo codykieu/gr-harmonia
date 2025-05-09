@@ -16,7 +16,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0) */
 /* BINDTOOL_USE_PYGCCXML(0) */
 /* BINDTOOL_HEADER_FILE(frequency_pk_est.h) */
-/* BINDTOOL_HEADER_FILE_HASH(db5d4190081c36730e3c99cc35dcbbbc) */
+/* BINDTOOL_HEADER_FILE_HASH(bb7483944a81d182b971c57f313e7789) */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -47,9 +47,6 @@ void bind_frequency_pk_est(py::module &m) {
 
       .def("set_backend", &frequency_pk_est::set_backend, py::arg("arg0"),
            D(frequency_pk_est, set_backend))
-
-      .def("init_metadata_keys", &frequency_pk_est::init_metadata_keys,
-           D(frequency_pk_est, init_metadata_keys))
 
       ;
 }

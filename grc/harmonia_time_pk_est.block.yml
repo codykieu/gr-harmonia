@@ -7,18 +7,14 @@ parameters:
   label: FFT Ratio
   dtype: int
   default: "1024"
-- id: pulse_width
-  label: Pulse Width
-  dtype: float
-  default: "200e-6"
-- id: cap_length
-  label: Capture Length
-  dtype: float
-  default: "400e-6"
 - id: samp_rate
   label: Sample Rate
   dtype: float
   default: "samp_rate"
+- id: bandwidth
+  label: Bandwidth
+  dtype: float
+  default: "bw"
 - id: NLLS_iter
   label: NLLS Iterations
   dtype: float
@@ -58,7 +54,7 @@ outputs:
 templates:
   imports: from gnuradio import harmonia
   make: |-
-    harmonia.time_pk_est(${nfft}, ${pulse_width}, ${cap_length}, ${samp_rate}, ${NLLS_iter}, ${NLLS_pts})
+    harmonia.time_pk_est(${nfft}, ${samp_rate}, ${bandwidth}, ${NLLS_iter}, ${NLLS_pts})
     self.${id}.set_metadata_keys()
     self.${id}.set_msg_queue_depth(${depth})
     self.${id}.set_backend(${backend})

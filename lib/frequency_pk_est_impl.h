@@ -31,6 +31,9 @@ private:
     // Variables
     double f_est;
     size_t d_queue_depth;
+    std::vector<float> d_sdr1_estimates;
+    std::vector<float> d_sdr2_estimates;
+    std::vector<float> d_sdr3_estimates;
 
     // Message Ports    
     pmt::pmt_t d_out_port;
@@ -43,10 +46,6 @@ private:
     // Metadata 
     pmt::pmt_t d_meta;
     pmt::pmt_t d_meta_f;
-    pmt::pmt_t d_freq_est_key; 
-    pmt::pmt_t sdr1_dict;
-    pmt::pmt_t sdr2_dict;
-    pmt::pmt_t sdr3_dict;
 
     void handle_msg(pmt::pmt_t msg);
 
@@ -57,7 +56,6 @@ public:
         double samp_rate, double NLLS_iter, double NLLS_pts, bool enable_out);
     ~frequency_pk_est_impl();
 
-    void init_metadata_keys();
     void set_msg_queue_depth(size_t) override;
     void set_backend(Device::Backend) override;
 };

@@ -23,7 +23,6 @@ from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
 from gnuradio import harmonia
 from gnuradio import plasma
-import sip
 import threading
 
 
@@ -64,10 +63,10 @@ class frequency_sync_test(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.samp_rate = samp_rate = 10e6
+        self.samp_rate = samp_rate = 50e6
         self.prf = prf = 0
         self.center_freq = center_freq = 1e9
-        self.bw = bw = samp_rate/2
+        self.bw = bw = 25e6
         self.Tp = Tp = 200e-6
         self.Tc = Tc = 200e-3
 
@@ -75,68 +74,14 @@ class frequency_sync_test(gr.top_block, Qt.QWidget):
         # Blocks
         ##################################################
 
-        self.qtgui_time_sink_x_0_1 = qtgui.time_sink_c(
-            1024, #size
-            samp_rate, #samp_rate
-            "", #name
-            0, #number of inputs
-            None # parent
-        )
-        self.qtgui_time_sink_x_0_1.set_update_time(0.10)
-        self.qtgui_time_sink_x_0_1.set_y_axis(-1, 1)
-
-        self.qtgui_time_sink_x_0_1.set_y_label('Amplitude', "")
-
-        self.qtgui_time_sink_x_0_1.enable_tags(True)
-        self.qtgui_time_sink_x_0_1.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_0_1.enable_autoscale(False)
-        self.qtgui_time_sink_x_0_1.enable_grid(False)
-        self.qtgui_time_sink_x_0_1.enable_axis_labels(True)
-        self.qtgui_time_sink_x_0_1.enable_control_panel(False)
-        self.qtgui_time_sink_x_0_1.enable_stem_plot(False)
-
-
-        labels = ['Signal 1', 'Signal 2', 'Signal 3', 'Signal 4', 'Signal 5',
-            'Signal 6', 'Signal 7', 'Signal 8', 'Signal 9', 'Signal 10']
-        widths = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        colors = ['blue', 'red', 'green', 'black', 'cyan',
-            'magenta', 'yellow', 'dark red', 'dark green', 'dark blue']
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0, 1.0]
-        styles = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        markers = [-1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1]
-
-
-        for i in range(2):
-            if len(labels[i]) == 0:
-                if (i % 2 == 0):
-                    self.qtgui_time_sink_x_0_1.set_line_label(i, "Re{{Data {0}}}".format(i/2))
-                else:
-                    self.qtgui_time_sink_x_0_1.set_line_label(i, "Im{{Data {0}}}".format(i/2))
-            else:
-                self.qtgui_time_sink_x_0_1.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_0_1.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_0_1.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_0_1.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_0_1.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_0_1.set_line_alpha(i, alphas[i])
-
-        self._qtgui_time_sink_x_0_1_win = sip.wrapinstance(self.qtgui_time_sink_x_0_1.qwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_time_sink_x_0_1_win)
-        self.plasma_pdu_file_sink_0_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/waverform', '/home/cody/gr-MATLAB/freq_pk_est_meta')
         self.plasma_pdu_file_sink_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/TDMA_test', '/home/cody/gr-MATLAB/TDMA_meta')
-        self.plasma_pdu_file_sink_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/freq_pk_est_test', '/home/cody/gr-MATLAB/freq_pk_est_meta')
-        self.harmonia_usrp_radar_all_0 = harmonia.usrp_radar_all("addr=192.168.60.2, use_dpkg=1", "addr=192.168.80.2, use_dpkg=1", samp_rate, samp_rate, center_freq, center_freq, 20, 20, 0.11, Tc, 0, False)
+        self.harmonia_usrp_radar_all_0 = harmonia.usrp_radar_all("addr=192.168.60.2, use_dpkg=1", "addr=192.168.80.2, use_dpkg=1", samp_rate, samp_rate, center_freq, center_freq, 20, 20, 0.001, Tc, 0.5, False)
         self.harmonia_usrp_radar_all_0.set_metadata_keys('core:tx_freq', 'core:rx_freq', 'core:sample_start', 'radar:prf')
         self.harmonia_single_tone_src_0 = harmonia.single_tone_src(1e6, 0, Tp, samp_rate, prf)
         self.harmonia_single_tone_src_0.init_meta_dict('radar:frequency', 'radar:phase', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
-        self.harmonia_frequency_pk_est_0 = harmonia.frequency_pk_est(4, Tp, Tc, samp_rate, 15, 7, True)
+        self.harmonia_frequency_pk_est_0 = harmonia.frequency_pk_est(4, Tp, Tc, samp_rate, 15, 7, False)
         self.harmonia_frequency_pk_est_0.set_msg_queue_depth(1)
         self.harmonia_frequency_pk_est_0.set_backend(harmonia.Device.CPU)
-        self.harmonia_frequency_pk_est_0.init_metadata_keys()
         self.harmonia_buffer_corrector_0 = harmonia.buffer_corrector(1996)
         self.blocks_message_debug_0 = blocks.message_debug(True, gr.log_levels.info)
 
@@ -146,12 +91,9 @@ class frequency_sync_test(gr.top_block, Qt.QWidget):
         ##################################################
         self.msg_connect((self.harmonia_buffer_corrector_0, 'out'), (self.harmonia_usrp_radar_all_0, 'in'))
         self.msg_connect((self.harmonia_frequency_pk_est_0, 'f_out'), (self.blocks_message_debug_0, 'print'))
-        self.msg_connect((self.harmonia_frequency_pk_est_0, 'out'), (self.plasma_pdu_file_sink_0, 'in'))
         self.msg_connect((self.harmonia_single_tone_src_0, 'out'), (self.harmonia_buffer_corrector_0, 'in'))
-        self.msg_connect((self.harmonia_single_tone_src_0, 'out'), (self.plasma_pdu_file_sink_0_0_0, 'in'))
         self.msg_connect((self.harmonia_usrp_radar_all_0, 'out'), (self.harmonia_frequency_pk_est_0, 'in'))
         self.msg_connect((self.harmonia_usrp_radar_all_0, 'out'), (self.plasma_pdu_file_sink_0_0, 'in'))
-        self.msg_connect((self.harmonia_usrp_radar_all_0, 'out'), (self.qtgui_time_sink_x_0_1, 'in'))
 
 
     def closeEvent(self, event):
@@ -167,8 +109,6 @@ class frequency_sync_test(gr.top_block, Qt.QWidget):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.set_bw(self.samp_rate/2)
-        self.qtgui_time_sink_x_0_1.set_samp_rate(self.samp_rate)
 
     def get_prf(self):
         return self.prf

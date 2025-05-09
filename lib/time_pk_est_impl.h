@@ -21,17 +21,16 @@ namespace gr
     {
     private:
       // Parameters
-      double d_pulse_width;
-      double d_cap_length;
+      size_t d_fftsize;
       double d_samp_rate;
+      double d_bandwidth;
       double d_NLLS_iter;
       double d_NLLS_pts;
-      double rx_time;
 
       // Variables
-      size_t d_fftsize;
       size_t d_msg_queue_depth;
       double t_est;
+      double rx_time;
       af::array d_match_filt;
       af::Backend d_backend;
 
@@ -43,14 +42,19 @@ namespace gr
       // Metadata
       pmt::pmt_t d_meta;
       pmt::pmt_t d_data;
+      pmt::pmt_t d_meta_time;
       pmt::pmt_t d_time_est_key;
+      pmt::pmt_t sdr1_dict;
+      pmt::pmt_t sdr2_dict;
+      pmt::pmt_t sdr3_dict;
+
+      af::array sinc(const af::array &x);
 
       void handle_tx_msg(pmt::pmt_t);
       void handle_rx_msg(pmt::pmt_t);
 
     public:
-      time_pk_est_impl(size_t nfft, double pulse_width, double cap_length,
-                       double samp_rate, double NLLS_iter, double NLLS_pts);
+      time_pk_est_impl(size_t nfft, double samp_rate, double bandwidth, double NLLS_iter, double NLLS_pts);
       ~time_pk_est_impl();
 
       void set_msg_queue_depth(size_t) override;

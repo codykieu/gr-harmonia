@@ -16,7 +16,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0) */
 /* BINDTOOL_USE_PYGCCXML(0) */
 /* BINDTOOL_HEADER_FILE(time_pk_est.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(e0865f78d1f25bd43b0e5bca932d968e) */
+/* BINDTOOL_HEADER_FILE_HASH(37b5000923f396db0ce8610814fa5f28) */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -36,9 +36,9 @@ void bind_time_pk_est(py::module &m) {
   py::class_<time_pk_est, gr::block, gr::basic_block,
              std::shared_ptr<time_pk_est>>(m, "time_pk_est", D(time_pk_est))
 
-      .def(py::init(&time_pk_est::make), py::arg("nfft"),
-           py::arg("pulse_width"), py::arg("cap_length"), py::arg("samp_rate"),
-           py::arg("NLLS_iter"), py::arg("NLLS_pts"), D(time_pk_est, make))
+      .def(py::init(&time_pk_est::make), py::arg("nfft"), py::arg("samp_rate"),
+           py::arg("bandwidth"), py::arg("NLLS_iter"), py::arg("NLLS_pts"),
+           D(time_pk_est, make))
 
       .def("set_msg_queue_depth", &time_pk_est::set_msg_queue_depth,
            py::arg("depth"), D(time_pk_est, set_msg_queue_depth))

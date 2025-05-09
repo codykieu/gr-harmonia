@@ -97,7 +97,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: 20e6
+    value: 10e6
   states:
     bus_sink: false
     bus_source: false
@@ -117,9 +117,25 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1160, 280.0]
+    coordinate: [1112, 344.0]
     rotation: 0
-    state: disabled
+    state: enabled
+- name: harmonia_buffer_corrector_0
+  id: harmonia_buffer_corrector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max_buffer_size: '1996'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [264, 304.0]
+    rotation: 0
+    state: enabled
 - name: harmonia_time_pk_est_0
   id: harmonia_time_pk_est
   parameters:
@@ -128,18 +144,19 @@ blocks:
     affinity: ''
     alias: ''
     backend: plasma.Device.CPU
-    cap_length: 400e-6
+    bandwidth: bw
     comment: ''
+    current_sdr: PMT_HARMONIA_SDR1
     depth: '10000'
     maxoutbuf: '0'
     minoutbuf: '0'
-    pulse_width: 200e-6
+    nfft: '4'
     samp_rate: samp_rate
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [824, 168.0]
+    coordinate: [896, 192.0]
     rotation: 0
     state: enabled
 - name: harmonia_usrp_radar_all_0
@@ -162,14 +179,14 @@ blocks:
     sdr1_gain: '20'
     sdr2_freq: center_freq
     sdr2_freq_key: core:rx_freq
-    sdr2_gain: '0'
-    start_delay: '0.11'
+    sdr2_gain: '10'
+    start_delay: '0.1'
     verbose: 'False'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [424, 340.0]
+    coordinate: [480, 340.0]
     rotation: 0
     state: enabled
 - name: plasma_lfm_source_0
@@ -195,7 +212,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [168, 168.0]
+    coordinate: [40, 192.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -292,9 +309,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1160, 192.0]
+    coordinate: [1112, 216.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: qtgui_time_sink_x_0_0
   id: qtgui_time_sink_x
   parameters:
@@ -389,7 +406,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [840, 400.0]
+    coordinate: [896, 400.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0_1
@@ -486,16 +503,18 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [424, 240.0]
+    coordinate: [264, 376.0]
     rotation: 0
-    state: enabled
+    state: disabled
 
 connections:
+- [harmonia_buffer_corrector_0, out, harmonia_usrp_radar_all_0, in]
+- [harmonia_time_pk_est_0, out, blocks_message_debug_0, print]
 - [harmonia_time_pk_est_0, out, qtgui_time_sink_x_0, in]
 - [harmonia_usrp_radar_all_0, out, harmonia_time_pk_est_0, rx]
 - [harmonia_usrp_radar_all_0, out, qtgui_time_sink_x_0_0, in]
+- [plasma_lfm_source_0, out, harmonia_buffer_corrector_0, in]
 - [plasma_lfm_source_0, out, harmonia_time_pk_est_0, tx]
-- [plasma_lfm_source_0, out, harmonia_usrp_radar_all_0, in]
 - [plasma_lfm_source_0, out, qtgui_time_sink_x_0_1, in]
 
 metadata:

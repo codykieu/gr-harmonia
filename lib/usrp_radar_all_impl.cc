@@ -201,35 +201,38 @@ namespace gr
       /***********************************************************************
        * Thread Implementations
        **********************************************************************/
-      double start_time_sdr1_tx = usrp_1->get_time_now().get_real_secs() + start_delay + TDMA_time_slot;
-      std::cout << "USRP1 Time: " << start_time_sdr1_tx << std::endl;
-      double start_time_sdr2_rx = usrp_2->get_time_now().get_real_secs();
-      std::cout << "USRP2 Time: " << start_time_sdr2_rx << std::endl;
+      std::cout << "USRP1 Time: " << usrp_1->get_time_now().get_real_secs() << std::endl;
+      std::cout << "USRP2 Time: " << usrp_2->get_time_now().get_real_secs() << std::endl;
 
-      double start_time_sdr1_rx = start_time_sdr1_tx + TDMA_time_slot;
-      // std::cout << "USRP1 Time 2: " << start_time_sdr1_rx << std::endl;
-      double start_time_sdr2_tx = start_time_sdr2_rx + TDMA_time_slot * 2.0;
-      // std::cout << "USRP2 Time 2: " << start_time_sdr2_tx << std::endl;
+      double start_time_sdr1_tx = usrp_1->get_time_now().get_real_secs() + start_delay;
+      std::cout << "USRP1 TX ADJUST: " << start_time_sdr1_tx << std::endl;
+      double start_time_sdr2_rx = usrp_2->get_time_now().get_real_secs();
+      std::cout << "USRP2 RX ADJUST: " << start_time_sdr2_rx << std::endl;
+
+      double start_time_sdr1_rx = start_time_sdr1_tx + TDMA_time_slot + start_delay;
+      std::cout << "USRP1 RX ADJUST: " << start_time_sdr1_rx << std::endl;
+      double start_time_sdr2_tx = start_time_sdr2_rx + TDMA_time_slot + 0.005;
+      std::cout << "USRP2 TX ADJUST: " << start_time_sdr2_tx << std::endl;
 
       // Transmit and Receive Threads
       tx1_thread = gr::thread::thread(
           &usrp_radar_all_impl::transmit_bursts, this, usrp_1, tx1_stream, start_time_sdr1_tx);
 
       rx2_thread =
-          gr::thread::thread(&usrp_radar_all_impl::receive, this, usrp_2, rx2_stream, start_time_sdr2_rx);
+          gr::thread::thread(&usrp_radar_all_impl::receive, this, usrp_2, rx2_stream, start_time_sdr2_rx, 1, false);
+
+      // Transmit bursts
+      tx2_thread = gr::thread::thread(
+          &usrp_radar_all_impl::transmit_bursts, this, usrp_2, tx2_stream, start_time_sdr2_tx);
+
+      rx1_thread =
+          gr::thread::thread(&usrp_radar_all_impl::receive, this, usrp_1, rx1_stream, start_time_sdr1_rx, 2, true);
 
       tx1_thread.join();
       rx2_thread.join();
 
-      // // Transmit bursts
-      // tx2_thread = gr::thread::thread(
-      //     &usrp_radar_all_impl::transmit_bursts, this, usrp_2, tx2_stream, start_time_sdr2_tx);
-
-      // rx1_thread =
-      //     gr::thread::thread(&usrp_radar_all_impl::receive, this, usrp_1, rx1_stream, start_time_sdr1_rx);
-
-      // tx2_thread.join();
-      // rx1_thread.join();
+      tx2_thread.join();
+      rx1_thread.join();
     }
 
     void usrp_radar_all_impl::config_usrp(uhd::usrp::multi_usrp::sptr &usrp_1,
@@ -313,7 +316,7 @@ namespace gr
 
     void usrp_radar_all_impl::receive(uhd::usrp::multi_usrp::sptr usrp_rx,
                                       uhd::rx_streamer::sptr rx_stream,
-                                      double start_time)
+                                      double start_time, int sdr_id, bool TDMA_done)
     {
       // Setup variables
       uhd::rx_metadata_t md;
@@ -321,13 +324,16 @@ namespace gr
       size_t total_samps_to_rx = cap_length * sdr1_rate;
       size_t samps_received = 0;
 
-      // Outputs RX time
-      std::cout << "USRP RX start time: " << usrp_rx->get_time_now().get_real_secs() << std::endl;
-
       // Set up UHD receive mode
       uhd::stream_cmd_t cmd(uhd::stream_cmd_t::STREAM_MODE_NUM_SAMPS_AND_DONE);
       cmd.num_samps = total_samps_to_rx;
       cmd.stream_now = usrp_rx->get_time_now().get_real_secs() >= start_time;
+      double rx_time_secs = usrp_rx->get_time_now().get_real_secs();
+      pmt::pmt_t rx_time = pmt::from_double(rx_time_secs);
+
+      // Outputs RX time
+      // std::cout << "Current time: " << rx_time << ", Start time: " << start_time << std::endl;
+
       cmd.time_spec = uhd::time_spec_t(start_time);
       rx_stream->issue_stream_cmd(cmd);
 
@@ -347,24 +353,31 @@ namespace gr
         samps_received += num_rx;
       }
 
-      // Tags metadata
+      std::cout << "SDR ID: " << sdr_id << std::endl;
+
       if (pmt::length(this->meta) > 0)
       {
         this->meta = pmt::dict_add(
-            this->meta, pmt::intern(sdr2_freq_key), pmt::from_double(sdr2_freq));
-        if (usrp_rx == usrp_1)
+            this->meta, pmt::intern("rx_time"), rx_time);
+        if (sdr_id == 1)
         {
+          // GR_LOG_WARN(d_logger, "SDR ID: 1 Confirmed");
           this->meta = pmt::dict_add(this->meta, pmt::intern("src"), PMT_HARMONIA_SDR1);
         }
-        else if (usrp_rx == usrp_2)
+        else if (sdr_id == 2)
         {
+          // GR_LOG_WARN(d_logger, "SDR ID: 2 Confirmed");
           this->meta = pmt::dict_add(this->meta, pmt::intern("src"), PMT_HARMONIA_SDR2);
         }
       }
 
+      if (TDMA_done)
+      {
+        this->meta = pmt::dict_add(this->meta, pmt::intern("TDMA_Done"), pmt::PMT_T);
+      }
       // Outputs metadata
       message_port_pub(PMT_HARMONIA_OUT, pmt::cons(this->meta, rx_data_pmt));
-      this->meta = pmt::make_dict();
+      // this->meta = pmt::make_dict();
     }
 
     void usrp_radar_all_impl::transmit_bursts(uhd::usrp::multi_usrp::sptr usrp_tx,
@@ -375,7 +388,8 @@ namespace gr
       uhd::tx_metadata_t md;
 
       // Outputs TX time
-      std::cout << "USRP TX start time: " << usrp_tx->get_time_now().get_real_secs() << std::endl;
+      // double current_time = usrp_tx->get_time_now().get_real_secs();
+      // std::cout << "Current time: " << current_time << ", Start time: " << start_time << std::endl;
 
       if (new_msg_received)
       {

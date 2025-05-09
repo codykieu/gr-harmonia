@@ -49,9 +49,9 @@ namespace gr
 
     void clock_drift_est_impl::handle_msg(pmt::pmt_t msg)
     {
-      auto now = std::chrono::high_resolution_clock::now();
-      double now_sec = std::chrono::duration<double>(now.time_since_epoch()).count();
-      std::cout << std::fixed << std::setprecision(15); // 15 decimal places    
+      // auto now = std::chrono::high_resolution_clock::now();
+      // double now_sec = std::chrono::duration<double>(now.time_since_epoch()).count();
+      // std::cout << std::fixed << std::setprecision(15); // 15 decimal places
 
       // Run following code once
       bool first_run = true;
@@ -179,6 +179,7 @@ namespace gr
       A(6, 0) = 1.000e9;
       af::array x_test = af::matmul(af::matmul(af::matmul(af::inverse(af::matmul(af::matmul(A.T(), inv_Cov_mat), A)), A.T()), inv_Cov_mat), y) * center_freq;
       af_print(x_test);
+      
       af::array x_alpha = af::matmul(af::matmul(af::matmul(af::inverse(af::matmul(af::matmul(A_mat.T(), inv_Cov_mat), A_mat)), A_mat.T()), inv_Cov_mat), y) * center_freq;
       af_print(x_alpha);
 
@@ -191,10 +192,9 @@ namespace gr
       meta = pmt::dict_add(meta, PMT_HARMONIA_SDR3, pmt::from_float(clock_drift_est3));
 
       message_port_pub(out_port, meta);
-      auto now2 = std::chrono::high_resolution_clock::now();
-      double now_sec2 = std::chrono::duration<double>(now2.time_since_epoch()).count();
-      std::cout << "[INFO] Process Time: " << (now_sec2- now_sec) << " seconds" << std::endl;
-  
+      // auto now2 = std::chrono::high_resolution_clock::now();
+      // double now_sec2 = std::chrono::duration<double>(now2.time_since_epoch()).count();
+      // std::cout << "[INFO] Process Time: " << (now_sec2- now_sec) << " seconds" << std::endl;
     }
 
   } /* namespace harmonia */
