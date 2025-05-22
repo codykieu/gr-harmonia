@@ -9,9 +9,12 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "" "python/harmonia/bindings/harmonia_python_autogen/timestamp" "custom" "python/harmonia/bindings/harmonia_python_autogen/deps"
+  "/home/cody/gr-harmonia/python/harmonia/bindings/QPSK_demod_python.cc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.o" "gcc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.o.d"
+  "/home/cody/gr-harmonia/python/harmonia/bindings/QPSK_mod_python.cc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.o" "gcc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.o.d"
   "/home/cody/gr-harmonia/python/harmonia/bindings/SDR_tagger_python.cc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/SDR_tagger_python.cc.o" "gcc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/SDR_tagger_python.cc.o.d"
   "/home/cody/gr-harmonia/python/harmonia/bindings/buffer_corrector_python.cc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/buffer_corrector_python.cc.o" "gcc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/buffer_corrector_python.cc.o.d"
   "/home/cody/gr-harmonia/python/harmonia/bindings/clock_drift_est_python.cc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clock_drift_est_python.cc.o" "gcc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clock_drift_est_python.cc.o.d"
+  "/home/cody/gr-harmonia/python/harmonia/bindings/clockbias_phase_est_python.cc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.o" "gcc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.o.d"
   "/home/cody/gr-harmonia/python/harmonia/bindings/device_python.cc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/device_python.cc.o" "gcc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/device_python.cc.o.d"
   "/home/cody/gr-harmonia/python/harmonia/bindings/frequency_pk_est_python.cc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/frequency_pk_est_python.cc.o" "gcc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/frequency_pk_est_python.cc.o.d"
   "/home/cody/gr-harmonia/build/python/harmonia/bindings/harmonia_python_autogen/mocs_compilation.cpp" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/harmonia_python_autogen/mocs_compilation.cpp.o" "gcc" "python/harmonia/bindings/CMakeFiles/harmonia_python.dir/harmonia_python_autogen/mocs_compilation.cpp.o.d"

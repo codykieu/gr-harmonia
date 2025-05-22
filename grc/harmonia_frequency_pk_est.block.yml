@@ -6,7 +6,7 @@ parameters:
 - id: nfft
   label: FFT Ratio
   dtype: int
-  default: "1024"
+  default: "8"
 - id: pulse_width
   label: Pulse Width
   dtype: float
@@ -23,10 +23,6 @@ parameters:
   label: NLLS Iterations
   dtype: float
   default: "15"
-- id: NLLS_pts
-  label: NLLS Points
-  dtype: float
-  default: "7"
 - id: backend
   label: Backend
   dtype: enum
@@ -65,7 +61,7 @@ outputs:
 templates:
   imports: from gnuradio import harmonia
   make: |-
-    harmonia.frequency_pk_est(${nfft}, ${pulse_width}, ${cap_length}, ${samp_rate}, ${NLLS_iter}, ${NLLS_pts}, ${enable_out})
+    harmonia.frequency_pk_est(${nfft}, ${pulse_width}, ${cap_length}, ${samp_rate}, ${NLLS_iter}, ${enable_out})
     self.${id}.set_msg_queue_depth(${depth})
     self.${id}.set_backend(${backend})
 

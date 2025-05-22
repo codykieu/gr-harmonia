@@ -56,6 +56,9 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
     "/home/cody/gr-harmonia/grc/harmonia_clock_drift_est.block.yml"
     "/home/cody/gr-harmonia/grc/harmonia_time_pk_est.block.yml"
     "/home/cody/gr-harmonia/grc/harmonia_buffer_corrector.block.yml"
+    "/home/cody/gr-harmonia/grc/harmonia_clockbias_phase_est.block.yml"
+    "/home/cody/gr-harmonia/grc/harmonia_QPSK_mod.block.yml"
+    "/home/cody/gr-harmonia/grc/harmonia_QPSK_demod.block.yml"
     )
 endif()
 

@@ -162,7 +162,6 @@ blocks:
 - name: harmonia_usrp_radar_all_0
   id: harmonia_usrp_radar_all
   parameters:
-    TDMA_time_slot: '0'
     affinity: ''
     alias: ''
     args_1: '"addr=192.168.60.2, use_dpkg=1"'
@@ -182,6 +181,7 @@ blocks:
     sdr2_gain: '10'
     start_delay: '0.1'
     verbose: 'False'
+    wait_time: 2e-6
   states:
     bus_sink: false
     bus_source: false
@@ -509,8 +509,6 @@ blocks:
 
 connections:
 - [harmonia_buffer_corrector_0, out, harmonia_usrp_radar_all_0, in]
-- [harmonia_time_pk_est_0, out, blocks_message_debug_0, print]
-- [harmonia_time_pk_est_0, out, qtgui_time_sink_x_0, in]
 - [harmonia_usrp_radar_all_0, out, harmonia_time_pk_est_0, rx]
 - [harmonia_usrp_radar_all_0, out, qtgui_time_sink_x_0_0, in]
 - [plasma_lfm_source_0, out, harmonia_buffer_corrector_0, in]

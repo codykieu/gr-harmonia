@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0
 #
 # GNU Radio Python Flow Graph
-# Title: Clock Drift Estimate Test
+# Title: Not titled yet
 # Author: cody
 # GNU Radio version: 3.10.12.0
 
@@ -24,16 +24,17 @@ from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
 from gnuradio import harmonia
+from gnuradio import plasma
 import threading
 
 
 
-class clock_drift_est_test(gr.top_block, Qt.QWidget):
+class QPSK_mod_test(gr.top_block, Qt.QWidget):
 
     def __init__(self):
-        gr.top_block.__init__(self, "Clock Drift Estimate Test", catch_exceptions=True)
+        gr.top_block.__init__(self, "Not titled yet", catch_exceptions=True)
         Qt.QWidget.__init__(self)
-        self.setWindowTitle("Clock Drift Estimate Test")
+        self.setWindowTitle("Not titled yet")
         qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
@@ -51,7 +52,7 @@ class clock_drift_est_test(gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("gnuradio/flowgraphs", "clock_drift_est_test")
+        self.settings = Qt.QSettings("gnuradio/flowgraphs", "QPSK_mod_test")
 
         try:
             geometry = self.settings.value("geometry")
@@ -65,27 +66,34 @@ class clock_drift_est_test(gr.top_block, Qt.QWidget):
         # Variables
         ##################################################
         self.samp_rate = samp_rate = 100e6
-        self.pulse_width = pulse_width = 200e-6
         self.center_freq = center_freq = 1e9
 
         ##################################################
         # Blocks
         ##################################################
 
-        self.harmonia_clock_drift_est_0 = harmonia.clock_drift_est(3, 2, 1e6, 1e9, samp_rate, pulse_width, 30)
-        self.blocks_message_strobe_0 = blocks.message_strobe(pmt.cons(pmt.intern("sdr1"), pmt.from_float(1000000.0)), 4000)
+        self.plasma_pdu_file_sink_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/qpsk_test', '')
+        self.harmonia_usrp_radar_all_0 = harmonia.usrp_radar_all("addr=192.168.60.2, use_dpkg=1", "addr=192.168.80.2, use_dpkg=1", samp_rate, samp_rate, center_freq, center_freq, 0, 0, 0.2, 0.01, 0.001, 2e-6, False)
+        self.harmonia_usrp_radar_all_0.set_metadata_keys('core:tx_freq', 'core:rx_freq', 'core:sample_start', 'radar:prf')
+        self.harmonia_QPSK_mod_0 = harmonia.QPSK_mod(8)
+        self.harmonia_QPSK_demod_0 = harmonia.QPSK_demod(8)
+        self.blocks_message_strobe_0 = blocks.message_strobe(pmt.cons( pmt.make_dict(),pmt.init_f32vector(2, [1222, 2392]) ), 3000)
         self.blocks_message_debug_0 = blocks.message_debug(True, gr.log_levels.info)
 
 
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.blocks_message_strobe_0, 'strobe'), (self.harmonia_clock_drift_est_0, 'in'))
-        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.blocks_message_debug_0, 'print'))
+        self.msg_connect((self.blocks_message_strobe_0, 'strobe'), (self.harmonia_QPSK_mod_0, 'in'))
+        self.msg_connect((self.harmonia_QPSK_demod_0, 'out'), (self.blocks_message_debug_0, 'log'))
+        self.msg_connect((self.harmonia_QPSK_mod_0, 'out'), (self.harmonia_QPSK_demod_0, 'in'))
+        self.msg_connect((self.harmonia_QPSK_mod_0, 'out'), (self.harmonia_usrp_radar_all_0, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'out'), (self.harmonia_QPSK_demod_0, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'out'), (self.plasma_pdu_file_sink_0, 'in'))
 
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("gnuradio/flowgraphs", "clock_drift_est_test")
+        self.settings = Qt.QSettings("gnuradio/flowgraphs", "QPSK_mod_test")
         self.settings.setValue("geometry", self.saveGeometry())
         self.stop()
         self.wait()
@@ -98,12 +106,6 @@ class clock_drift_est_test(gr.top_block, Qt.QWidget):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
 
-    def get_pulse_width(self):
-        return self.pulse_width
-
-    def set_pulse_width(self, pulse_width):
-        self.pulse_width = pulse_width
-
     def get_center_freq(self):
         return self.center_freq
 
@@ -113,7 +115,7 @@ class clock_drift_est_test(gr.top_block, Qt.QWidget):
 
 
 
-def main(top_block_cls=clock_drift_est_test, options=None):
+def main(top_block_cls=QPSK_mod_test, options=None):
 
     qapp = Qt.QApplication(sys.argv)
 

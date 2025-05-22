@@ -17,4 +17,7 @@ install(FILES
     harmonia_usrp_radar_rx.block.yml
     harmonia_clock_drift_est.block.yml
     harmonia_time_pk_est.block.yml
-    harmonia_buffer_corrector.block.yml DESTINATION share/gnuradio/grc/blocks)
+    harmonia_buffer_corrector.block.yml
+    harmonia_clockbias_phase_est.block.yml
+    harmonia_QPSK_mod.block.yml
+    harmonia_QPSK_demod.block.yml DESTINATION share/gnuradio/grc/blocks)

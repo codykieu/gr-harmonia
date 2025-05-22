@@ -12,6 +12,7 @@
 #include <gnuradio/harmonia/frequency_pk_est.h>
 #include <gnuradio/harmonia/pmt_constants.h>
 #include <plasma_dsp/fft.h>
+#include <cmath>
 
 namespace gr {
 namespace harmonia {
@@ -25,15 +26,16 @@ private:
     double d_cap_length;
     double d_samp_rate;
     double d_NLLS_iter;
-    double d_NLLS_pts;
     bool d_enable_out;
 
     // Variables
-    double f_est;
+    af::Backend d_backend;
     size_t d_queue_depth;
+    double f_est;
     std::vector<float> d_sdr1_estimates;
     std::vector<float> d_sdr2_estimates;
     std::vector<float> d_sdr3_estimates;
+    af::array nlls_ind;
 
     // Message Ports    
     pmt::pmt_t d_out_port;
@@ -47,13 +49,13 @@ private:
     pmt::pmt_t d_meta;
     pmt::pmt_t d_meta_f;
 
-    void handle_msg(pmt::pmt_t msg);
+    af::array sinc(const af::array &x);
 
-    af::Backend d_backend;
+    void handle_msg(pmt::pmt_t msg);
 
 public:
     frequency_pk_est_impl(size_t nfft, double pulse_width, double cap_length,
-        double samp_rate, double NLLS_iter, double NLLS_pts, bool enable_out);
+        double samp_rate, double NLLS_iter, bool enable_out);
     ~frequency_pk_est_impl();
 
     void set_msg_queue_depth(size_t) override;

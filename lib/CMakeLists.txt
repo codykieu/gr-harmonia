@@ -23,7 +23,10 @@ list(APPEND harmonia_sources
     usrp_radar_rx_impl.cc
     clock_drift_est_impl.cc
     time_pk_est_impl.cc
-    buffer_corrector_impl.cc )
+    buffer_corrector_impl.cc
+    clockbias_phase_est_impl.cc
+    QPSK_mod_impl.cc
+    QPSK_demod_impl.cc )
 
 set(harmonia_sources
     "${harmonia_sources}"

@@ -53,144 +53,120 @@ namespace gr
       // double now_sec = std::chrono::duration<double>(now.time_since_epoch()).count();
       // std::cout << std::fixed << std::setprecision(15); // 15 decimal places
 
-      // Run following code once
-      bool first_run = true;
-
-      if (first_run)
+      // Ensure message is a dictionary
+      if (!pmt::is_dict(msg))
       {
-        A_mat = af::constant(0, (2 * num_platforms + 1), (2 * num_platforms));
-        A_mat(2 * num_platforms, 0) = 1.0; // Assumes SDR1 has no clock drift
-        first_run = false;                 // Mark as done
+        GR_LOG_ERROR(d_logger, "Message is not a dictionary!");
+        return;
       }
 
-      // Handle dictionary inputs
-      pmt::pmt_t key = pmt::car(msg);
-      pmt::pmt_t value = pmt::cdr(msg);
+      // Map SDR PMT symbols to indices
+      std::map<pmt::pmt_t, int> sdr_idx = {
+          {PMT_HARMONIA_SDR1, 0},
+          {PMT_HARMONIA_SDR2, 1},
+          {PMT_HARMONIA_SDR3, 2}};
 
-      if (pmt::equal(key, PMT_HARMONIA_SDR1)) // SDR 1 TX
+      // Transmitting SDR, Order of SDR it's receiving
+      std::map<int, std::vector<int>> tx_to_rx_idx = {
+          {0, {1, 2}}, // SDR1 TX → SDR2, SDR3
+          {1, {0, 2}}, // SDR2 TX → SDR1, SDR3
+          {2, {0, 1}}, // SDR3 TX → SDR1, SDR2
+      };
+
+      std::vector<std::vector<double>> A_est;
+
+      std::vector<pmt::pmt_t> tx_order = {
+          PMT_HARMONIA_SDR1,
+          PMT_HARMONIA_SDR2,
+          PMT_HARMONIA_SDR3,
+      };
+
+      for (const auto &tx_key : tx_order)
       {
-        if (platform_num == 2)
+        if (!pmt::dict_has_key(msg, tx_key))
+          continue;
+
+        pmt::pmt_t vec_pmt = pmt::dict_ref(msg, tx_key, pmt::PMT_NIL);
+        if (!pmt::is_f32vector(vec_pmt))
+          continue;
+
+        int i = sdr_idx[tx_key];
+        const auto &rx_indices = tx_to_rx_idx[i];
+        std::vector<float> freq_estimates_f32 = pmt::f32vector_elements(vec_pmt);
+        // Convert vector into double
+        std::vector<double> freq_estimates(freq_estimates_f32.begin(), freq_estimates_f32.end());
+
+        if (freq_estimates.size() != rx_indices.size())
         {
-          // Convert the PMT vector to a std::vector<float>
-          std::vector<float> value_vector = {-(static_cast<float>(center_freq) + static_cast<float>(baseband_freq)),
-                                             (pmt::to_float(value) + static_cast<float>(center_freq)),
-                                             0};
-          af::array A_vec(value_vector.size(), value_vector.data());
-          A_mat(0, af::seq(0, num_platforms - 1)) = A_vec;
+          GR_LOG_ERROR(d_logger, "Mismatch in RX index size vs freq estimate vector");
+          continue;
         }
-        if (platform_num == 3)
+
+        // Allocating frequency estimates into matrix
+        for (size_t k = 0; k < freq_estimates.size(); ++k)
         {
-          // Convert the PMT vector to a std::vector<float>
-          std::vector<float> value_vector = {-(static_cast<float>(center_freq) + static_cast<float>(baseband_freq)),
-                                             0,
-                                             (pmt::to_float(value) + static_cast<float>(center_freq))};
-          af::array A_vec(value_vector.size(), value_vector.data());
-          A_mat(1, af::seq(0, num_platforms - 1)) = A_vec;
+          int j = rx_indices[k];
+          double f_est = freq_estimates[k];
+
+          std::vector<double> row(num_platforms, 0.0);
+          row[j] = f_est + center_freq;
+          row[i] = -(baseband_freq + center_freq);
+          A_est.push_back(row);
         }
       }
 
-      else if (pmt::equal(key, PMT_HARMONIA_SDR2)) // SDR 2 TX
+      // Assumption of Clock Drift of SDR1 = 1.0
+      std::vector<double> constraint(num_platforms, 0.0);
+      constraint[0] = center_freq;
+      A_est.push_back(constraint);
+
+      // Flatten in column-major order for ArrayFire
+      std::vector<double> flat(num_platforms * A_est.size(), 0.0);
+      for (size_t r = 0; r < A_est.size(); ++r)
       {
-        if (platform_num == 1)
+        for (int c = 0; c < num_platforms; ++c)
         {
-          // Convert the PMT vector to a std::vector<float>
-          std::vector<float> value_vector = {(pmt::to_float(value) + static_cast<float>(center_freq)),
-                                             -(static_cast<float>(center_freq) + static_cast<float>(baseband_freq)),
-                                             0};
-          af::array A_vec(value_vector.size(), value_vector.data());
-          A_mat(2, af::seq(0, num_platforms - 1)) = A_vec;
-        }
-        if (platform_num == 3)
-        {
-          // Convert the PMT vector to a std::vector<float>
-          std::vector<float> value_vector = {0,
-                                             -(static_cast<float>(center_freq) + static_cast<float>(baseband_freq)),
-                                             (pmt::to_float(value) + static_cast<float>(center_freq))};
-          af::array A_vec(value_vector.size(), value_vector.data());
-          A_mat(3, af::seq(0, num_platforms - 1)) = A_vec;
+          flat[c * A_est.size() + r] = A_est[r][c]; // column-major
         }
       }
 
-      else if (pmt::equal(key, PMT_HARMONIA_SDR3)) // SDR 3 TX
-      {
-        if (platform_num == 1)
-        {
-          // Convert the PMT vector to a std::vector<float>
-          std::vector<float> value_vector = {(pmt::to_float(value) + static_cast<float>(center_freq)),
-                                             0,
-                                             -(static_cast<float>(center_freq) + static_cast<float>(baseband_freq))};
-          af::array A_vec(value_vector.size(), value_vector.data());
-          A_mat(4, af::seq(0, num_platforms - 1)) = A_vec;
-        }
-        if (platform_num == 2)
-        {
-          // Convert the PMT vector to a std::vector<float>
-          std::vector<float> value_vector = {0,
-                                             (pmt::to_float(value) + static_cast<float>(center_freq)),
-                                             -(static_cast<float>(center_freq) + static_cast<float>(baseband_freq))};
-          af::array A_vec(value_vector.size(), value_vector.data());
-          A_mat(5, af::seq(0, num_platforms - 1)) = A_vec;
-        }
-      }
-      else
-      {
-        GR_LOG_INFO(d_logger, "No SDR specified/found");
-      }
-      af_print(A_mat);
-      // y = Ax
-      af::array y = af::join(0, af::constant(0, 2 * num_platforms), af::constant(1, 1));
-      af_print(y);
+      // Matrix for Linear System of Equations 
+      af::dim4 dims(A_est.size(), num_platforms);
+      A_mat = af::array(dims, flat.data(), afHost); // afHost tells AF it's a host pointer
+      af::array y = af::join(0, af::constant(0.0, A_est.size() - 1, f64), af::constant(1.0, 1, f64));
 
-      // Variance of frequency
-      double var_f = 3 / (2 * std::pow(af::Pi, 2) * std::pow(pulse_width, 3) * samp_rate * std::pow(10.0, (SNR / 10.0)) * (1 - std::pow((1 / (pulse_width * samp_rate)), 2)));
-      // std::cout << "var_f: " << var_f << std::endl;
+      // Compute variance 
+      double var_f = 3 / (2 * std::pow(af::Pi, 2.0) * std::pow(pulse_width, 3.0) * samp_rate *
+                          std::pow(10.0, SNR / 10.0) * (1.0 - std::pow(1.0 / (pulse_width * samp_rate), 2.0)));
 
-      // Create the diagonal values
-      af::array diag_vals = af::flat(af::join(0, (af::constant(var_f, 2 * num_platforms)), af::constant(1e-9f, 1)));
-
-      // Create the diagonal matrix
+      // Diagonalize noise/weight matrix according to SNR
+      af::array diag_vals = af::join(0,
+                                     af::constant(var_f, A_est.size() - 1, f64),
+                                     af::constant(1e-12, 1, f64));
       af::array Cov_mat = af::diag(diag_vals, 0, false);
-
-      // Compute inverse of Covariance matrix
       af::array inv_Cov_mat = af::inverse(Cov_mat);
 
-      int N = 6;
-      af::array A = af::constant(0.0f, N + 1, N); // 7x6 matrix
+      // Solve Weighted Least Sqares 
+      af::array At_Cinv = af::matmulTN(A_mat, inv_Cov_mat);
+      af::array lhs = af::matmul(At_Cinv, A_mat);
+      af::array rhs = af::matmul(At_Cinv, y);
+      af::array x_alpha = af::solve(lhs, rhs) * center_freq;
 
-      // Fill in the custom pattern (assuming pattern based on visual)
-      A(0, 0) = -1.001e9;
-      A(0, 1) = 1.0192e9;
-      A(0, 3) = -1.000e9;
-      A(1, 0) = -1.001e9;
-      A(1, 2) = 1.0187e9;
-      A(1, 4) = -1.000e9;
-      A(2, 0) = 1.0136e9;
-      A(2, 1) = -1.001e9;
-      A(2, 3) = -1.000e9;
-      A(3, 1) = -1.001e9;
-      A(3, 2) = 9.937e8;
-      A(3, 5) = -1.000e9;
-      A(4, 0) = 9.816e8;
-      A(4, 2) = -1.001e9;
-      A(4, 4) = -1.000e9;
-      A(5, 1) = 1.0163e9;
-      A(5, 2) = -1.001e9;
-      A(5, 5) = -1.000e9;
-      A(6, 0) = 1.000e9;
-      af::array x_test = af::matmul(af::matmul(af::matmul(af::inverse(af::matmul(af::matmul(A.T(), inv_Cov_mat), A)), A.T()), inv_Cov_mat), y) * center_freq;
-      af_print(x_test);
+      // Output estimates
+      std::vector<double> x_host(x_alpha.elements());
+      x_alpha.host(x_host.data());
       
-      af::array x_alpha = af::matmul(af::matmul(af::matmul(af::inverse(af::matmul(af::matmul(A_mat.T(), inv_Cov_mat), A_mat)), A_mat.T()), inv_Cov_mat), y) * center_freq;
-      af_print(x_alpha);
+      // Print estimates
+      std::cout << "x_alpha (Hz):" << std::endl;
+      for (double val : x_host)
+        std::cout << std::fixed << std::setprecision(13) << val << std::endl;
 
-      float clock_drift_est1 = x_test(0).scalar<float>();
-      float clock_drift_est2 = x_test(1).scalar<float>();
-      float clock_drift_est3 = x_test(2).scalar<float>();
+      // Add to metadata
+      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR1, pmt::from_double(x_host[0]));
+      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR2, pmt::from_double(x_host[1]));
+      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR3, pmt::from_double(x_host[2]));
 
-      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR1, pmt::from_float(clock_drift_est1));
-      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR2, pmt::from_float(clock_drift_est2));
-      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR3, pmt::from_float(clock_drift_est3));
-
+      // Export message
       message_port_pub(out_port, meta);
       // auto now2 = std::chrono::high_resolution_clock::now();
       // double now_sec2 = std::chrono::duration<double>(now2.time_since_epoch()).count();

@@ -1,0 +1,49 @@
+id: harmonia_clockbias_phase_est
+label: Clock Bias and Phase Estimation
+category: '[harmonia]'
+
+parameters:
+- id: num_platforms
+  label: Number of Platforms
+  dtype: int
+  default: "num_platforms"
+- id: platform_num
+  label: Platform Number
+  dtype: int
+  default: "1"
+- id: baseband_freq
+  label: Baseband Frequency
+  dtype: float
+  default: "1e6"
+- id: center_freq
+  label: Center Frequency
+  dtype: float
+  default: "center_freq"
+- id: samp_rate
+  label: Sample Rate
+  dtype: float
+  default: "samp_rate"
+- id: pulse_width
+  label: Pulse Width
+  dtype: float
+  default: "Tp"
+- id: SNR
+  label: Signal-to-Noise Ratio (dB)
+  dtype: float
+  default: "0"
+
+inputs:
+-   domain: message
+    id: in
+
+outputs:
+-   domain: message
+    id: out
+    
+templates:
+  imports: from gnuradio import harmonia
+  make: harmonia.clockbias_phase_est(${num_platforms}, ${platform_num}, ${baseband_freq}, ${center_freq}, ${samp_rate}, ${pulse_width}, ${SNR})
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1

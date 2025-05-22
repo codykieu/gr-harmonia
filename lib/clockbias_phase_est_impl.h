@@ -1,0 +1,63 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2025 Cody Kieu.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+#ifndef INCLUDED_HARMONIA_CLOCKBIAS_PHASE_EST_IMPL_H
+#define INCLUDED_HARMONIA_CLOCKBIAS_PHASE_EST_IMPL_H
+
+#include <gnuradio/harmonia/clockbias_phase_est.h>
+#include <gnuradio/harmonia/pmt_constants.h>
+#include <arrayfire.h>
+#include <chrono>
+#include <iomanip>
+
+namespace gr
+{
+  namespace harmonia
+  {
+
+    class clockbias_phase_est_impl : public clockbias_phase_est
+    {
+    private:
+      const pmt::pmt_t msg_port;
+      const pmt::pmt_t out_port;
+      pmt::pmt_t d_msg;
+
+      // Parameters
+      int num_platforms;
+      int platform_num;
+      double baseband_freq;
+      double center_freq;
+      double samp_rate;
+      double pulse_width;
+      double SNR;
+      af::array TOF_est, Phase_est;
+
+      // Object and data
+      pmt::pmt_t d_data;
+
+      // Metadata fields
+      pmt::pmt_t meta;
+      pmt::pmt_t key;
+
+      af::array to_af_array(const std::vector<std::vector<float>> &matrix);
+      void handle_msg(pmt::pmt_t msg);
+
+    public:
+      clockbias_phase_est_impl(int num_platforms,
+                               int platform_num,
+                               double baseband_freq,
+                               double center_freq,
+                               double samp_rate,
+                               double pulse_width,
+                               double SNR);
+      ~clockbias_phase_est_impl();
+    };
+
+  } // namespace harmonia
+} // namespace gr
+
+#endif /* INCLUDED_HARMONIA_CLOCKBIAS_PHASE_EST_IMPL_H */

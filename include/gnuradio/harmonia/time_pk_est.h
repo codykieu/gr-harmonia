@@ -36,7 +36,6 @@ public:
 
   virtual void set_msg_queue_depth(size_t depth) = 0;
   virtual void set_backend(Device::Backend) = 0;
-  virtual void set_metadata_keys() = 0;
 };
 
 } // namespace harmonia

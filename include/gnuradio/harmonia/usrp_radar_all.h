@@ -44,7 +44,8 @@ namespace gr
                        const double sdr2_gain,
                        const double start_delay,
                        const double cap_length,
-                       const double TDMA_time_slot,
+                       const double wait_time,
+                       const double TDMA_time,
                        const bool verbose);
       virtual void set_metadata_keys(const std::string &sdr1_freq_key,
                                      const std::string &sdr2_freq_key,

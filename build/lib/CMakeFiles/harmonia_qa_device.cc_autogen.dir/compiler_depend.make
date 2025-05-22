@@ -9,15 +9,6 @@ lib/harmonia_qa_device.cc_autogen/timestamp: /home/cody/gr-harmonia/cmake/Module
   /usr/local/lib/cmake/gnuradio/GrPlatform.cmake \
   /usr/local/lib/cmake/gnuradio/GrTest.cmake \
   /usr/share/cmake-3.28/Modules/CMakePackageConfigHelpers.cmake \
-  /usr/share/cmake-3.28/Modules/WriteBasicConfigVersionFile.cmake \
-  /home/cody/gr-harmonia/cmake/Modules/targetConfig.cmake.in \
-  /home/cody/gr-harmonia/lib/CMakeLists.txt \
-  /home/cody/gr-harmonia/lib/qa_device.cc \
-  /usr/bin/cmake \
-  /usr/local/lib/cmake/gnuradio/GrMiscUtils.cmake \
-  /usr/local/lib/cmake/gnuradio/GrPlatform.cmake \
-  /usr/local/lib/cmake/gnuradio/GrTest.cmake \
-  /usr/share/cmake-3.28/Modules/CMakePackageConfigHelpers.cmake \
   /usr/share/cmake-3.28/Modules/WriteBasicConfigVersionFile.cmake
 
 

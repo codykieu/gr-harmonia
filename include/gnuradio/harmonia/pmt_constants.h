@@ -9,6 +9,7 @@ static const pmt::pmt_t PMT_HARMONIA_TX = pmt::intern("tx");
 static const pmt::pmt_t PMT_HARMONIA_RX = pmt::intern("rx");
 static const pmt::pmt_t PMT_HARMONIA_PDU = pmt::intern("pdu");
 static const pmt::pmt_t PMT_HARMONIA_F_OUT = pmt::intern("f_out");
+static const pmt::pmt_t PMT_HARMONIA_TP_OUT = pmt::intern("tp_out");
 
 // SigMF core
 static const pmt::pmt_t PMT_HARMONIA_GLOBAL = pmt::intern("global");
@@ -38,7 +39,8 @@ static const pmt::pmt_t PMT_HARMONIA_T_EST = pmt::intern("sync:t_est");
 static const pmt::pmt_t PMT_HARMONIA_SDR1 = pmt::intern("sdr1");
 static const pmt::pmt_t PMT_HARMONIA_SDR2 = pmt::intern("sdr2");
 static const pmt::pmt_t PMT_HARMONIA_SDR3 = pmt::intern("sdr3");
-static const pmt::pmt_t PMT_HARMONIA_SDR4 = pmt::intern("sdr4");
-static const pmt::pmt_t PMT_HARMONIA_SDR5 = pmt::intern("sdr5");
+static const pmt::pmt_t PMT_HARMONIA_P_SDR1 = pmt::intern("phase_sdr1");
+static const pmt::pmt_t PMT_HARMONIA_P_SDR2 = pmt::intern("phase_sdr2");
+static const pmt::pmt_t PMT_HARMONIA_P_SDR3 = pmt::intern("phase_sdr3");
 
 #endif /* PMT_HARMONIA_CONSTANTS */

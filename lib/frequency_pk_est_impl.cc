@@ -21,11 +21,10 @@ namespace gr
                                                       double cap_length,
                                                       double samp_rate,
                                                       double NLLS_iter,
-                                                      double NLLS_pts,
                                                       bool enable_out)
         {
             return gnuradio::make_block_sptr<frequency_pk_est_impl>(
-                nfft, pulse_width, cap_length, samp_rate, NLLS_iter, NLLS_pts, enable_out);
+                nfft, pulse_width, cap_length, samp_rate, NLLS_iter, enable_out);
         }
 
         /*
@@ -36,7 +35,6 @@ namespace gr
                                                      double cap_length,
                                                      double samp_rate,
                                                      double NLLS_iter,
-                                                     double NLLS_pts,
                                                      bool enable_out)
             : gr::block("frequency_pk_est",
                         gr::io_signature::make(0, 0, 0),
@@ -46,7 +44,6 @@ namespace gr
               d_cap_length(cap_length),
               d_samp_rate(samp_rate),
               d_NLLS_iter(NLLS_iter),
-              d_NLLS_pts(NLLS_pts),
               d_enable_out(enable_out)
         {
             d_in_port = PMT_HARMONIA_IN;
@@ -71,7 +68,7 @@ namespace gr
         frequency_pk_est_impl::~frequency_pk_est_impl() {}
 
         // Sinc Function
-        af::array sinc(const af::array &x)
+        af::array frequency_pk_est_impl::sinc(const af::array &x)
         {
             return af::select(x == 0.0, 1.0, af::sin(af::Pi * x) / (af::Pi * x));
         }
@@ -103,24 +100,25 @@ namespace gr
 
             // Check which SDR TX the signal
             pmt::pmt_t src_val = pmt::dict_ref(d_meta, pmt::intern("src"), pmt::PMT_NIL);
-            std::cout << "src_val in freq block: " << pmt::write_string(src_val) << std::endl;
+            std::cout << "[SDR ID]: " << pmt::write_string(src_val) << std::endl;
             pmt::pmt_t TDMA_val = pmt::dict_ref(d_meta, pmt::intern("TDMA_Done"), pmt::PMT_NIL);
 
             // Retrieves length of samples
             size_t n = pmt::length(samples);
             // GR_LOG_INFO(d_logger, "Received PDU with length: " + std::to_string(n));
             double NFFT = d_fftsize * n;
-            const std::complex<float> *in_data = pmt::c32vector_elements(samples, n);
+            // GR_LOG_INFO(d_logger, "NFFT: " + std::to_string(NFFT));
 
-            // Calculating absolute FFT of input data
-            af::array af_input(n, reinterpret_cast<const af::cfloat *>(in_data));
-            af::array af_fft = af::fftNorm(af_input, 1.0, NFFT);
+            // Casting data into array
+            const std::complex<float> *in_data = pmt::c32vector_elements(samples, n);
+            af::array af_input = af::array(n, reinterpret_cast<const af::cfloat *>(in_data));
+
+            // FFT
+            af::array af_fft = af::fft(af_input, NFFT);
+
             // FFTshift to zero
             af_fft = ::plasma::fftshift(af_fft, 0);
             af::array af_abs_fft = af::abs(af_fft);
-            // Log FFT data length
-            // size_t fft_length = af_abs_fft.elements();
-            // GR_LOG_INFO(d_logger, "Length of af_abs_fft: " + std::to_string(fft_length));
 
             // Output absolute fft of input data
             size_t io(0);
@@ -128,22 +126,20 @@ namespace gr
             float *out = pmt::f32vector_writable_elements(d_data, io);
             af_abs_fft.host(out);
 
+            // Send the data as a message
             if (d_enable_out)
             {
-                // Send the data as a message
                 message_port_pub(d_out_port, pmt::cons(d_meta, d_data));
             }
 
             // Output max and index of data
             double max_fft;
             unsigned max_idx;
-            af::max(&max_fft, &max_idx, af_fft);
+            af::max(&max_fft, &max_idx, af_abs_fft);
 
-            // Generate frequency axis
-            af::array f_axis =
-                (-d_samp_rate / 2.0) + ((af::seq(0, NFFT - 1)) * (d_samp_rate / (NFFT)));
-
-            af::array f_pk = f_axis(max_idx); // Get the value at max_idx as an af::array
+            // Calculate frequency at peak
+            double f_pk = -d_samp_rate / 2 + double(max_idx) * d_samp_rate / double(NFFT);
+            GR_LOG_INFO(d_logger, "Frequency Peak: " + std::to_string(f_pk));
 
             // ----------------- Sinc-NLLS -----------------
             // Create lambda array
@@ -151,64 +147,68 @@ namespace gr
             af::array af_lambda(3, lambda, afHost);
 
             // Making Index for NLLS
-            af::array nlls_ind = af::seq(0.0, d_NLLS_pts - 1.0);
+            double NLLS_pts = std::ceil(NFFT * 2.0 * d_pulse_width / d_cap_length) - 1.0;
+            // GR_LOG_INFO(d_logger, "NLLS Points: " + std::to_string(NLLS_pts));
+            af::array nlls_ind = af::seq(0.0, NLLS_pts - 1.0);
             nlls_ind = nlls_ind - af::median(nlls_ind);
-            nlls_ind = nlls_ind;
+            nlls_ind = nlls_ind.as(f64);
+            af::array max_vector = af::constant(static_cast<double>(max_idx), static_cast<dim_t>(NLLS_pts));
 
             // Output vector of points around max index
-            af::array nlls_y = af_abs_fft(max_idx - nlls_ind);
-            nlls_y = nlls_y;
+            af::array nlls_y = af_abs_fft(max_vector - nlls_ind);
+            nlls_y = nlls_y.as(f64);
+            // af_print(nlls_y);
 
             // Iterates through NLLS x times
-            for (int i = 0; i < d_NLLS_iter; i++)
+            for (int iter = 0; iter < d_NLLS_iter; ++iter)
             {
+                af::array x = nlls_ind - af_lambda(1);
+                af::array z = x * af_lambda(2);
+                af::array sinc_z = sinc(z);
+                af::array cos_z = af::cos(af::Pi * z);
+                af::array nlls_f = af_lambda(0) * sinc_z;
 
-                af::array nlls_f = (lambda[0] * sinc((nlls_ind - lambda[1]) * lambda[2]));
+                // Jacobian Matrix
+                af::array GN1 = sinc_z;                                             
+                af::array GN2 = af_lambda(0) * (sinc_z - cos_z) / (x);              
+                af::array GN3 = af_lambda(0) * x * (cos_z - sinc_z) / af_lambda(2); 
+                af::array J = af::join(1, GN1, GN2, GN3);
 
-                // Gaussian-Newton optimization
-                af::array GN1 = sinc(lambda[2] * (nlls_ind - lambda[1]));
-                af::array GN2 =
-                    (lambda[0] * (sinc(lambda[2] * (nlls_ind - lambda[1])) -
-                                  af::cos(af::Pi * lambda[2] * (nlls_ind - lambda[1])))) /
-                    (nlls_ind - lambda[1]);
-                af::array GN3 =
-                    (lambda[0] * (af::cos(af::Pi * lambda[2] * (nlls_ind - lambda[1])) -
-                                  sinc(lambda[2] * (nlls_ind - lambda[1])))) /
-                    (lambda[2]);
-                af::array nlls_J = af::join(1, GN1, GN2, GN3);
-                af::replace(nlls_J, !(af::isNaN(nlls_J)), 0.0);
-                af::replace(nlls_J, !(af::isInf(nlls_J)), 0.0);
+                // Replace Infinite and NaNs with zeros
+                af::replace(J, !(af::isInf(J)), 0.0);
+                af::replace(J, !(af::isNaN(J)), 0.0);
 
-                //  Residual errors
-                af::array nlls_delty = nlls_y - nlls_f;
+                // Residual
+                af::array r = nlls_y - nlls_f; 
+                // Solve for lambda
+                af::array JTJ = af::matmulTN(J, J);
+                af::array JTr = af::matmulTN(J, r);
+                af::array delta = af::solve(JTJ, JTr);
 
-                // Parameter
-                af::array nlls_deltlambda = af::matmul((af::matmul((af::inverse(af::matmul(nlls_J.T(), nlls_J))), nlls_J.T())), nlls_delty);
-
-                // Estimate
-                af_lambda = af_lambda + nlls_deltlambda;
-                af_lambda.host(lambda);
+                af_lambda += delta;
             }
+            // Output Lambda
+            af_lambda.host(lambda);
+            // af_print(af_lambda);
 
             // Compute frequency estimate
             af::array f_est_arr = f_pk + (af_lambda(1) / d_cap_length);
+            // af_print(f_est_arr);
 
-            // Extract scalar value from ArrayFire array
+            // Output frequency estimate
             f_est_arr.host(&f_est);
 
+            // Assign estimates to designated transmitted SDRs
             if (pmt::equal(src_val, PMT_HARMONIA_SDR1))
             {
-                GR_LOG_WARN(d_logger, "SDR1 Found");
                 d_sdr1_estimates.push_back(f_est);
             }
             else if (pmt::equal(src_val, PMT_HARMONIA_SDR2))
             {
-                GR_LOG_WARN(d_logger, "SDR2 Found");
                 d_sdr2_estimates.push_back(f_est);
             }
             else if (pmt::equal(src_val, PMT_HARMONIA_SDR3))
             {
-                GR_LOG_WARN(d_logger, "SDR3 Found");
                 d_sdr3_estimates.push_back(f_est);
             }
             else
@@ -216,8 +216,9 @@ namespace gr
                 GR_LOG_WARN(d_logger, "Unknown SDR source in metadata");
             }
 
-            auto to_pmt_f32 = [&](const std::vector<float>& v){
-                return pmt::init_f32vector(v.size(), const_cast<float*>(v.data()));
+            auto to_pmt_f32 = [&](const std::vector<float> &v)
+            {
+                return pmt::init_f32vector(v.size(), const_cast<float *>(v.data()));
             };
 
             // Wait for TDMA to fully finish before outputting all data
@@ -227,13 +228,9 @@ namespace gr
                 d_meta_f = pmt::dict_add(d_meta_f, PMT_HARMONIA_SDR2, to_pmt_f32(d_sdr2_estimates));
                 d_meta_f = pmt::dict_add(d_meta_f, PMT_HARMONIA_SDR3, to_pmt_f32(d_sdr3_estimates));
 
-                GR_LOG_WARN(d_logger, "TDMA done");
+                GR_LOG_INFO(d_logger, "TDMA done");
                 // Send the frequency estimates as a message with metadata
                 message_port_pub(d_f_out_port, d_meta_f);
-            }
-            else
-            {
-                GR_LOG_WARN(d_logger, "TDMA not done, unable to publish metadata");
             }
 
             // Reset the metadata output

@@ -16,7 +16,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0) */
 /* BINDTOOL_USE_PYGCCXML(0) */
 /* BINDTOOL_HEADER_FILE(time_pk_est.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(37b5000923f396db0ce8610814fa5f28) */
+/* BINDTOOL_HEADER_FILE_HASH(c389eaaa4947f4f0da7d9f98f5afa6d5) */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -45,9 +45,6 @@ void bind_time_pk_est(py::module &m) {
 
       .def("set_backend", &time_pk_est::set_backend, py::arg("arg0"),
            D(time_pk_est, set_backend))
-
-      .def("set_metadata_keys", &time_pk_est::set_metadata_keys,
-           D(time_pk_est, set_metadata_keys))
 
       ;
 }

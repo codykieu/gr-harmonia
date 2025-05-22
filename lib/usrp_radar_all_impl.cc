@@ -23,7 +23,8 @@ namespace gr
                                               const double sdr2_gain,
                                               const double start_delay,
                                               const double cap_length,
-                                              const double TDMA_time_slot,
+                                              const double wait_time,
+                                              const double TDMA_time,
                                               const bool verbose)
     {
       return gnuradio::make_block_sptr<usrp_radar_all_impl>(args_1,
@@ -36,7 +37,8 @@ namespace gr
                                                             sdr2_gain,
                                                             start_delay,
                                                             cap_length,
-                                                            TDMA_time_slot,
+                                                            wait_time,
+                                                            TDMA_time,
                                                             verbose);
     }
 
@@ -53,7 +55,8 @@ namespace gr
                                              const double sdr2_gain,
                                              const double start_delay,
                                              const double cap_length,
-                                             const double TDMA_time_slot,
+                                             const double wait_time,
+                                             const double TDMA_time,
                                              const bool verbose)
         : gr::block("usrp_radar_all",
                     gr::io_signature::make(0, 0, 0),
@@ -68,7 +71,8 @@ namespace gr
           sdr2_gain(sdr2_gain),
           start_delay(start_delay),
           cap_length(cap_length),
-          TDMA_time_slot(TDMA_time_slot),
+          wait_time(wait_time),
+          TDMA_time(TDMA_time),
           verbose(verbose)
     {
       // Additional parameters. I have the hooks in to make them configurable, but we don't
@@ -154,6 +158,30 @@ namespace gr
       }
     }
 
+    void usrp_radar_all_impl::transmit_all(
+        uhd::usrp::multi_usrp::sptr usrp,
+        uhd::tx_streamer::sptr tx_stream,
+        const std::vector<double> &times)
+    {
+      for (const auto &tx_time : times)
+      {
+        this->transmit_bursts(usrp, tx_stream, tx_time);
+      }
+    }
+
+    void usrp_radar_all_impl::receive_all(
+        uhd::usrp::multi_usrp::sptr usrp,
+        uhd::rx_streamer::sptr rx_stream,
+        const std::vector<double> &times,
+        const std::vector<int> &rx_tags,
+        const std::vector<bool> &final_flags)
+    {
+      for (size_t i = 0; i < times.size(); ++i)
+      {
+        this->receive(usrp, rx_stream, times[i], rx_tags[i], final_flags[i]);
+      }
+    }
+
     void usrp_radar_all_impl::run()
     {
       while (not new_msg_received)
@@ -201,38 +229,97 @@ namespace gr
       /***********************************************************************
        * Thread Implementations
        **********************************************************************/
-      std::cout << "USRP1 Time: " << usrp_1->get_time_now().get_real_secs() << std::endl;
-      std::cout << "USRP2 Time: " << usrp_2->get_time_now().get_real_secs() << std::endl;
+      // std::cout << "USRP1 Time: " << usrp_1->get_time_now().get_real_secs() << std::endl;
+      // std::cout << "USRP2 Time: " << usrp_2->get_time_now().get_real_secs() << std::endl;
 
-      double start_time_sdr1_tx = usrp_1->get_time_now().get_real_secs() + start_delay;
-      std::cout << "USRP1 TX ADJUST: " << start_time_sdr1_tx << std::endl;
-      double start_time_sdr2_rx = usrp_2->get_time_now().get_real_secs();
-      std::cout << "USRP2 RX ADJUST: " << start_time_sdr2_rx << std::endl;
+      double sdr1_begin = usrp_1->get_time_now().get_real_secs() + start_delay;
+      double sdr2_begin = usrp_2->get_time_now().get_real_secs() + start_delay;
 
-      double start_time_sdr1_rx = start_time_sdr1_tx + TDMA_time_slot + start_delay;
-      std::cout << "USRP1 RX ADJUST: " << start_time_sdr1_rx << std::endl;
-      double start_time_sdr2_tx = start_time_sdr2_rx + TDMA_time_slot + 0.005;
-      std::cout << "USRP2 TX ADJUST: " << start_time_sdr2_tx << std::endl;
+      double sdr1_tx1 = sdr1_begin + TDMA_time;
+      double sdr2_rx1 = sdr2_begin + TDMA_time - wait_time;
 
-      // Transmit and Receive Threads
-      tx1_thread = gr::thread::thread(
-          &usrp_radar_all_impl::transmit_bursts, this, usrp_1, tx1_stream, start_time_sdr1_tx);
+      double sdr1_rx1 = sdr1_begin + TDMA_time * 2 - wait_time;
+      double sdr2_tx1 = sdr2_begin + TDMA_time * 2;
 
-      rx2_thread =
-          gr::thread::thread(&usrp_radar_all_impl::receive, this, usrp_2, rx2_stream, start_time_sdr2_rx, 1, false);
+      double sdr1_tx2 = sdr1_begin + TDMA_time * 3;
+      double sdr2_rx2 = sdr2_begin + TDMA_time * 3 - wait_time;
 
-      // Transmit bursts
-      tx2_thread = gr::thread::thread(
-          &usrp_radar_all_impl::transmit_bursts, this, usrp_2, tx2_stream, start_time_sdr2_tx);
+      double sdr1_rx2 = sdr1_begin + TDMA_time * 4 - wait_time;
+      double sdr2_tx2 = sdr2_begin + TDMA_time * 4;
 
-      rx1_thread =
-          gr::thread::thread(&usrp_radar_all_impl::receive, this, usrp_1, rx1_stream, start_time_sdr1_rx, 2, true);
+      double sdr1_tx3 = sdr1_begin + TDMA_time * 5;
+      double sdr2_rx3 = sdr2_begin + TDMA_time * 5 - wait_time;
 
-      tx1_thread.join();
-      rx2_thread.join();
+      double sdr1_rx3 = sdr1_begin + TDMA_time * 6 - wait_time;
+      double sdr2_tx3 = sdr2_begin + TDMA_time * 6;
 
-      tx2_thread.join();
-      rx1_thread.join();
+      double sdr1_tx4 = sdr1_begin + TDMA_time * 6;
+      double sdr2_rx4 = sdr2_begin + TDMA_time * 6 - wait_time;
+
+      // std::cout << "[SDR1] Scheduled start at: " << sdr1_begin << std::endl;
+      // std::cout << "[SDR2] Scheduled start at: " << sdr2_begin << std::endl;
+
+      // std::cout << "[RX1] Scheduled RX at: " << sdr2_rx1 << std::endl;
+      // std::cout << "[TX1] Scheduled TX at: " << sdr1_tx1 << std::endl;
+
+      // std::cout << "[RX2] Scheduled RX at: " << sdr1_rx1 << std::endl;
+      // std::cout << "[TX2] Scheduled TX at: " << sdr2_tx1 << std::endl;
+
+      // std::cout << "[RX3] Scheduled RX at: " << sdr2_rx2 << std::endl;
+      // std::cout << "[TX3] Scheduled TX at: " << sdr1_tx2 << std::endl;
+
+      // std::cout << "[RX4] Scheduled RX at: " << sdr1_rx2 << std::endl;
+      // std::cout << "[TX4] Scheduled TX at: " << sdr2_tx2 << std::endl;
+
+      // std::cout << "[RX5] Scheduled RX at: " << sdr2_rx3 << std::endl;
+      // std::cout << "[TX5] Scheduled TX at: " << sdr1_tx3 << std::endl;
+
+      // std::cout << "[RX6] Scheduled RX at: " << sdr1_rx3 << std::endl;
+      // std::cout << "[TX6] Scheduled TX at: " << sdr2_tx3 << std::endl;
+
+      // std::cout << "[RX6 (True)] Scheduled RX at: " << sdr2_rx4 << std::endl;
+      // std::cout << "[TX6 (true)] Scheduled TX at: " << sdr1_tx4 << std::endl;
+
+      // Threads
+      std::vector<double> sdr1_tx_times = {sdr1_tx1, sdr1_tx2, sdr1_tx3, sdr1_tx4};
+      std::vector<double> sdr1_rx_times = {sdr1_rx1, sdr1_rx2};
+      std::vector<double> sdr2_tx_times = {sdr2_tx1, sdr2_tx2};
+      std::vector<double> sdr2_rx_times = {sdr2_rx1, sdr2_rx2, sdr2_rx3, sdr2_rx4};
+
+      std::vector<int> sdr1_rx_tags = {2, 2};
+      std::vector<int> sdr2_rx_tags = {1, 1, 3, 3};
+
+      std::vector<bool> sdr1_rx_final = {false, false};
+      std::vector<bool> sdr2_rx_final = {false, false, false, true};
+
+      sdr1_tx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::transmit_all, this, usrp_1, tx1_stream, sdr1_tx_times);
+
+      sdr1_rx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::receive_all,
+          this, usrp_1, rx1_stream, sdr1_rx_times, sdr1_rx_tags, sdr1_rx_final);
+
+      sdr2_tx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::transmit_all, this, usrp_2, tx2_stream, sdr2_tx_times);
+
+      sdr2_rx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::receive_all,
+          this, usrp_2, rx2_stream, sdr2_rx_times, sdr2_rx_tags, sdr2_rx_final);
+
+      sdr1_tx_thread.join();
+      sdr1_rx_thread.join();
+      sdr2_tx_thread.join();
+      sdr2_rx_thread.join();
+
+      // One Pulse Test
+      // // Transmit and Receive Threads
+      // tx1_thread = gr::thread::thread(
+      //     &usrp_radar_all_impl::transmit_bursts, this, usrp_1, tx1_stream, sdr1_tx1);
+
+      // rx2_thread =
+      //     gr::thread::thread(&usrp_radar_all_impl::receive, this, usrp_2, rx2_stream, sdr2_rx1, 1, true);
+      // tx1_thread.join();
+      // rx2_thread.join();
     }
 
     void usrp_radar_all_impl::config_usrp(uhd::usrp::multi_usrp::sptr &usrp_1,
@@ -285,8 +372,13 @@ namespace gr
       // std::cout << "USRP2 Time: " << usrp_2->get_time_now().get_real_secs() << std::endl;
 
       // Sets USRPs to start at time = 0.0
-      usrp_1->set_time_now(uhd::time_spec_t(0.0));
-      usrp_2->set_time_now(uhd::time_spec_t(0.0));
+      // usrp_1->set_time_now(uhd::time_spec_t(0.0));
+      // usrp_2->set_time_now(uhd::time_spec_t(0.0));
+
+      usrp_1->set_clock_source("external");
+      usrp_2->set_clock_source("external");
+      usrp_1->set_time_unknown_pps(uhd::time_spec_t(0.0));
+      usrp_2->set_time_unknown_pps(uhd::time_spec_t(0.0));
 
       // std::cout << "USRP1 Time Post: " << usrp_1->get_time_now().get_real_secs() << std::endl;
       // std::cout << "USRP2 Time Post: " << usrp_2->get_time_now().get_real_secs() << std::endl;
@@ -342,7 +434,7 @@ namespace gr
       gr_complex *rx_data_ptr = pmt::c32vector_writable_elements(rx_data_pmt, total_samps_to_rx);
 
       // Tells USRP to wait for incoming samples before giving up
-      double timeout = 0.1;
+      double timeout = 0.5;
 
       // Counts number of samples received until end of capture time
       while (samps_received < total_samps_to_rx)
@@ -352,8 +444,6 @@ namespace gr
 
         samps_received += num_rx;
       }
-
-      std::cout << "SDR ID: " << sdr_id << std::endl;
 
       if (pmt::length(this->meta) > 0)
       {
@@ -368,6 +458,11 @@ namespace gr
         {
           // GR_LOG_WARN(d_logger, "SDR ID: 2 Confirmed");
           this->meta = pmt::dict_add(this->meta, pmt::intern("src"), PMT_HARMONIA_SDR2);
+        }
+        else if (sdr_id == 3)
+        {
+          // GR_LOG_WARN(d_logger, "SDR ID: 2 Confirmed");
+          this->meta = pmt::dict_add(this->meta, pmt::intern("src"), PMT_HARMONIA_SDR3);
         }
       }
 
@@ -422,11 +517,12 @@ namespace gr
       }
 
       // Transmits waveform to UHD
-      double timeout = 0.1;
+      double timeout = 0.5;
       md.start_of_burst = true;
       md.end_of_burst = true;
       md.has_time_spec = true;
       md.time_spec = uhd::time_spec_t(start_time);
+      // std::cout << "[TX burst] Sending at " << start_time << std::endl;
       tx_stream->send(tx_buffs[0].data(), tx_buffs[0].size(), md, timeout);
     }
 

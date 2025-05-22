@@ -46,3 +46,5 @@ GR_ADD_TEST(qa_usrp_radar_rx ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa
 GR_ADD_TEST(qa_clock_drift_est ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_clock_drift_est.py)
 GR_ADD_TEST(qa_time_pk_est ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_time_pk_est.py)
 GR_ADD_TEST(qa_buffer_corrector ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_buffer_corrector.py)
+GR_ADD_TEST(qa_clockbias_phase_est ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_clockbias_phase_est.py)
+GR_ADD_TEST(qa_QPSK_demod ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_QPSK_demod.py)

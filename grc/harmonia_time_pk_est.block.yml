@@ -6,7 +6,7 @@ parameters:
 - id: nfft
   label: FFT Ratio
   dtype: int
-  default: "1024"
+  default: "4"
 - id: samp_rate
   label: Sample Rate
   dtype: float
@@ -48,14 +48,13 @@ inputs:
   domain: message
 
 outputs:
-- id: out
+- id: tp_out
   domain: message
 
 templates:
   imports: from gnuradio import harmonia
   make: |-
     harmonia.time_pk_est(${nfft}, ${samp_rate}, ${bandwidth}, ${NLLS_iter}, ${NLLS_pts})
-    self.${id}.set_metadata_keys()
     self.${id}.set_msg_queue_depth(${depth})
     self.${id}.set_backend(${backend})
 

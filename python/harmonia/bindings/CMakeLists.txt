@@ -36,6 +36,9 @@ list(APPEND harmonia_python_files
     clock_drift_est_python.cc
     time_pk_est_python.cc
     buffer_corrector_python.cc
+    clockbias_phase_est_python.cc
+    QPSK_mod_python.cc
+    QPSK_demod_python.cc
     python_bindings.cc
     )
 

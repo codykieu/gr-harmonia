@@ -34,7 +34,7 @@ public:
      * creating new instances.
      */
     static sptr make(size_t nfft, double pulse_width, double cap_length,
-        double samp_rate, double NLLS_iter, double NLLS_pts, bool enable_out);
+        double samp_rate, double NLLS_iter, bool enable_out);
 
     virtual void set_msg_queue_depth(size_t) = 0;
 

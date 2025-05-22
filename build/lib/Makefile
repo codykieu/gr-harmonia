@@ -255,6 +255,54 @@ harmonia_qa_device.cc_autogen/fast:
 	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/harmonia_qa_device.cc_autogen.dir/build.make lib/CMakeFiles/harmonia_qa_device.cc_autogen.dir/build
 .PHONY : harmonia_qa_device.cc_autogen/fast
 
+QPSK_demod_impl.o: QPSK_demod_impl.cc.o
+.PHONY : QPSK_demod_impl.o
+
+# target to build an object file
+QPSK_demod_impl.cc.o:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/QPSK_demod_impl.cc.o
+.PHONY : QPSK_demod_impl.cc.o
+
+QPSK_demod_impl.i: QPSK_demod_impl.cc.i
+.PHONY : QPSK_demod_impl.i
+
+# target to preprocess a source file
+QPSK_demod_impl.cc.i:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/QPSK_demod_impl.cc.i
+.PHONY : QPSK_demod_impl.cc.i
+
+QPSK_demod_impl.s: QPSK_demod_impl.cc.s
+.PHONY : QPSK_demod_impl.s
+
+# target to generate assembly for a file
+QPSK_demod_impl.cc.s:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/QPSK_demod_impl.cc.s
+.PHONY : QPSK_demod_impl.cc.s
+
+QPSK_mod_impl.o: QPSK_mod_impl.cc.o
+.PHONY : QPSK_mod_impl.o
+
+# target to build an object file
+QPSK_mod_impl.cc.o:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/QPSK_mod_impl.cc.o
+.PHONY : QPSK_mod_impl.cc.o
+
+QPSK_mod_impl.i: QPSK_mod_impl.cc.i
+.PHONY : QPSK_mod_impl.i
+
+# target to preprocess a source file
+QPSK_mod_impl.cc.i:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/QPSK_mod_impl.cc.i
+.PHONY : QPSK_mod_impl.cc.i
+
+QPSK_mod_impl.s: QPSK_mod_impl.cc.s
+.PHONY : QPSK_mod_impl.s
+
+# target to generate assembly for a file
+QPSK_mod_impl.cc.s:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/QPSK_mod_impl.cc.s
+.PHONY : QPSK_mod_impl.cc.s
+
 SDR_tagger_impl.o: SDR_tagger_impl.cc.o
 .PHONY : SDR_tagger_impl.o
 
@@ -326,6 +374,30 @@ clock_drift_est_impl.s: clock_drift_est_impl.cc.s
 clock_drift_est_impl.cc.s:
 	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/clock_drift_est_impl.cc.s
 .PHONY : clock_drift_est_impl.cc.s
+
+clockbias_phase_est_impl.o: clockbias_phase_est_impl.cc.o
+.PHONY : clockbias_phase_est_impl.o
+
+# target to build an object file
+clockbias_phase_est_impl.cc.o:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/clockbias_phase_est_impl.cc.o
+.PHONY : clockbias_phase_est_impl.cc.o
+
+clockbias_phase_est_impl.i: clockbias_phase_est_impl.cc.i
+.PHONY : clockbias_phase_est_impl.i
+
+# target to preprocess a source file
+clockbias_phase_est_impl.cc.i:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/clockbias_phase_est_impl.cc.i
+.PHONY : clockbias_phase_est_impl.cc.i
+
+clockbias_phase_est_impl.s: clockbias_phase_est_impl.cc.s
+.PHONY : clockbias_phase_est_impl.s
+
+# target to generate assembly for a file
+clockbias_phase_est_impl.cc.s:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/clockbias_phase_est_impl.cc.s
+.PHONY : clockbias_phase_est_impl.cc.s
 
 device.o: device.cc.o
 .PHONY : device.o
@@ -658,6 +730,12 @@ help:
 	@echo "... harmonia_qa_device.cc_autogen_timestamp_deps"
 	@echo "... gnuradio-harmonia"
 	@echo "... harmonia_qa_device.cc"
+	@echo "... QPSK_demod_impl.o"
+	@echo "... QPSK_demod_impl.i"
+	@echo "... QPSK_demod_impl.s"
+	@echo "... QPSK_mod_impl.o"
+	@echo "... QPSK_mod_impl.i"
+	@echo "... QPSK_mod_impl.s"
 	@echo "... SDR_tagger_impl.o"
 	@echo "... SDR_tagger_impl.i"
 	@echo "... SDR_tagger_impl.s"
@@ -667,6 +745,9 @@ help:
 	@echo "... clock_drift_est_impl.o"
 	@echo "... clock_drift_est_impl.i"
 	@echo "... clock_drift_est_impl.s"
+	@echo "... clockbias_phase_est_impl.o"
+	@echo "... clockbias_phase_est_impl.i"
+	@echo "... clockbias_phase_est_impl.s"
 	@echo "... device.o"
 	@echo "... device.i"
 	@echo "... device.s"

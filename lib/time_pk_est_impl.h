@@ -28,26 +28,29 @@ namespace gr
       double d_NLLS_pts;
 
       // Variables
-      size_t d_msg_queue_depth;
-      double t_est;
-      double rx_time;
       af::array d_match_filt;
       af::Backend d_backend;
+      size_t d_msg_queue_depth;
+      double t_est;
+      double p_est;
+      double rx_time;
+      std::vector<float> d_sdr1_time_est;
+      std::vector<float> d_sdr2_time_est;
+      std::vector<float> d_sdr3_time_est;
+      std::vector<float> d_sdr1_phase_est;
+      std::vector<float> d_sdr2_phase_est;
+      std::vector<float> d_sdr3_phase_est;
 
       // Message Ports
       pmt::pmt_t d_tx_port;
       pmt::pmt_t d_rx_port;
       pmt::pmt_t d_out_port;
+      pmt::pmt_t d_tp_out_port;
 
       // Metadata
       pmt::pmt_t d_meta;
       pmt::pmt_t d_data;
-      pmt::pmt_t d_meta_time;
-      pmt::pmt_t d_time_est_key;
-      pmt::pmt_t sdr1_dict;
-      pmt::pmt_t sdr2_dict;
-      pmt::pmt_t sdr3_dict;
-
+      pmt::pmt_t d_tp_meta;
       af::array sinc(const af::array &x);
 
       void handle_tx_msg(pmt::pmt_t);
@@ -59,7 +62,6 @@ namespace gr
 
       void set_msg_queue_depth(size_t) override;
       void set_backend(Device::Backend) override;
-      void set_metadata_keys() override;
     };
 
   } // namespace harmonia

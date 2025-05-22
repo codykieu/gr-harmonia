@@ -1,5 +1,5 @@
 id: harmonia_usrp_radar_rx
-label: USRP:RX USRP Radars
+label: UHD:RX USRP Radars
 category: '[harmonia]'
 
 parameters:

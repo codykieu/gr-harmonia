@@ -24,5 +24,8 @@ install(FILES
     usrp_radar_rx.h
     clock_drift_est.h
     time_pk_est.h
-    buffer_corrector.h DESTINATION include/gnuradio/harmonia
+    buffer_corrector.h
+    clockbias_phase_est.h
+    QPSK_mod.h
+    QPSK_demod.h DESTINATION include/gnuradio/harmonia
 )

@@ -227,6 +227,54 @@ harmonia_python_autogen/fast:
 	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python_autogen.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python_autogen.dir/build
 .PHONY : harmonia_python_autogen/fast
 
+QPSK_demod_python.o: QPSK_demod_python.cc.o
+.PHONY : QPSK_demod_python.o
+
+# target to build an object file
+QPSK_demod_python.cc.o:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.o
+.PHONY : QPSK_demod_python.cc.o
+
+QPSK_demod_python.i: QPSK_demod_python.cc.i
+.PHONY : QPSK_demod_python.i
+
+# target to preprocess a source file
+QPSK_demod_python.cc.i:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.i
+.PHONY : QPSK_demod_python.cc.i
+
+QPSK_demod_python.s: QPSK_demod_python.cc.s
+.PHONY : QPSK_demod_python.s
+
+# target to generate assembly for a file
+QPSK_demod_python.cc.s:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.s
+.PHONY : QPSK_demod_python.cc.s
+
+QPSK_mod_python.o: QPSK_mod_python.cc.o
+.PHONY : QPSK_mod_python.o
+
+# target to build an object file
+QPSK_mod_python.cc.o:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.o
+.PHONY : QPSK_mod_python.cc.o
+
+QPSK_mod_python.i: QPSK_mod_python.cc.i
+.PHONY : QPSK_mod_python.i
+
+# target to preprocess a source file
+QPSK_mod_python.cc.i:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.i
+.PHONY : QPSK_mod_python.cc.i
+
+QPSK_mod_python.s: QPSK_mod_python.cc.s
+.PHONY : QPSK_mod_python.s
+
+# target to generate assembly for a file
+QPSK_mod_python.cc.s:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.s
+.PHONY : QPSK_mod_python.cc.s
+
 SDR_tagger_python.o: SDR_tagger_python.cc.o
 .PHONY : SDR_tagger_python.o
 
@@ -298,6 +346,30 @@ clock_drift_est_python.s: clock_drift_est_python.cc.s
 clock_drift_est_python.cc.s:
 	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clock_drift_est_python.cc.s
 .PHONY : clock_drift_est_python.cc.s
+
+clockbias_phase_est_python.o: clockbias_phase_est_python.cc.o
+.PHONY : clockbias_phase_est_python.o
+
+# target to build an object file
+clockbias_phase_est_python.cc.o:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.o
+.PHONY : clockbias_phase_est_python.cc.o
+
+clockbias_phase_est_python.i: clockbias_phase_est_python.cc.i
+.PHONY : clockbias_phase_est_python.i
+
+# target to preprocess a source file
+clockbias_phase_est_python.cc.i:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.i
+.PHONY : clockbias_phase_est_python.cc.i
+
+clockbias_phase_est_python.s: clockbias_phase_est_python.cc.s
+.PHONY : clockbias_phase_est_python.s
+
+# target to generate assembly for a file
+clockbias_phase_est_python.cc.s:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.s
+.PHONY : clockbias_phase_est_python.cc.s
 
 device_python.o: device_python.cc.o
 .PHONY : device_python.o
@@ -604,6 +676,12 @@ help:
 	@echo "... harmonia_python_autogen"
 	@echo "... harmonia_python_autogen_timestamp_deps"
 	@echo "... harmonia_python"
+	@echo "... QPSK_demod_python.o"
+	@echo "... QPSK_demod_python.i"
+	@echo "... QPSK_demod_python.s"
+	@echo "... QPSK_mod_python.o"
+	@echo "... QPSK_mod_python.i"
+	@echo "... QPSK_mod_python.s"
 	@echo "... SDR_tagger_python.o"
 	@echo "... SDR_tagger_python.i"
 	@echo "... SDR_tagger_python.s"
@@ -613,6 +691,9 @@ help:
 	@echo "... clock_drift_est_python.o"
 	@echo "... clock_drift_est_python.i"
 	@echo "... clock_drift_est_python.s"
+	@echo "... clockbias_phase_est_python.o"
+	@echo "... clockbias_phase_est_python.i"
+	@echo "... clockbias_phase_est_python.s"
 	@echo "... device_python.o"
 	@echo "... device_python.i"
 	@echo "... device_python.s"
