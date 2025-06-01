@@ -37,7 +37,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: 750e-6
+    value: 600e-6
   states:
     bus_sink: false
     bus_source: false
@@ -49,7 +49,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: 200e-6
+    value: 300e-6
   states:
     bus_sink: false
     bus_source: false
@@ -61,7 +61,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '0'
+    value: 1e6
   states:
     bus_sink: false
     bus_source: false
@@ -73,7 +73,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: 1e9
+    value: 3e9
   states:
     bus_sink: false
     bus_source: false
@@ -91,6 +91,18 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [328, 80.0]
+    rotation: 0
+    state: enabled
+- name: run_id
+  id: variable
+  parameters:
+    comment: ''
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [392, 80.0]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -117,9 +129,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1192, 248.0]
+    coordinate: [1368, 328.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_message_debug_0_0
   id: blocks_message_debug
   parameters:
@@ -132,29 +144,13 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1456, 416.0]
-    rotation: 0
-    state: enabled
-- name: harmonia_buffer_corrector_0
-  id: harmonia_buffer_corrector
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    max_buffer_size: '1996'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [240, 256.0]
+    coordinate: [1088, 608.0]
     rotation: 0
     state: enabled
 - name: harmonia_clock_drift_est_0
   id: harmonia_clock_drift_est
   parameters:
-    SNR: '34'
+    SNR: '30'
     affinity: ''
     alias: ''
     baseband_freq: baseband_freq
@@ -170,13 +166,13 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1192, 388.0]
+    coordinate: [1088, 436.0]
     rotation: 0
     state: enabled
 - name: harmonia_frequency_pk_est_0
   id: harmonia_frequency_pk_est
   parameters:
-    NLLS_iter: '15'
+    NLLS_iter: '10'
     affinity: ''
     alias: ''
     backend: harmonia.Device.CPU
@@ -194,7 +190,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [864, 204.0]
+    coordinate: [824, 420.0]
     rotation: 0
     state: enabled
 - name: harmonia_single_tone_src_0
@@ -202,11 +198,13 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
+    center_freq: center_freq
     comment: ''
     duration_key: radar:duration
     frequency: baseband_freq
     frequency_key: radar:frequency
     label_key: core:label
+    max_buffer_size: '1996'
     maxoutbuf: '0'
     minoutbuf: '0'
     phase: '0'
@@ -216,17 +214,76 @@ blocks:
     pulse_width: Tp
     samp_rate: samp_rate
     sample_rate_key: core:sample_rate
+    sdr_id: '3'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [24, 232.0]
+    coordinate: [960, 164.0]
+    rotation: 0
+    state: enabled
+- name: harmonia_single_tone_src_0_0
+  id: harmonia_single_tone_src
+  parameters:
+    affinity: ''
+    alias: ''
+    center_freq: center_freq
+    comment: ''
+    duration_key: radar:duration
+    frequency: baseband_freq
+    frequency_key: radar:frequency
+    label_key: core:label
+    max_buffer_size: '1996'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    phase: '0'
+    phase_key: radar:phase
+    prf: prf
+    prf_key: radar:prf
+    pulse_width: Tp
+    samp_rate: samp_rate
+    sample_rate_key: core:sample_rate
+    sdr_id: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [232, 212.0]
+    rotation: 0
+    state: enabled
+- name: harmonia_single_tone_src_0_1
+  id: harmonia_single_tone_src
+  parameters:
+    affinity: ''
+    alias: ''
+    center_freq: center_freq
+    comment: ''
+    duration_key: radar:duration
+    frequency: baseband_freq
+    frequency_key: radar:frequency
+    label_key: core:label
+    max_buffer_size: '1996'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    phase: '0'
+    phase_key: radar:phase
+    prf: prf
+    prf_key: radar:prf
+    pulse_width: Tp
+    samp_rate: samp_rate
+    sample_rate_key: core:sample_rate
+    sdr_id: '2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [960, 4.0]
     rotation: 0
     state: enabled
 - name: harmonia_usrp_radar_all_0
   id: harmonia_usrp_radar_all
   parameters:
-    TDMA_time: 50e-3
+    TDMA_time: 100e-3
     affinity: ''
     alias: ''
     args_1: '"addr=192.168.60.2, use_dpkg=1"'
@@ -246,12 +303,12 @@ blocks:
     sdr2_gain: '0'
     start_delay: '0.001'
     verbose: 'False'
-    wait_time: Tc/2
+    wait_time: 200e-6
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [448, 172.0]
+    coordinate: [400, 404.0]
     rotation: 0
     state: enabled
 - name: plasma_pdu_file_sink_0
@@ -263,12 +320,12 @@ blocks:
     data_filename: /home/cody/gr-MATLAB/freq_pk_est_test
     meta_filename: /home/cody/gr-MATLAB/freq_pk_est_meta
     save_meta: 'True'
-    type: complex
+    type: float
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1192, 152.0]
+    coordinate: [1088, 344.0]
     rotation: 0
     state: enabled
 - name: plasma_pdu_file_sink_0_0
@@ -277,7 +334,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    data_filename: /home/cody/gr-MATLAB/TDMA_test
+    data_filename: /home/cody/gr-MATLAB/clock_drift_pre
     meta_filename: /home/cody/gr-MATLAB/TDMA_meta
     save_meta: 'True'
     type: complex
@@ -285,7 +342,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [880, 104.0]
+    coordinate: [824, 328.0]
     rotation: 0
     state: enabled
 - name: plasma_pdu_file_sink_0_0_0
@@ -302,314 +359,212 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [448, 104.0]
+    coordinate: [448, 184.0]
+    rotation: 0
+    state: disabled
+- name: plasma_pdu_file_sink_0_0_0_0
+  id: plasma_pdu_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    data_filename: /home/cody/gr-MATLAB/waverform2
+    meta_filename: /home/cody/gr-MATLAB/freq_pk_est_meta
+    save_meta: 'False'
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1168, 120.0]
+    rotation: 0
+    state: disabled
+- name: plasma_pdu_file_sink_0_0_0_0_0
+  id: plasma_pdu_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    data_filename: ''
+    meta_filename: f'/home/cody/gr-MATLAB/clock_drift_20khz/clock_drift_est{run_id}'
+    save_meta: 'True'
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1336, 560.0]
     rotation: 0
     state: enabled
-- name: qtgui_time_sink_x_0
-  id: qtgui_time_sink_x
+- name: plasma_pdu_file_sink_0_0_1
+  id: plasma_pdu_file_sink
   parameters:
     affinity: ''
     alias: ''
-    alpha1: '1.0'
-    alpha10: '1.0'
-    alpha2: '1.0'
-    alpha3: '1.0'
-    alpha4: '1.0'
-    alpha5: '1.0'
-    alpha6: '1.0'
-    alpha7: '1.0'
-    alpha8: '1.0'
-    alpha9: '1.0'
-    autoscale: 'False'
-    axislabels: 'True'
-    color1: blue
-    color10: dark blue
-    color2: red
-    color3: green
-    color4: black
-    color5: cyan
-    color6: magenta
-    color7: yellow
-    color8: dark red
-    color9: dark green
     comment: ''
-    ctrlpanel: 'False'
-    entags: 'True'
-    grid: 'False'
-    gui_hint: ''
-    label1: Signal 1
-    label10: Signal 10
-    label2: Signal 2
-    label3: Signal 3
-    label4: Signal 4
-    label5: Signal 5
-    label6: Signal 6
-    label7: Signal 7
-    label8: Signal 8
-    label9: Signal 9
-    legend: 'True'
-    marker1: '-1'
-    marker10: '-1'
-    marker2: '-1'
-    marker3: '-1'
-    marker4: '-1'
-    marker5: '-1'
-    marker6: '-1'
-    marker7: '-1'
-    marker8: '-1'
-    marker9: '-1'
-    name: '""'
-    nconnections: '1'
-    size: '1024'
-    srate: samp_rate
-    stemplot: 'False'
-    style1: '1'
-    style10: '1'
-    style2: '1'
-    style3: '1'
-    style4: '1'
-    style5: '1'
-    style6: '1'
-    style7: '1'
-    style8: '1'
-    style9: '1'
-    tr_chan: '0'
-    tr_delay: '0'
-    tr_level: '0.0'
-    tr_mode: qtgui.TRIG_MODE_FREE
-    tr_slope: qtgui.TRIG_SLOPE_POS
-    tr_tag: '""'
-    type: msg_complex
-    update_time: '0.10'
-    width1: '1'
-    width10: '1'
-    width2: '1'
-    width3: '1'
-    width4: '1'
-    width5: '1'
-    width6: '1'
-    width7: '1'
-    width8: '1'
-    width9: '1'
-    ylabel: Amplitude
-    ymax: '1'
-    ymin: '-1'
-    yunit: '""'
+    data_filename: /home/cody/gr-MATLAB/clock_drift_post
+    meta_filename: /home/cody/gr-MATLAB/TDMA_meta
+    save_meta: 'False'
+    type: complex
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 312.0]
+    coordinate: [824, 584.0]
     rotation: 0
-    state: disabled
-- name: qtgui_time_sink_x_0_1
-  id: qtgui_time_sink_x
+    state: enabled
+- name: virtual_sink_0
+  id: virtual_sink
   parameters:
-    affinity: ''
     alias: ''
-    alpha1: '1.0'
-    alpha10: '1.0'
-    alpha2: '1.0'
-    alpha3: '1.0'
-    alpha4: '1.0'
-    alpha5: '1.0'
-    alpha6: '1.0'
-    alpha7: '1.0'
-    alpha8: '1.0'
-    alpha9: '1.0'
-    autoscale: 'False'
-    axislabels: 'True'
-    color1: blue
-    color10: dark blue
-    color2: red
-    color3: green
-    color4: black
-    color5: cyan
-    color6: magenta
-    color7: yellow
-    color8: dark red
-    color9: dark green
     comment: ''
-    ctrlpanel: 'False'
-    entags: 'True'
-    grid: 'False'
-    gui_hint: ''
-    label1: Signal 1
-    label10: Signal 10
-    label2: Signal 2
-    label3: Signal 3
-    label4: Signal 4
-    label5: Signal 5
-    label6: Signal 6
-    label7: Signal 7
-    label8: Signal 8
-    label9: Signal 9
-    legend: 'True'
-    marker1: '-1'
-    marker10: '-1'
-    marker2: '-1'
-    marker3: '-1'
-    marker4: '-1'
-    marker5: '-1'
-    marker6: '-1'
-    marker7: '-1'
-    marker8: '-1'
-    marker9: '-1'
-    name: '""'
-    nconnections: '1'
-    size: '1024'
-    srate: samp_rate
-    stemplot: 'False'
-    style1: '1'
-    style10: '1'
-    style2: '1'
-    style3: '1'
-    style4: '1'
-    style5: '1'
-    style6: '1'
-    style7: '1'
-    style8: '1'
-    style9: '1'
-    tr_chan: '0'
-    tr_delay: '0'
-    tr_level: '0.0'
-    tr_mode: qtgui.TRIG_MODE_FREE
-    tr_slope: qtgui.TRIG_SLOPE_POS
-    tr_tag: '""'
-    type: msg_complex
-    update_time: '0.10'
-    width1: '1'
-    width10: '1'
-    width2: '1'
-    width3: '1'
-    width4: '1'
-    width5: '1'
-    width6: '1'
-    width7: '1'
-    width8: '1'
-    width9: '1'
-    ylabel: Amplitude
-    ymax: '1'
-    ymin: '-1'
-    yunit: '""'
+    stream_id: clock_est
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [864, 376.0]
+    coordinate: [1328, 488.0]
     rotation: 0
-    state: disabled
-- name: qtgui_time_sink_x_0_1_0
-  id: qtgui_time_sink_x
+    state: enabled
+- name: virtual_sink_0_0
+  id: virtual_sink
   parameters:
-    affinity: ''
     alias: ''
-    alpha1: '1.0'
-    alpha10: '1.0'
-    alpha2: '1.0'
-    alpha3: '1.0'
-    alpha4: '1.0'
-    alpha5: '1.0'
-    alpha6: '1.0'
-    alpha7: '1.0'
-    alpha8: '1.0'
-    alpha9: '1.0'
-    autoscale: 'False'
-    axislabels: 'True'
-    color1: blue
-    color10: dark blue
-    color2: red
-    color3: green
-    color4: black
-    color5: cyan
-    color6: magenta
-    color7: yellow
-    color8: dark red
-    color9: dark green
     comment: ''
-    ctrlpanel: 'False'
-    entags: 'True'
-    grid: 'False'
-    gui_hint: ''
-    label1: Signal 1
-    label10: Signal 10
-    label2: Signal 2
-    label3: Signal 3
-    label4: Signal 4
-    label5: Signal 5
-    label6: Signal 6
-    label7: Signal 7
-    label8: Signal 8
-    label9: Signal 9
-    legend: 'True'
-    marker1: '-1'
-    marker10: '-1'
-    marker2: '-1'
-    marker3: '-1'
-    marker4: '-1'
-    marker5: '-1'
-    marker6: '-1'
-    marker7: '-1'
-    marker8: '-1'
-    marker9: '-1'
-    name: '""'
-    nconnections: '1'
-    size: '1024'
-    srate: samp_rate
-    stemplot: 'False'
-    style1: '1'
-    style10: '1'
-    style2: '1'
-    style3: '1'
-    style4: '1'
-    style5: '1'
-    style6: '1'
-    style7: '1'
-    style8: '1'
-    style9: '1'
-    tr_chan: '0'
-    tr_delay: '0'
-    tr_level: '0.0'
-    tr_mode: qtgui.TRIG_MODE_FREE
-    tr_slope: qtgui.TRIG_SLOPE_POS
-    tr_tag: '""'
-    type: msg_float
-    update_time: '0.10'
-    width1: '1'
-    width10: '1'
-    width2: '1'
-    width3: '1'
-    width4: '1'
-    width5: '1'
-    width6: '1'
-    width7: '1'
-    width8: '1'
-    width9: '1'
-    ylabel: Amplitude
-    ymax: '1'
-    ymin: '-1'
-    yunit: '""'
+    stream_id: sdr1_wav
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1192, 72.0]
+    coordinate: [448, 264.0]
     rotation: 0
-    state: disabled
+    state: enabled
+- name: virtual_sink_0_0_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: sdr2_wav
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1168, 56.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_0_0_1
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: sdr3_wav
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1168, 216.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_0_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: clock_est
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40, 264.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_0_1
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: clock_est
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 56.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_0_2
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: clock_est
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 216.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_0_3
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: sdr1_wav
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [192, 456.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_0_3_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: sdr3_wav
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [192, 520.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_0_3_1
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: sdr2_wav
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40, 488.0]
+    rotation: 0
+    state: enabled
 
 connections:
-- [harmonia_buffer_corrector_0, out, harmonia_usrp_radar_all_0, in]
-- [harmonia_buffer_corrector_0, out, plasma_pdu_file_sink_0_0_0, in]
-- [harmonia_clock_drift_est_0, out, blocks_message_debug_0_0, print]
-- [harmonia_frequency_pk_est_0, f_out, blocks_message_debug_0, print]
+- [harmonia_clock_drift_est_0, out, blocks_message_debug_0, print]
+- [harmonia_clock_drift_est_0, out, plasma_pdu_file_sink_0_0_0_0_0, in]
+- [harmonia_clock_drift_est_0, out, virtual_sink_0, '0']
+- [harmonia_frequency_pk_est_0, f_out, blocks_message_debug_0_0, print]
 - [harmonia_frequency_pk_est_0, f_out, harmonia_clock_drift_est_0, in]
 - [harmonia_frequency_pk_est_0, out, plasma_pdu_file_sink_0, in]
-- [harmonia_frequency_pk_est_0, out, qtgui_time_sink_x_0_1_0, in]
-- [harmonia_single_tone_src_0, out, harmonia_buffer_corrector_0, in]
-- [harmonia_single_tone_src_0, out, qtgui_time_sink_x_0, in]
+- [harmonia_single_tone_src_0, out, virtual_sink_0_0_1, '0']
+- [harmonia_single_tone_src_0_0, out, plasma_pdu_file_sink_0_0_0, in]
+- [harmonia_single_tone_src_0_0, out, virtual_sink_0_0, '0']
+- [harmonia_single_tone_src_0_1, out, plasma_pdu_file_sink_0_0_0_0, in]
+- [harmonia_single_tone_src_0_1, out, virtual_sink_0_0_0, '0']
 - [harmonia_usrp_radar_all_0, out, harmonia_frequency_pk_est_0, in]
 - [harmonia_usrp_radar_all_0, out, plasma_pdu_file_sink_0_0, in]
-- [harmonia_usrp_radar_all_0, out, qtgui_time_sink_x_0_1, in]
+- [harmonia_usrp_radar_all_0, out2, plasma_pdu_file_sink_0_0_1, in]
+- [virtual_source_0_0, '0', harmonia_single_tone_src_0_0, in]
+- [virtual_source_0_1, '0', harmonia_single_tone_src_0_1, in]
+- [virtual_source_0_2, '0', harmonia_single_tone_src_0, in]
+- [virtual_source_0_3, '0', harmonia_usrp_radar_all_0, in]
+- [virtual_source_0_3_0, '0', harmonia_usrp_radar_all_0, in3]
+- [virtual_source_0_3_1, '0', harmonia_usrp_radar_all_0, in2]
 
 metadata:
   file_format: 1

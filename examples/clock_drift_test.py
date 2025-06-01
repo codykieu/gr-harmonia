@@ -64,44 +64,52 @@ class clock_drift_test(gr.top_block, Qt.QWidget):
         # Variables
         ##################################################
         self.samp_rate = samp_rate = 100e6
+        self.run_id = run_id = 0
         self.prf = prf = 0
-        self.center_freq = center_freq = 1e9
-        self.baseband_freq = baseband_freq = 0
-        self.Tp = Tp = 200e-6
-        self.Tc = Tc = 750e-6
+        self.center_freq = center_freq = 3e9
+        self.baseband_freq = baseband_freq = 1e6
+        self.Tp = Tp = 300e-6
+        self.Tc = Tc = 600e-6
 
         ##################################################
         # Blocks
         ##################################################
 
-        self.plasma_pdu_file_sink_0_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/waverform', '/home/cody/gr-MATLAB/freq_pk_est_meta')
-        self.plasma_pdu_file_sink_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/TDMA_test', '/home/cody/gr-MATLAB/TDMA_meta')
-        self.plasma_pdu_file_sink_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/freq_pk_est_test', '/home/cody/gr-MATLAB/freq_pk_est_meta')
-        self.harmonia_usrp_radar_all_0 = harmonia.usrp_radar_all("addr=192.168.60.2, use_dpkg=1", "addr=192.168.80.2, use_dpkg=1", samp_rate, samp_rate, center_freq, center_freq, 0, 0, 0.001, Tc, Tc/2, 50e-3, False)
+        self.plasma_pdu_file_sink_0_0_1 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/clock_drift_post', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.plasma_pdu_file_sink_0_0_0_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'', f'/home/cody/gr-MATLAB/clock_drift_20khz/clock_drift_est{run_id}')
+        self.plasma_pdu_file_sink_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/clock_drift_pre', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.plasma_pdu_file_sink_0 = plasma.pdu_file_sink(gr.sizeof_float,'/home/cody/gr-MATLAB/freq_pk_est_test', '/home/cody/gr-MATLAB/freq_pk_est_meta')
+        self.harmonia_usrp_radar_all_0 = harmonia.usrp_radar_all("addr=192.168.60.2, use_dpkg=1", "addr=192.168.80.2, use_dpkg=1", samp_rate, samp_rate, center_freq, center_freq, 0, 0, 0.001, Tc, 200e-6, 100e-3, False)
         self.harmonia_usrp_radar_all_0.set_metadata_keys('core:tx_freq', 'core:rx_freq', 'core:sample_start', 'radar:prf')
-        self.harmonia_single_tone_src_0 = harmonia.single_tone_src(baseband_freq, 0, Tp, samp_rate, prf)
+        self.harmonia_single_tone_src_0_1 = harmonia.single_tone_src(baseband_freq, center_freq, 0, Tp, samp_rate, prf, 1996, 2)
+        self.harmonia_single_tone_src_0_1.init_meta_dict('radar:frequency', 'radar:phase', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
+        self.harmonia_single_tone_src_0_0 = harmonia.single_tone_src(baseband_freq, center_freq, 0, Tp, samp_rate, prf, 1996, 1)
+        self.harmonia_single_tone_src_0_0.init_meta_dict('radar:frequency', 'radar:phase', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
+        self.harmonia_single_tone_src_0 = harmonia.single_tone_src(baseband_freq, center_freq, 0, Tp, samp_rate, prf, 1996, 3)
         self.harmonia_single_tone_src_0.init_meta_dict('radar:frequency', 'radar:phase', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
-        self.harmonia_frequency_pk_est_0 = harmonia.frequency_pk_est(12, Tp, Tc, samp_rate, 15, True)
+        self.harmonia_frequency_pk_est_0 = harmonia.frequency_pk_est(12, Tp, Tc, samp_rate, 10, True)
         self.harmonia_frequency_pk_est_0.set_msg_queue_depth(1)
         self.harmonia_frequency_pk_est_0.set_backend(harmonia.Device.CPU)
-        self.harmonia_clock_drift_est_0 = harmonia.clock_drift_est(3, 1, baseband_freq, center_freq, samp_rate, Tp, 34)
-        self.harmonia_buffer_corrector_0 = harmonia.buffer_corrector(1996)
+        self.harmonia_clock_drift_est_0 = harmonia.clock_drift_est(3, 1, baseband_freq, center_freq, samp_rate, Tp, 30)
         self.blocks_message_debug_0_0 = blocks.message_debug(True, gr.log_levels.info)
-        self.blocks_message_debug_0 = blocks.message_debug(True, gr.log_levels.info)
 
 
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.harmonia_buffer_corrector_0, 'out'), (self.harmonia_usrp_radar_all_0, 'in'))
-        self.msg_connect((self.harmonia_buffer_corrector_0, 'out'), (self.plasma_pdu_file_sink_0_0_0, 'in'))
-        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.blocks_message_debug_0_0, 'print'))
-        self.msg_connect((self.harmonia_frequency_pk_est_0, 'f_out'), (self.blocks_message_debug_0, 'print'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_single_tone_src_0, 'in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_single_tone_src_0_0, 'in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_single_tone_src_0_1, 'in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.plasma_pdu_file_sink_0_0_0_0_0, 'in'))
+        self.msg_connect((self.harmonia_frequency_pk_est_0, 'f_out'), (self.blocks_message_debug_0_0, 'print'))
         self.msg_connect((self.harmonia_frequency_pk_est_0, 'f_out'), (self.harmonia_clock_drift_est_0, 'in'))
         self.msg_connect((self.harmonia_frequency_pk_est_0, 'out'), (self.plasma_pdu_file_sink_0, 'in'))
-        self.msg_connect((self.harmonia_single_tone_src_0, 'out'), (self.harmonia_buffer_corrector_0, 'in'))
+        self.msg_connect((self.harmonia_single_tone_src_0, 'out'), (self.harmonia_usrp_radar_all_0, 'in3'))
+        self.msg_connect((self.harmonia_single_tone_src_0_0, 'out'), (self.harmonia_usrp_radar_all_0, 'in'))
+        self.msg_connect((self.harmonia_single_tone_src_0_1, 'out'), (self.harmonia_usrp_radar_all_0, 'in2'))
         self.msg_connect((self.harmonia_usrp_radar_all_0, 'out'), (self.harmonia_frequency_pk_est_0, 'in'))
         self.msg_connect((self.harmonia_usrp_radar_all_0, 'out'), (self.plasma_pdu_file_sink_0_0, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'out2'), (self.plasma_pdu_file_sink_0_0_1, 'in'))
 
 
     def closeEvent(self, event):
@@ -117,6 +125,12 @@ class clock_drift_test(gr.top_block, Qt.QWidget):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
+
+    def get_run_id(self):
+        return self.run_id
+
+    def set_run_id(self, run_id):
+        self.run_id = run_id
 
     def get_prf(self):
         return self.prf

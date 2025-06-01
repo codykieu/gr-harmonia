@@ -32,7 +32,7 @@ public:
    * creating new instances.
    */
   static sptr
-  make(double frequency, double phase, double pulse_width, double samp_rate, double prf);
+  make(double frequency, double center_freq, double phase, double pulse_width, double samp_rate, double prf, int max_buffer_size, int sdr_id);
 
   /**
    * @brief Set the metadata keys in the PDU output

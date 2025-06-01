@@ -4,7 +4,10 @@
 
 // GNU-radio specific
 static const pmt::pmt_t PMT_HARMONIA_IN = pmt::intern("in");
+static const pmt::pmt_t PMT_HARMONIA_IN2 = pmt::intern("in2");
+static const pmt::pmt_t PMT_HARMONIA_IN3 = pmt::intern("in3");
 static const pmt::pmt_t PMT_HARMONIA_OUT = pmt::intern("out");
+static const pmt::pmt_t PMT_HARMONIA_OUT2 = pmt::intern("out2");
 static const pmt::pmt_t PMT_HARMONIA_TX = pmt::intern("tx");
 static const pmt::pmt_t PMT_HARMONIA_RX = pmt::intern("rx");
 static const pmt::pmt_t PMT_HARMONIA_PDU = pmt::intern("pdu");
@@ -42,5 +45,6 @@ static const pmt::pmt_t PMT_HARMONIA_SDR3 = pmt::intern("sdr3");
 static const pmt::pmt_t PMT_HARMONIA_P_SDR1 = pmt::intern("phase_sdr1");
 static const pmt::pmt_t PMT_HARMONIA_P_SDR2 = pmt::intern("phase_sdr2");
 static const pmt::pmt_t PMT_HARMONIA_P_SDR3 = pmt::intern("phase_sdr3");
+static const pmt::pmt_t PMT_HARMONIA_CD_IN = pmt::intern("cd_in");
 
 #endif /* PMT_HARMONIA_CONSTANTS */

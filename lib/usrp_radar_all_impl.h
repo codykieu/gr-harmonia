@@ -18,6 +18,10 @@
 #include <boost/thread/thread.hpp>
 #include <fstream>
 #include <queue>
+#include <thread>
+#include <chrono>
+#include <sstream>
+#include <iomanip>
 
 namespace gr
 {
@@ -43,9 +47,27 @@ namespace gr
       std::string sdr1_cpu_format, sdr2_cpu_format;
       std::string sdr1_otw_format, sdr2_otw_format;
       double prf;
-
       bool verbose;
       size_t n_delay;
+
+      // Clock Drift Params
+      bool clock_drift_enabled = false;
+      bool cd_run_executed = false;
+      std::vector<double> sdr1_tx_times_drift;
+      std::vector<double> sdr2_rx_times_drift;
+      std::vector<int> sdr2_rx_tags_drift;
+      std::vector<bool> sdr2_rx_final_drift;
+      double cd1_est, cd2_est, cd3_est;
+      double alpha;
+      bool cd1_ready = false;
+      bool cd2_ready = false;
+      bool cd3_ready = false;
+      bool waveform1_ready = false;
+      bool waveform2_ready = false;
+      bool waveform3_ready = false;
+      pmt::pmt_t updated_data1 = pmt::PMT_NIL;
+      pmt::pmt_t updated_data2 = pmt::PMT_NIL;
+      pmt::pmt_t updated_data3 = pmt::PMT_NIL;
 
       // Implementation params
       gr::thread::thread main_thread;
@@ -58,10 +80,24 @@ namespace gr
       gr::thread::thread sdr2_tx_thread;
       gr::thread::thread sdr1_rx_thread;
       gr::thread::thread sdr2_rx_thread;
+      gr::thread::thread cd_sdr1_tx_thread;
+      gr::thread::thread cd_sdr2_tx_thread;
+      gr::thread::thread cd_sdr1_rx_thread;
+      gr::thread::thread cd_sdr2_rx_thread;
+
+      pmt::pmt_t tx_data_sdr1;
+      pmt::pmt_t tx_data_sdr2;
+      pmt::pmt_t tx_data_sdr3;
+
+      pmt::pmt_t meta_sdr1;
+      pmt::pmt_t meta_sdr2;
+      pmt::pmt_t meta_sdr3;
 
       std::vector<std::vector<gr_complex>> tx_buffs;
       std::atomic<bool> finished;
       std::atomic<bool> new_msg_received;
+      std::atomic<bool> new_msg_received_sdr1, new_msg_received_sdr2, new_msg_received_sdr3;
+
       size_t tx_buff_size, rx_buff_size;
       size_t n_tx_total;
 
@@ -75,7 +111,6 @@ namespace gr
       std::string prf_key;
 
     private:
-      void handle_msg(pmt::pmt_t msg);
       void config_usrp(uhd::usrp::multi_usrp::sptr &usrp_1,
                        uhd::usrp::multi_usrp::sptr &usrp_2,
                        const std::string &args_1,
@@ -94,15 +129,22 @@ namespace gr
                    double start_time, int sdr_id, bool TDMA_done);
       void transmit_bursts(uhd::usrp::multi_usrp::sptr usrp_tx,
                            uhd::tx_streamer::sptr tx_stream,
-                           double start_time);
+                           double start_time, int sdr_id);
       void set_metadata_keys(const std::string &sdr1_freq_key,
                              const std::string &sdr2_freq_key,
                              const std::string &sample_start_key,
                              const std::string &prf_key);
+      void setup_streamers(
+          uhd::rx_streamer::sptr &rx1_stream,
+          uhd::rx_streamer::sptr &rx2_stream,
+          uhd::tx_streamer::sptr &tx1_stream,
+          uhd::tx_streamer::sptr &tx2_stream);
+
       void transmit_all(
           uhd::usrp::multi_usrp::sptr usrp,
           uhd::tx_streamer::sptr tx_stream,
-          const std::vector<double> &times);
+          const std::vector<double> &times,
+          int sdr_id);
       void receive_all(
           uhd::usrp::multi_usrp::sptr usrp,
           uhd::rx_streamer::sptr rx_stream,
@@ -126,9 +168,11 @@ namespace gr
                           const bool verbose);
       ~usrp_radar_all_impl();
       void run();
+      void check_cd_ready();
+      void cd_run();
       bool start() override;
       bool stop() override;
-      void handle_message(const pmt::pmt_t &msg);
+      void handle_message(const pmt::pmt_t &msg, int sdr_id);
     };
 
   } // namespace harmonia

@@ -49,10 +49,6 @@ namespace gr
 
     void clock_drift_est_impl::handle_msg(pmt::pmt_t msg)
     {
-      // auto now = std::chrono::high_resolution_clock::now();
-      // double now_sec = std::chrono::duration<double>(now.time_since_epoch()).count();
-      // std::cout << std::fixed << std::setprecision(15); // 15 decimal places
-
       // Ensure message is a dictionary
       if (!pmt::is_dict(msg))
       {
@@ -130,12 +126,12 @@ namespace gr
         }
       }
 
-      // Matrix for Linear System of Equations 
+      // Matrix for Linear System of Equations
       af::dim4 dims(A_est.size(), num_platforms);
       A_mat = af::array(dims, flat.data(), afHost); // afHost tells AF it's a host pointer
       af::array y = af::join(0, af::constant(0.0, A_est.size() - 1, f64), af::constant(1.0, 1, f64));
 
-      // Compute variance 
+      // Compute variance
       double var_f = 3 / (2 * std::pow(af::Pi, 2.0) * std::pow(pulse_width, 3.0) * samp_rate *
                           std::pow(10.0, SNR / 10.0) * (1.0 - std::pow(1.0 / (pulse_width * samp_rate), 2.0)));
 
@@ -146,7 +142,7 @@ namespace gr
       af::array Cov_mat = af::diag(diag_vals, 0, false);
       af::array inv_Cov_mat = af::inverse(Cov_mat);
 
-      // Solve Weighted Least Sqares 
+      // Solve Weighted Least Sqares
       af::array At_Cinv = af::matmulTN(A_mat, inv_Cov_mat);
       af::array lhs = af::matmul(At_Cinv, A_mat);
       af::array rhs = af::matmul(At_Cinv, y);
@@ -155,7 +151,7 @@ namespace gr
       // Output estimates
       std::vector<double> x_host(x_alpha.elements());
       x_alpha.host(x_host.data());
-      
+
       // Print estimates
       std::cout << "x_alpha (Hz):" << std::endl;
       for (double val : x_host)
@@ -165,12 +161,11 @@ namespace gr
       meta = pmt::dict_add(meta, PMT_HARMONIA_SDR1, pmt::from_double(x_host[0]));
       meta = pmt::dict_add(meta, PMT_HARMONIA_SDR2, pmt::from_double(x_host[1]));
       meta = pmt::dict_add(meta, PMT_HARMONIA_SDR3, pmt::from_double(x_host[2]));
-
+      meta = pmt::dict_add(meta, pmt::intern("clock_drift_enable"), pmt::PMT_T);
       // Export message
       message_port_pub(out_port, meta);
-      // auto now2 = std::chrono::high_resolution_clock::now();
-      // double now_sec2 = std::chrono::duration<double>(now2.time_since_epoch()).count();
-      // std::cout << "[INFO] Process Time: " << (now_sec2- now_sec) << " seconds" << std::endl;
+      // pmt::pmt_t empty_vec = pmt::make_u8vector(0, 0);
+      // message_port_pub(out_port, pmt::cons(meta, empty_vec));
     }
 
   } /* namespace harmonia */

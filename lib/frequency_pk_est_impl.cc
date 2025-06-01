@@ -100,7 +100,7 @@ namespace gr
 
             // Check which SDR TX the signal
             pmt::pmt_t src_val = pmt::dict_ref(d_meta, pmt::intern("src"), pmt::PMT_NIL);
-            std::cout << "[SDR ID]: " << pmt::write_string(src_val) << std::endl;
+            // std::cout << "[SDR ID]: " << pmt::write_string(src_val) << std::endl;
             pmt::pmt_t TDMA_val = pmt::dict_ref(d_meta, pmt::intern("TDMA_Done"), pmt::PMT_NIL);
 
             // Retrieves length of samples
@@ -114,7 +114,7 @@ namespace gr
             af::array af_input = af::array(n, reinterpret_cast<const af::cfloat *>(in_data));
 
             // FFT
-            af::array af_fft = af::fft(af_input, NFFT);
+            af::array af_fft = af::fftNorm(af_input, 1.0, NFFT);
 
             // FFTshift to zero
             af_fft = ::plasma::fftshift(af_fft, 0);
@@ -137,9 +137,16 @@ namespace gr
             unsigned max_idx;
             af::max(&max_fft, &max_idx, af_abs_fft);
 
-            // Calculate frequency at peak
-            double f_pk = -d_samp_rate / 2 + double(max_idx) * d_samp_rate / double(NFFT);
-            GR_LOG_INFO(d_logger, "Frequency Peak: " + std::to_string(f_pk));
+            // // Calculate frequency at peak
+            // double f_pk = -d_samp_rate / 2 + double(max_idx) * d_samp_rate / double(NFFT);
+            // GR_LOG_INFO(d_logger, "Frequency Peak: " + std::to_string(f_pk));
+
+            // Generate frequency axis
+            af::array f_axis =
+                (-d_samp_rate / 2.0) + ((af::seq(0, NFFT - 1)) * (d_samp_rate / (NFFT)));
+
+            af::array f_pk = f_axis(max_idx); // Get the value at max_idx as an af::array
+            af_print(f_pk);
 
             // ----------------- Sinc-NLLS -----------------
             // Create lambda array
@@ -147,7 +154,7 @@ namespace gr
             af::array af_lambda(3, lambda, afHost);
 
             // Making Index for NLLS
-            double NLLS_pts = std::ceil(NFFT * 2.0 * d_pulse_width / d_cap_length) - 1.0;
+            double NLLS_pts = std::ceil(d_fftsize * 2.0 * d_pulse_width / d_cap_length) - 1.0;
             // GR_LOG_INFO(d_logger, "NLLS Points: " + std::to_string(NLLS_pts));
             af::array nlls_ind = af::seq(0.0, NLLS_pts - 1.0);
             nlls_ind = nlls_ind - af::median(nlls_ind);

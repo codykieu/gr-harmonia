@@ -85,9 +85,18 @@ inputs:
   - id: in
     domain: message
     optional: true
+  - id: in2
+    domain: message
+    optional: true
+  - id: in3
+    domain: message
+    optional: true
 
 outputs:
   - id: out
+    domain: message
+    optional: true
+  - id: out2
     domain: message
     optional: true
 

@@ -28,14 +28,18 @@ namespace gr
 
       // Waveform parameters
       double frequency;
+      double center_freq;
       double phase;
       double pulse_width;
       double samp_rate;
       double prf;
+      int max_buffer_size;
+      int sdr_id;
 
       // Waveform object and IQ data
       pmt::pmt_t d_data;
-
+      double alpha_hat;
+      
       // Metadata fields
       pmt::pmt_t label_key;
       pmt::pmt_t sample_rate_key;
@@ -46,23 +50,27 @@ namespace gr
       pmt::pmt_t meta;
 
       void handle_msg(pmt::pmt_t msg);
+      void buffer_corrector(std::vector<gr_complex> &vec);
 
     public:
       single_tone_src_impl(double frequency,
+        double center_freq,
                            double phase,
                            double pulse_width,
                            double samp_rate,
-                           double prf);
+                           double prf,
+                           int max_buffer_size,
+                           int sdr_id);
       ~single_tone_src_impl();
 
       bool start() override;
 
-      void init_meta_dict(const std::string& frequency_key,
-                          const std::string& phase_key,
-                          const std::string& duration_key,
-                          const std::string& sample_rate_key,
-                          const std::string& label_key,
-                          const std::string& prf_key);
+      void init_meta_dict(const std::string &frequency_key,
+                          const std::string &phase_key,
+                          const std::string &duration_key,
+                          const std::string &sample_rate_key,
+                          const std::string &label_key,
+                          const std::string &prf_key);
     };
 
   } // namespace harmonia

@@ -88,7 +88,6 @@ namespace gr
       this->tx_buffs = std::vector<std::vector<gr_complex>>(sdr1_channel_nums.size());
 
       this->n_tx_total = 0;
-      this->new_msg_received = false;
       this->meta = pmt::make_dict();
 
       config_usrp(this->usrp_1,
@@ -108,9 +107,28 @@ namespace gr
       n_delay = 0;
 
       message_port_register_in(PMT_HARMONIA_IN);
+      message_port_register_in(PMT_HARMONIA_IN2);
+      message_port_register_in(PMT_HARMONIA_IN3);
       message_port_register_out(PMT_HARMONIA_OUT);
+      message_port_register_out(PMT_HARMONIA_OUT2);
+
+      message_port_register_in(PMT_HARMONIA_IN);
       set_msg_handler(PMT_HARMONIA_IN, [this](pmt::pmt_t msg)
-                      { this->handle_message(msg); });
+                      {
+                        this->handle_message(msg, 1); // SDR1
+                      });
+
+      message_port_register_in(PMT_HARMONIA_IN2);
+      set_msg_handler(PMT_HARMONIA_IN2, [this](pmt::pmt_t msg)
+                      {
+                        this->handle_message(msg, 2); // SDR2
+                      });
+
+      message_port_register_in(PMT_HARMONIA_IN3);
+      set_msg_handler(PMT_HARMONIA_IN3, [this](pmt::pmt_t msg)
+                      {
+                        this->handle_message(msg, 3); // SDR3
+                      });
     }
 
     /*
@@ -131,41 +149,121 @@ namespace gr
       return block::stop();
     }
 
-    void usrp_radar_all_impl::handle_message(const pmt::pmt_t &msg)
+    void usrp_radar_all_impl::handle_message(const pmt::pmt_t &msg, int sdr_id)
     {
-      if (pmt::is_pdu(msg))
+      if (!pmt::is_pair(msg))
+        return;
+
+      pmt::pmt_t meta = pmt::car(msg);
+      pmt::pmt_t data = pmt::cdr(msg);
+
+      switch (sdr_id)
       {
-        meta = pmt::dict_update(meta, pmt::car(msg));
-        tx_data = pmt::cdr(msg);
-        tx_buff_size = pmt::length(tx_data);
-
-        if (pmt::dict_has_key(meta, pmt::intern(prf_key)))
-        {
-          prf = pmt::to_double(
-              pmt::dict_ref(meta, pmt::intern(prf_key), pmt::from_double(0.0)));
-
-          if (prf == 0)
-          {
-            rx_buff_size = tx_buff_size;
-          }
-          else
-          {
-            rx_buff_size = round(sdr2_rate / prf);
-          }
-        }
-
-        new_msg_received = true;
+      case 1:
+        GR_LOG_INFO(d_logger, "WAVEFORM 1 UPDATED");
+        tx_data_sdr1 = data;
+        meta_sdr1 = meta;
+        waveform1_ready = true;
+        break;
+      case 2:
+        GR_LOG_INFO(d_logger, "WAVEFORM 2 UPDATED");
+        tx_data_sdr2 = data;
+        meta_sdr2 = meta;
+        waveform2_ready = true;
+        break;
+      case 3:
+        GR_LOG_INFO(d_logger, "WAVEFORM 3 UPDATED");
+        tx_data_sdr3 = data;
+        meta_sdr3 = meta;
+        waveform3_ready = true;
+        break;
       }
+
+      if (pmt::dict_has_key(meta, pmt::intern("clock_drift_enable")) &&
+          pmt::equal(pmt::dict_ref(meta, pmt::intern("clock_drift_enable"), pmt::PMT_F), pmt::PMT_T))
+      {
+        clock_drift_enabled = true;
+
+        pmt::pmt_t pmt_cd1 = pmt::dict_ref(meta, PMT_HARMONIA_SDR1, pmt::PMT_NIL);
+        pmt::pmt_t pmt_cd2 = pmt::dict_ref(meta, PMT_HARMONIA_SDR2, pmt::PMT_NIL);
+        pmt::pmt_t pmt_cd3 = pmt::dict_ref(meta, PMT_HARMONIA_SDR3, pmt::PMT_NIL);
+
+        if (pmt::is_number(pmt_cd1) && sdr_id == 1)
+        {
+          cd1_est = pmt::to_double(pmt_cd1);
+          cd1_ready = true;
+        }
+        if (pmt::is_number(pmt_cd2) && sdr_id == 2)
+        {
+          cd2_est = pmt::to_double(pmt_cd2);
+          cd2_ready = true;
+        }
+        if (pmt::is_number(pmt_cd3) && sdr_id == 3)
+        {
+          cd3_est = pmt::to_double(pmt_cd3);
+          cd3_ready = true;
+        }
+      }
+
+      check_cd_ready();
+    }
+
+    void usrp_radar_all_impl::check_cd_ready()
+    {
+      if (cd1_ready && cd2_ready && cd3_ready &&
+          waveform1_ready && waveform2_ready && waveform3_ready &&
+          clock_drift_enabled && !cd_run_executed)
+      {
+        cd_run_executed = true;
+        GR_LOG_INFO(d_logger, "Clock drift enabled. Launching cd_run.");
+        cd_run();
+      }
+    }
+
+    void usrp_radar_all_impl::setup_streamers(
+        uhd::rx_streamer::sptr &rx1_stream,
+        uhd::rx_streamer::sptr &rx2_stream,
+        uhd::tx_streamer::sptr &tx1_stream,
+        uhd::tx_streamer::sptr &tx2_stream)
+    {
+      /***********************************************************************
+       * Receive thread
+       **********************************************************************/
+      uhd::stream_args_t rx1_args(sdr1_cpu_format, sdr1_otw_format);
+      rx1_args.channels = sdr1_channel_nums;
+      rx1_args.args = uhd::device_addr_t(sdr1_device_addr);
+      rx1_stream = usrp_1->get_rx_stream(rx1_args);
+
+      // size_t buffer_size = rx1_stream->get_max_num_samps();
+      // std::cout << "RX Stream Max Number of Samples per Call: " << buffer_size << std::endl;
+      uhd::stream_args_t rx2_args(sdr2_cpu_format, sdr2_otw_format);
+      rx2_args.channels = sdr2_channel_nums;
+      rx2_args.args = uhd::device_addr_t(sdr2_device_addr);
+      rx2_stream = usrp_2->get_rx_stream(rx2_args);
+
+      /***********************************************************************
+       * Transmit thread
+       **********************************************************************/
+      uhd::stream_args_t tx1_args(sdr1_cpu_format, sdr1_otw_format);
+      tx1_args.channels = sdr1_channel_nums;
+      tx1_args.args = uhd::device_addr_t(sdr1_device_addr);
+      tx1_stream = usrp_1->get_tx_stream(tx1_args);
+
+      uhd::stream_args_t tx2_args(sdr2_cpu_format, sdr2_otw_format);
+      tx2_args.channels = sdr2_channel_nums;
+      tx2_args.args = uhd::device_addr_t(sdr2_device_addr);
+      tx2_stream = usrp_2->get_tx_stream(tx2_args);
     }
 
     void usrp_radar_all_impl::transmit_all(
         uhd::usrp::multi_usrp::sptr usrp,
         uhd::tx_streamer::sptr tx_stream,
-        const std::vector<double> &times)
+        const std::vector<double> &times,
+        int sdr_id)
     {
       for (const auto &tx_time : times)
       {
-        this->transmit_bursts(usrp, tx_stream, tx_time);
+        this->transmit_bursts(usrp, tx_stream, tx_time, sdr_id);
       }
     }
 
@@ -184,54 +282,13 @@ namespace gr
 
     void usrp_radar_all_impl::run()
     {
-      while (not new_msg_received)
-      { // Wait for Tx data
-        if (finished)
-        {
-          return;
-        }
-        else
-        {
-          std::this_thread::sleep_for(std::chrono::microseconds(10));
-        }
-      }
-
-      /***********************************************************************
-       * Receive thread
-       **********************************************************************/
-      // USRP 1
-      uhd::stream_args_t rx1_stream_args(sdr1_cpu_format, sdr1_otw_format);
-      rx1_stream_args.channels = sdr1_channel_nums;
-      rx1_stream_args.args = uhd::device_addr_t(sdr1_device_addr);
-      uhd::rx_streamer::sptr rx1_stream = usrp_1->get_rx_stream(rx1_stream_args);
-
-      // USRP 2
-      uhd::stream_args_t rx2_stream_args(sdr2_cpu_format, sdr2_otw_format);
-      rx2_stream_args.channels = sdr2_channel_nums;
-      rx2_stream_args.args = uhd::device_addr_t(sdr2_device_addr);
-      uhd::rx_streamer::sptr rx2_stream = usrp_2->get_rx_stream(rx2_stream_args);
-
-      /***********************************************************************
-       * Transmit thread
-       **********************************************************************/
-      // USRP 1
-      uhd::stream_args_t tx1_stream_args(sdr1_cpu_format, sdr1_otw_format);
-      tx1_stream_args.channels = sdr1_channel_nums;
-      tx1_stream_args.args = uhd::device_addr_t(sdr1_device_addr);
-      uhd::tx_streamer::sptr tx1_stream = usrp_1->get_tx_stream(tx1_stream_args);
-
-      // USRP 2
-      uhd::stream_args_t tx2_stream_args(sdr2_cpu_format, sdr2_otw_format);
-      tx2_stream_args.channels = sdr2_channel_nums;
-      tx2_stream_args.args = uhd::device_addr_t(sdr2_device_addr);
-      uhd::tx_streamer::sptr tx2_stream = usrp_2->get_tx_stream(tx2_stream_args);
+      uhd::rx_streamer::sptr rx1_stream, rx2_stream;
+      uhd::tx_streamer::sptr tx1_stream, tx2_stream;
+      setup_streamers(rx1_stream, rx2_stream, tx1_stream, tx2_stream);
 
       /***********************************************************************
        * Thread Implementations
        **********************************************************************/
-      // std::cout << "USRP1 Time: " << usrp_1->get_time_now().get_real_secs() << std::endl;
-      // std::cout << "USRP2 Time: " << usrp_2->get_time_now().get_real_secs() << std::endl;
-
       double sdr1_begin = usrp_1->get_time_now().get_real_secs() + start_delay;
       double sdr2_begin = usrp_2->get_time_now().get_real_secs() + start_delay;
 
@@ -256,30 +313,6 @@ namespace gr
       double sdr1_tx4 = sdr1_begin + TDMA_time * 6;
       double sdr2_rx4 = sdr2_begin + TDMA_time * 6 - wait_time;
 
-      // std::cout << "[SDR1] Scheduled start at: " << sdr1_begin << std::endl;
-      // std::cout << "[SDR2] Scheduled start at: " << sdr2_begin << std::endl;
-
-      // std::cout << "[RX1] Scheduled RX at: " << sdr2_rx1 << std::endl;
-      // std::cout << "[TX1] Scheduled TX at: " << sdr1_tx1 << std::endl;
-
-      // std::cout << "[RX2] Scheduled RX at: " << sdr1_rx1 << std::endl;
-      // std::cout << "[TX2] Scheduled TX at: " << sdr2_tx1 << std::endl;
-
-      // std::cout << "[RX3] Scheduled RX at: " << sdr2_rx2 << std::endl;
-      // std::cout << "[TX3] Scheduled TX at: " << sdr1_tx2 << std::endl;
-
-      // std::cout << "[RX4] Scheduled RX at: " << sdr1_rx2 << std::endl;
-      // std::cout << "[TX4] Scheduled TX at: " << sdr2_tx2 << std::endl;
-
-      // std::cout << "[RX5] Scheduled RX at: " << sdr2_rx3 << std::endl;
-      // std::cout << "[TX5] Scheduled TX at: " << sdr1_tx3 << std::endl;
-
-      // std::cout << "[RX6] Scheduled RX at: " << sdr1_rx3 << std::endl;
-      // std::cout << "[TX6] Scheduled TX at: " << sdr2_tx3 << std::endl;
-
-      // std::cout << "[RX6 (True)] Scheduled RX at: " << sdr2_rx4 << std::endl;
-      // std::cout << "[TX6 (true)] Scheduled TX at: " << sdr1_tx4 << std::endl;
-
       // Threads
       std::vector<double> sdr1_tx_times = {sdr1_tx1, sdr1_tx2, sdr1_tx3, sdr1_tx4};
       std::vector<double> sdr1_rx_times = {sdr1_rx1, sdr1_rx2};
@@ -293,14 +326,14 @@ namespace gr
       std::vector<bool> sdr2_rx_final = {false, false, false, true};
 
       sdr1_tx_thread = gr::thread::thread(
-          &usrp_radar_all_impl::transmit_all, this, usrp_1, tx1_stream, sdr1_tx_times);
+          &usrp_radar_all_impl::transmit_all, this, usrp_1, tx1_stream, sdr1_tx_times, 1);
 
       sdr1_rx_thread = gr::thread::thread(
           &usrp_radar_all_impl::receive_all,
           this, usrp_1, rx1_stream, sdr1_rx_times, sdr1_rx_tags, sdr1_rx_final);
 
       sdr2_tx_thread = gr::thread::thread(
-          &usrp_radar_all_impl::transmit_all, this, usrp_2, tx2_stream, sdr2_tx_times);
+          &usrp_radar_all_impl::transmit_all, this, usrp_2, tx2_stream, sdr2_tx_times, 2);
 
       sdr2_rx_thread = gr::thread::thread(
           &usrp_radar_all_impl::receive_all,
@@ -314,12 +347,62 @@ namespace gr
       // One Pulse Test
       // // Transmit and Receive Threads
       // tx1_thread = gr::thread::thread(
-      //     &usrp_radar_all_impl::transmit_bursts, this, usrp_1, tx1_stream, sdr1_tx1);
+      //     &usrp_radar_all_impl::transmit_bursts, this, usrp_1, tx1_stream, sdr1_tx1, 1);
 
       // rx2_thread =
       //     gr::thread::thread(&usrp_radar_all_impl::receive, this, usrp_2, rx2_stream, sdr2_rx1, 1, true);
       // tx1_thread.join();
       // rx2_thread.join();
+    }
+
+    void usrp_radar_all_impl::cd_run()
+    {
+      uhd::rx_streamer::sptr rx1_stream, rx2_stream;
+      uhd::tx_streamer::sptr tx1_stream, tx2_stream;
+      setup_streamers(rx1_stream, rx2_stream, tx1_stream, tx2_stream);
+
+      double sdr1_begin = usrp_1->get_time_now().get_real_secs() + start_delay;
+      double sdr2_begin = usrp_2->get_time_now().get_real_secs() + start_delay;
+
+      std::vector<double> sdr1_tx_times = {
+          (sdr1_begin + TDMA_time) / cd1_est};
+      std::vector<double> sdr1_rx_times = {
+          (sdr1_begin + TDMA_time * 2) / cd1_est - wait_time};
+      std::vector<double> sdr2_tx_times = {
+          (sdr2_begin + TDMA_time * 2) / cd2_est};
+      std::vector<double> sdr2_rx_times = {
+          (sdr2_begin + TDMA_time) / cd2_est - wait_time};
+
+      // Radar will process their data with their own estimation
+      std::vector<int> sdr1_rx_tags = {1};
+      std::vector<int> sdr2_rx_tags = {2};
+
+      std::vector<int> sdr1_tx_tags = {1};
+      std::vector<int> sdr2_tx_tags = {2};
+
+      std::vector<bool> sdr1_rx_final = {false};
+      std::vector<bool> sdr2_rx_final = {true};
+
+      cd_sdr1_tx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::transmit_all, this, usrp_1, tx1_stream, sdr1_tx_times, 1);
+
+      cd_sdr2_rx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::receive_all,
+          this, usrp_2, rx2_stream, sdr2_rx_times, sdr2_rx_tags, sdr2_rx_final);
+
+      cd_sdr2_tx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::transmit_all, this, usrp_2, tx2_stream, sdr2_tx_times, 2);
+
+      cd_sdr1_rx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::receive_all,
+          this, usrp_1, rx1_stream, sdr1_rx_times, sdr1_rx_tags, sdr1_rx_final);
+
+      cd_sdr1_tx_thread.join();
+      cd_sdr2_rx_thread.join();
+      cd_sdr2_tx_thread.join();
+      cd_sdr1_tx_thread.join();
+
+      GR_LOG_INFO(d_logger, "Drift TX/RX sequence completed.");
     }
 
     void usrp_radar_all_impl::config_usrp(uhd::usrp::multi_usrp::sptr &usrp_1,
@@ -380,9 +463,6 @@ namespace gr
       usrp_1->set_time_unknown_pps(uhd::time_spec_t(0.0));
       usrp_2->set_time_unknown_pps(uhd::time_spec_t(0.0));
 
-      // std::cout << "USRP1 Time Post: " << usrp_1->get_time_now().get_real_secs() << std::endl;
-      // std::cout << "USRP2 Time Post: " << usrp_2->get_time_now().get_real_secs() << std::endl;
-
       if (verbose)
       {
         std::cout << boost::format("Using Device 1: %s") % usrp_1->get_pp_string()
@@ -412,6 +492,7 @@ namespace gr
     {
       // Setup variables
       uhd::rx_metadata_t md;
+
       // Total samples to receive based on capture time
       size_t total_samps_to_rx = cap_length * sdr1_rate;
       size_t samps_received = 0;
@@ -423,9 +504,6 @@ namespace gr
       double rx_time_secs = usrp_rx->get_time_now().get_real_secs();
       pmt::pmt_t rx_time = pmt::from_double(rx_time_secs);
 
-      // Outputs RX time
-      // std::cout << "Current time: " << rx_time << ", Start time: " << start_time << std::endl;
-
       cmd.time_spec = uhd::time_spec_t(start_time);
       rx_stream->issue_stream_cmd(cmd);
 
@@ -434,7 +512,7 @@ namespace gr
       gr_complex *rx_data_ptr = pmt::c32vector_writable_elements(rx_data_pmt, total_samps_to_rx);
 
       // Tells USRP to wait for incoming samples before giving up
-      double timeout = 0.5;
+      double timeout = 0.1;
 
       // Counts number of samples received until end of capture time
       while (samps_received < total_samps_to_rx)
@@ -445,85 +523,142 @@ namespace gr
         samps_received += num_rx;
       }
 
-      if (pmt::length(this->meta) > 0)
+      if (clock_drift_enabled)
       {
-        this->meta = pmt::dict_add(
-            this->meta, pmt::intern("rx_time"), rx_time);
         if (sdr_id == 1)
-        {
-          // GR_LOG_WARN(d_logger, "SDR ID: 1 Confirmed");
-          this->meta = pmt::dict_add(this->meta, pmt::intern("src"), PMT_HARMONIA_SDR1);
-        }
+          alpha = cd1_est;
+        // alpha = 1.0;
         else if (sdr_id == 2)
-        {
-          // GR_LOG_WARN(d_logger, "SDR ID: 2 Confirmed");
-          this->meta = pmt::dict_add(this->meta, pmt::intern("src"), PMT_HARMONIA_SDR2);
-        }
+          alpha = cd2_est;
+        // alpha = 1.00001;
         else if (sdr_id == 3)
+          alpha = cd3_est;
+
+        double fc = sdr1_freq;
+        double ts = 1.0 / sdr1_rate;
+
+        std::vector<double> t(total_samps_to_rx);
+        for (size_t n = 0; n < total_samps_to_rx; n++)
         {
-          // GR_LOG_WARN(d_logger, "SDR ID: 2 Confirmed");
-          this->meta = pmt::dict_add(this->meta, pmt::intern("src"), PMT_HARMONIA_SDR3);
+          t[n] = start_time + n * ts;
         }
+
+        for (size_t n = 0; n < total_samps_to_rx; n++)
+        {
+          double phase_correction = 2 * M_PI * fc * (alpha - 1.0) * (t[n] / alpha);
+          rx_data_ptr[n] *= std::exp(gr_complex(0, phase_correction));
+        }
+      }
+
+      this->meta = pmt::dict_add(
+          this->meta, pmt::intern("rx_time"), rx_time);
+      if (sdr_id == 1)
+      {
+        // GR_LOG_WARN(d_logger, "SDR ID: 1 Confirmed");
+        this->meta = pmt::dict_add(this->meta, pmt::intern("src"), PMT_HARMONIA_SDR1);
+      }
+      else if (sdr_id == 2)
+      {
+        // GR_LOG_WARN(d_logger, "SDR ID: 2 Confirmed");
+        this->meta = pmt::dict_add(this->meta, pmt::intern("src"), PMT_HARMONIA_SDR2);
+      }
+      else if (sdr_id == 3)
+      {
+        // GR_LOG_WARN(d_logger, "SDR ID: 2 Confirmed");
+        this->meta = pmt::dict_add(this->meta, pmt::intern("src"), PMT_HARMONIA_SDR3);
       }
 
       if (TDMA_done)
       {
         this->meta = pmt::dict_add(this->meta, pmt::intern("TDMA_Done"), pmt::PMT_T);
       }
-      // Outputs metadata
-      message_port_pub(PMT_HARMONIA_OUT, pmt::cons(this->meta, rx_data_pmt));
-      // this->meta = pmt::make_dict();
+
+      // Choose the correct output port
+      pmt::pmt_t output_msg = pmt::cons(this->meta, rx_data_pmt);
+      if (clock_drift_enabled)
+      {
+        message_port_pub(PMT_HARMONIA_OUT2, output_msg);
+      }
+      else
+      {
+        message_port_pub(PMT_HARMONIA_OUT, output_msg);
+      }
     }
 
     void usrp_radar_all_impl::transmit_bursts(uhd::usrp::multi_usrp::sptr usrp_tx,
                                               uhd::tx_streamer::sptr tx_stream,
-                                              double start_time)
+                                              double start_time, int sdr_id)
     {
-      // Create the metadata, and populate the time spec at the latest possible moment
       uhd::tx_metadata_t md;
+      pmt::pmt_t selected_data = pmt::PMT_NIL;
+      pmt::pmt_t selected_meta = pmt::PMT_NIL;
 
-      // Outputs TX time
-      // double current_time = usrp_tx->get_time_now().get_real_secs();
-      // std::cout << "Current time: " << current_time << ", Start time: " << start_time << std::endl;
+      // Choose the appropriate TX data based on the SDR ID
+      // Use updated intermediate data if ready
+      // if (waveform1_ready)
+      updated_data1 = tx_data_sdr1;
+      // if (waveform2_ready)
+      updated_data2 = tx_data_sdr2;
+      // if (waveform3_ready)
+      updated_data3 = tx_data_sdr3;
 
-      if (new_msg_received)
+      if (sdr_id == 1)
       {
-        // Assigns TX data to a vector
-        const std::vector<gr_complex> tx_data_vector = pmt::c32vector_elements(tx_data);
-
-        // Assigns TX data to buffer vector
-        tx_buffs[0] = tx_data_vector;
-
-        // Updates metadata with new information
-        meta = pmt::dict_add(meta, pmt::intern(sdr1_freq_key), pmt::from_double(sdr1_freq));
-        meta = pmt::dict_add(meta, pmt::intern(sample_start_key), pmt::from_long(n_tx_total));
-
-        // Turns new message off
-        new_msg_received = false;
-
-        // ------- Testing -------
-        // Save to-be-transmitted waveform to file
-        // std::ofstream outfile("tx_data_vector.cfile", std::ios::binary);
-        // outfile.write(reinterpret_cast<const char *>(tx_data_vector.data()),
-        //               tx_data_vector.size() * sizeof(gr_complex));
-        // outfile.close();
-        // std::cout << "[usrp_radar] Saved " << tx_data_vector.size() << " samples to tx_data_vector.cfile" << std::endl;
-
-        // Get maximum buffer size and TX data length
-        // size_t max_samples = tx_stream->get_max_num_samps();
-        // size_t tx_data_len = tx_data_vector.size();
-        // std::cout << "[usrp_radar] Pulse size: " << tx_data_len << " samples" << std::endl;
-        // std::cout << "Max samples per buffer (fragment size): " << max_samples << std::endl;
+        selected_data = updated_data1;
+        selected_meta = meta_sdr1;
+      }
+      else if (sdr_id == 2)
+      {
+        selected_data = updated_data2;
+        selected_meta = meta_sdr2;
+      }
+      else if (sdr_id == 3)
+      {
+        selected_data = updated_data3;
+        selected_meta = meta_sdr3;
+      }
+      else
+      {
+        GR_LOG_ERROR(d_logger, "No TX data available for SDR ID " + std::to_string(sdr_id));
+        return;
       }
 
-      // Transmits waveform to UHD
-      double timeout = 0.5;
+      // Validate
+      if (!pmt::is_c32vector(selected_data))
+      {
+        GR_LOG_ERROR(d_logger, "TX data is not a c32vector for SDR " + std::to_string(sdr_id));
+        return;
+      }
+
+      // Extract vector
+      size_t len = 0;
+      const gr_complex *raw = pmt::c32vector_elements(selected_data, len);
+      if (!raw || len == 0)
+      {
+        GR_LOG_ERROR(d_logger, "Invalid TX data for SDR " + std::to_string(sdr_id));
+        return;
+      }
+
+      std::vector<gr_complex> tx_data_vector(raw, raw + len);
+      if (tx_buffs.size() < 1)
+        tx_buffs.resize(1);
+      tx_buffs[0] = tx_data_vector;
+
+      // Populate metadata
       md.start_of_burst = true;
       md.end_of_burst = true;
       md.has_time_spec = true;
       md.time_spec = uhd::time_spec_t(start_time);
-      // std::cout << "[TX burst] Sending at " << start_time << std::endl;
-      tx_stream->send(tx_buffs[0].data(), tx_buffs[0].size(), md, timeout);
+
+      double timeout = 0.1;
+      size_t sent = tx_stream->send(tx_buffs[0].data(), tx_buffs[0].size(), md, timeout);
+      if (sent != tx_buffs[0].size())
+      {
+        GR_LOG_ERROR(d_logger, "Mismatch in TX samples sent for SDR " +
+                                   std::to_string(sdr_id) + ": " +
+                                   std::to_string(sent) + " vs " +
+                                   std::to_string(tx_buffs[0].size()));
+      }
     }
 
     void usrp_radar_all_impl::set_metadata_keys(const std::string &sdr1_freq_key,

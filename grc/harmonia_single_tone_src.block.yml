@@ -5,9 +5,13 @@ category: '[harmonia]'
 parameters:
   # Waveform parameters
   - id: frequency
-    label: Frequency
+    label: Baseband Frequency
     dtype: float
-    default: "frequency"
+    default: "fb"
+  - id: center_freq
+    label: Center Frequency
+    dtype: float
+    default: "fc"
   - id: phase
     label: Phase
     dtype: float
@@ -25,6 +29,14 @@ parameters:
     dtype: float
     default: 0
     hide: ${ ('part' if prf == 0 else 'none') }
+  - id: max_buffer_size
+    label: Max buffer size
+    dtype: int
+    default: 1996
+  - id: sdr_id
+    label: SDR Number
+    dtype: int
+    default: 1
   # Metadata fields
   - id: frequency_key
     label: Frequency Key
@@ -76,7 +88,7 @@ outputs:
 templates:
   imports: from gnuradio import harmonia
   make: |-
-    harmonia.single_tone_src(${frequency}, ${phase}, ${pulse_width}, ${samp_rate}, ${prf})
+    harmonia.single_tone_src(${frequency}, ${center_freq}, ${phase}, ${pulse_width}, ${samp_rate}, ${prf}, ${max_buffer_size}, ${sdr_id})
     self.${id}.init_meta_dict(${frequency_key}, ${phase_key}, ${duration_key}, ${sample_rate_key}, ${label_key}, ${prf_key})
 
 documentation: |-

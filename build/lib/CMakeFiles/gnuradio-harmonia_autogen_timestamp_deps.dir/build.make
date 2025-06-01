@@ -66,11 +66,11 @@ include lib/CMakeFiles/gnuradio-harmonia_autogen_timestamp_deps.dir/compiler_dep
 # Include the progress variables for this target.
 include lib/CMakeFiles/gnuradio-harmonia_autogen_timestamp_deps.dir/progress.make
 
-lib/CMakeFiles/gnuradio-harmonia_autogen_timestamp_deps: /usr/local/lib/libgnuradio-runtime.so.3.10.12.0
 lib/CMakeFiles/gnuradio-harmonia_autogen_timestamp_deps: /usr/local/lib/libgnuradio-blocks.so.3.10.12.0
-lib/CMakeFiles/gnuradio-harmonia_autogen_timestamp_deps: /opt/arrayfire/lib64/libaf.so.3.9.0
-lib/CMakeFiles/gnuradio-harmonia_autogen_timestamp_deps: /usr/local/lib/libplasma_dsp.so
 lib/CMakeFiles/gnuradio-harmonia_autogen_timestamp_deps: /usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5.15.13
+lib/CMakeFiles/gnuradio-harmonia_autogen_timestamp_deps: /usr/local/lib/libplasma_dsp.so
+lib/CMakeFiles/gnuradio-harmonia_autogen_timestamp_deps: /opt/arrayfire/lib64/libaf.so.3.9.0
+lib/CMakeFiles/gnuradio-harmonia_autogen_timestamp_deps: /usr/local/lib/libgnuradio-runtime.so.3.10.12.0
 lib/CMakeFiles/gnuradio-harmonia_autogen_timestamp_deps: /usr/lib/qt5/bin/moc
 
 gnuradio-harmonia_autogen_timestamp_deps: lib/CMakeFiles/gnuradio-harmonia_autogen_timestamp_deps
