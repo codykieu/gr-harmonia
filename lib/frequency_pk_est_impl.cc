@@ -114,7 +114,7 @@ namespace gr
             af::array af_input = af::array(n, reinterpret_cast<const af::cfloat *>(in_data));
 
             // FFT
-            af::array af_fft = af::fftNorm(af_input, 1.0, NFFT);
+            af::array af_fft = af::fft(af_input, NFFT);
 
             // FFTshift to zero
             af_fft = ::plasma::fftshift(af_fft, 0);
@@ -146,7 +146,7 @@ namespace gr
                 (-d_samp_rate / 2.0) + ((af::seq(0, NFFT - 1)) * (d_samp_rate / (NFFT)));
 
             af::array f_pk = f_axis(max_idx); // Get the value at max_idx as an af::array
-            af_print(f_pk);
+            // af_print(f_pk);
 
             // ----------------- Sinc-NLLS -----------------
             // Create lambda array

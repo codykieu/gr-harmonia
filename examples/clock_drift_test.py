@@ -11,7 +11,6 @@
 
 from PyQt5 import Qt
 from gnuradio import qtgui
-from gnuradio import blocks, gr
 from gnuradio import gr
 from gnuradio.filter import firdes
 from gnuradio.fft import window
@@ -29,7 +28,7 @@ import threading
 
 class clock_drift_test(gr.top_block, Qt.QWidget):
 
-    def __init__(self):
+    def __init__(self, run_id = 0):
         gr.top_block.__init__(self, "Clock Drift Synchronization Test", catch_exceptions=True)
         Qt.QWidget.__init__(self)
         self.setWindowTitle("Clock Drift Synchronization Test")
@@ -64,9 +63,9 @@ class clock_drift_test(gr.top_block, Qt.QWidget):
         # Variables
         ##################################################
         self.samp_rate = samp_rate = 100e6
-        self.run_id = run_id = 0
+        self.run_id = run_id
         self.prf = prf = 0
-        self.center_freq = center_freq = 3e9
+        self.center_freq = center_freq = 1e9
         self.baseband_freq = baseband_freq = 1e6
         self.Tp = Tp = 300e-6
         self.Tc = Tc = 600e-6
@@ -76,10 +75,10 @@ class clock_drift_test(gr.top_block, Qt.QWidget):
         ##################################################
 
         self.plasma_pdu_file_sink_0_0_1 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/clock_drift_post', '/home/cody/gr-MATLAB/TDMA_meta')
-        self.plasma_pdu_file_sink_0_0_0_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'', f'/home/cody/gr-MATLAB/clock_drift_20khz/clock_drift_est{run_id}')
+        self.plasma_pdu_file_sink_0_0_0_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'', f'/home/cody/gr-MATLAB/clock_drift_test_1mhz/clock_drift_est{run_id}')
         self.plasma_pdu_file_sink_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/clock_drift_pre', '/home/cody/gr-MATLAB/TDMA_meta')
         self.plasma_pdu_file_sink_0 = plasma.pdu_file_sink(gr.sizeof_float,'/home/cody/gr-MATLAB/freq_pk_est_test', '/home/cody/gr-MATLAB/freq_pk_est_meta')
-        self.harmonia_usrp_radar_all_0 = harmonia.usrp_radar_all("addr=192.168.60.2, use_dpkg=1", "addr=192.168.80.2, use_dpkg=1", samp_rate, samp_rate, center_freq, center_freq, 0, 0, 0.001, Tc, 200e-6, 100e-3, False)
+        self.harmonia_usrp_radar_all_0 = harmonia.usrp_radar_all("addr=192.168.60.2, use_dpkg=1", "addr=192.168.80.2, use_dpkg=1", samp_rate, samp_rate, center_freq, center_freq, 0, 0, 0.003, Tc, 200e-6, 150e-3, False)
         self.harmonia_usrp_radar_all_0.set_metadata_keys('core:tx_freq', 'core:rx_freq', 'core:sample_start', 'radar:prf')
         self.harmonia_single_tone_src_0_1 = harmonia.single_tone_src(baseband_freq, center_freq, 0, Tp, samp_rate, prf, 1996, 2)
         self.harmonia_single_tone_src_0_1.init_meta_dict('radar:frequency', 'radar:phase', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
@@ -87,11 +86,10 @@ class clock_drift_test(gr.top_block, Qt.QWidget):
         self.harmonia_single_tone_src_0_0.init_meta_dict('radar:frequency', 'radar:phase', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
         self.harmonia_single_tone_src_0 = harmonia.single_tone_src(baseband_freq, center_freq, 0, Tp, samp_rate, prf, 1996, 3)
         self.harmonia_single_tone_src_0.init_meta_dict('radar:frequency', 'radar:phase', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
-        self.harmonia_frequency_pk_est_0 = harmonia.frequency_pk_est(12, Tp, Tc, samp_rate, 10, True)
+        self.harmonia_frequency_pk_est_0 = harmonia.frequency_pk_est(16, Tp, Tc, samp_rate, 10, True)
         self.harmonia_frequency_pk_est_0.set_msg_queue_depth(1)
         self.harmonia_frequency_pk_est_0.set_backend(harmonia.Device.CPU)
-        self.harmonia_clock_drift_est_0 = harmonia.clock_drift_est(3, 1, baseband_freq, center_freq, samp_rate, Tp, 30)
-        self.blocks_message_debug_0_0 = blocks.message_debug(True, gr.log_levels.info)
+        self.harmonia_clock_drift_est_0 = harmonia.clock_drift_est(3, 1, baseband_freq, center_freq, samp_rate, Tp, 34)
 
 
         ##################################################
@@ -101,7 +99,6 @@ class clock_drift_test(gr.top_block, Qt.QWidget):
         self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_single_tone_src_0_0, 'in'))
         self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_single_tone_src_0_1, 'in'))
         self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.plasma_pdu_file_sink_0_0_0_0_0, 'in'))
-        self.msg_connect((self.harmonia_frequency_pk_est_0, 'f_out'), (self.blocks_message_debug_0_0, 'print'))
         self.msg_connect((self.harmonia_frequency_pk_est_0, 'f_out'), (self.harmonia_clock_drift_est_0, 'in'))
         self.msg_connect((self.harmonia_frequency_pk_est_0, 'out'), (self.plasma_pdu_file_sink_0, 'in'))
         self.msg_connect((self.harmonia_single_tone_src_0, 'out'), (self.harmonia_usrp_radar_all_0, 'in3'))

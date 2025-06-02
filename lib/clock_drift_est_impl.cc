@@ -122,13 +122,13 @@ namespace gr
       {
         for (int c = 0; c < num_platforms; ++c)
         {
-          flat[c * A_est.size() + r] = A_est[r][c]; // column-major
+          flat[c * A_est.size() + r] = A_est[r][c]; 
         }
       }
 
       // Matrix for Linear System of Equations
       af::dim4 dims(A_est.size(), num_platforms);
-      A_mat = af::array(dims, flat.data(), afHost); // afHost tells AF it's a host pointer
+      A_mat = af::array(dims, flat.data(), afHost); 
       af::array y = af::join(0, af::constant(0.0, A_est.size() - 1, f64), af::constant(1.0, 1, f64));
 
       // Compute variance
@@ -163,9 +163,9 @@ namespace gr
       meta = pmt::dict_add(meta, PMT_HARMONIA_SDR3, pmt::from_double(x_host[2]));
       meta = pmt::dict_add(meta, pmt::intern("clock_drift_enable"), pmt::PMT_T);
       // Export message
-      message_port_pub(out_port, meta);
-      // pmt::pmt_t empty_vec = pmt::make_u8vector(0, 0);
-      // message_port_pub(out_port, pmt::cons(meta, empty_vec));
+      // message_port_pub(out_port, meta);
+      pmt::pmt_t empty_vec = pmt::make_u8vector(0, 0);
+      message_port_pub(out_port, pmt::cons(meta, empty_vec));
     }
 
   } /* namespace harmonia */

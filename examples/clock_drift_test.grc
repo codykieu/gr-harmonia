@@ -73,7 +73,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: 3e9
+    value: 1e9
   states:
     bus_sink: false
     bus_source: false
@@ -146,11 +146,11 @@ blocks:
     bus_structure: null
     coordinate: [1088, 608.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: harmonia_clock_drift_est_0
   id: harmonia_clock_drift_est
   parameters:
-    SNR: '30'
+    SNR: '34'
     affinity: ''
     alias: ''
     baseband_freq: baseband_freq
@@ -183,7 +183,7 @@ blocks:
     enable_out: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
-    nfft: '12'
+    nfft: '16'
     pulse_width: Tp
     samp_rate: samp_rate
   states:
@@ -283,7 +283,7 @@ blocks:
 - name: harmonia_usrp_radar_all_0
   id: harmonia_usrp_radar_all
   parameters:
-    TDMA_time: 100e-3
+    TDMA_time: 150e-3
     affinity: ''
     alias: ''
     args_1: '"addr=192.168.60.2, use_dpkg=1"'
@@ -301,7 +301,7 @@ blocks:
     sdr2_freq: center_freq
     sdr2_freq_key: core:rx_freq
     sdr2_gain: '0'
-    start_delay: '0.001'
+    start_delay: '0.003'
     verbose: 'False'
     wait_time: 200e-6
   states:
@@ -386,7 +386,7 @@ blocks:
     alias: ''
     comment: ''
     data_filename: ''
-    meta_filename: f'/home/cody/gr-MATLAB/clock_drift_20khz/clock_drift_est{run_id}'
+    meta_filename: f'/home/cody/gr-MATLAB/clock_drift_test_1mhz/clock_drift_est{run_id}'
     save_meta: 'True'
     type: complex
   states:

@@ -526,11 +526,12 @@ namespace gr
       if (clock_drift_enabled)
       {
         if (sdr_id == 1)
-          alpha = cd1_est;
-        // alpha = 1.0;
+          // alpha = cd1_est;
+        alpha = 1.0;
         else if (sdr_id == 2)
-          alpha = cd2_est;
-        // alpha = 1.00001;
+          // alpha = cd2_est;
+          // alpha = 1.0;
+        alpha = 1.00001;
         else if (sdr_id == 3)
           alpha = cd3_est;
 
@@ -595,11 +596,11 @@ namespace gr
 
       // Choose the appropriate TX data based on the SDR ID
       // Use updated intermediate data if ready
-      // if (waveform1_ready)
+      if (waveform1_ready)
       updated_data1 = tx_data_sdr1;
-      // if (waveform2_ready)
+      if (waveform2_ready)
       updated_data2 = tx_data_sdr2;
-      // if (waveform3_ready)
+      if (waveform3_ready)
       updated_data3 = tx_data_sdr3;
 
       if (sdr_id == 1)

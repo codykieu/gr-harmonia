@@ -44,14 +44,14 @@ namespace gr
         x = af::join(0, x, zeros);
       }
 
-      // Buffer correction
-      size_t remainder = x.elements() % max_buffer_size;
-      if (remainder != 0)
-      {
-        size_t pad = max_buffer_size - remainder;
-        af::array pad_arr = af::constant(af::cdouble(0, 0), af::dim4(pad));
-        x = af::join(0, x, pad_arr);
-      }
+      // // Buffer correction
+      // size_t remainder = x.elements() % max_buffer_size;
+      // if (remainder != 0)
+      // {
+      //   size_t pad = max_buffer_size - remainder;
+      //   af::array pad_arr = af::constant(af::cdouble(0, 0), af::dim4(pad));
+      //   x = af::join(0, x, pad_arr);
+      // }
 
       return x;
     }
@@ -169,11 +169,14 @@ namespace gr
       // Select the right drift value based on SDR ID
       if (sdr_id == 1)
       {
-        val = pmt::dict_ref(msg, PMT_HARMONIA_SDR1, pmt::PMT_NIL);
+        // val = pmt::dict_ref(msg, PMT_HARMONIA_SDR1, pmt::PMT_NIL);
+        val = pmt::from_double(1.0);
       }
       else if (sdr_id == 2)
       {
-        val = pmt::dict_ref(msg, PMT_HARMONIA_SDR2, pmt::PMT_NIL);
+        // val = pmt::dict_ref(msg, PMT_HARMONIA_SDR2, pmt::PMT_NIL);
+        val = pmt::from_double(1.00001);
+
       }
       else if (sdr_id == 3)
       {
