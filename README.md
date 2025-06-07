@@ -6,9 +6,10 @@ The following features have been implemented:
 - PDU Complex to Magnitude
 - PDU Frequency Peak Estimator
 - PDU Clock Drift Estimator
-- PDU Time and Phase Estimator
-- PDU Frequency Sink
-- PDU System of Equations Solver
+- PDU Time Peak Estimator
+- PDU Clock Bias and Phase Estimator
+- UHD: USRP Block
+
 
 **NOTE**: 
 
