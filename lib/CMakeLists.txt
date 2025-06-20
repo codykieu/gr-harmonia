@@ -25,8 +25,6 @@ list(APPEND harmonia_sources
     time_pk_est_impl.cc
     buffer_corrector_impl.cc
     clockbias_phase_est_impl.cc
-    QPSK_mod_impl.cc
-    QPSK_demod_impl.cc
     LFM_src_impl.cc
     compensation_impl.cc )
 

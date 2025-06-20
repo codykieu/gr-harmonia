@@ -26,8 +26,6 @@ install(FILES
     time_pk_est.h
     buffer_corrector.h
     clockbias_phase_est.h
-    QPSK_mod.h
-    QPSK_demod.h
     LFM_src.h
     compensation.h DESTINATION include/gnuradio/harmonia
 )
