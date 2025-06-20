@@ -16,46 +16,46 @@ namespace gr
   namespace harmonia
   {
 
-    time_pk_est::sptr time_pk_est::make(size_t nfft,
-                                        double samp_rate,
+    time_pk_est::sptr time_pk_est::make(double samp_rate,
                                         double bandwidth,
                                         double NLLS_iter,
-                                        double NLLS_pts)
+                                        int sdr_id)
     {
-      return gnuradio::make_block_sptr<time_pk_est_impl>(nfft,
-                                                         samp_rate,
+      return gnuradio::make_block_sptr<time_pk_est_impl>(samp_rate,
                                                          bandwidth,
                                                          NLLS_iter,
-                                                         NLLS_pts);
+                                                         sdr_id);
     }
 
     /*
      * The private constructor
      */
-    time_pk_est_impl::time_pk_est_impl(size_t nfft,
-                                       double samp_rate,
+    time_pk_est_impl::time_pk_est_impl(double samp_rate,
                                        double bandwidth,
                                        double NLLS_iter,
-                                       double NLLS_pts)
+                                       int sdr_id)
         : gr::block("time_pk_est",
                     gr::io_signature::make(0, 0, 0),
                     gr::io_signature::make(0, 0, 0)),
-          d_fftsize(nfft),
-          d_samp_rate(samp_rate),
-          d_bandwidth(bandwidth),
-          d_NLLS_iter(NLLS_iter),
-          d_NLLS_pts(NLLS_pts)
+          samp_rate(samp_rate),
+          bandwidth(bandwidth),
+          NLLS_iter(NLLS_iter),
+          sdr_id(sdr_id),
+          d_rx_count(0)
     {
-      d_data = pmt::make_c32vector(1, 0);
+      d_data = pmt::make_c32vector(0, 0);
       d_meta = pmt::make_dict();
       d_tp_meta = pmt::make_dict();
+      // Input Ports
       d_tx_port = PMT_HARMONIA_TX;
       d_rx_port = PMT_HARMONIA_RX;
-      // d_out_port = PMT_HARMONIA_OUT;
+      // Output Ports
+      d_out_port = PMT_HARMONIA_OUT;
       d_tp_out_port = PMT_HARMONIA_TP_OUT;
       message_port_register_in(d_tx_port);
       message_port_register_in(d_rx_port);
       message_port_register_out(d_tp_out_port);
+      message_port_register_out(d_out_port);
       set_msg_handler(d_tx_port, [this](pmt::pmt_t msg)
                       { handle_tx_msg(msg); });
       set_msg_handler(d_rx_port, [this](pmt::pmt_t msg)
@@ -130,10 +130,19 @@ namespace gr
         return;
       }
 
-      // Check which SDR TX the signal
-      pmt::pmt_t src_val = pmt::dict_ref(d_meta, pmt::intern("src"), pmt::PMT_NIL);
-      std::cout << "[SDR ID]: " << pmt::write_string(src_val) << std::endl;
-      pmt::pmt_t TDMA_val = pmt::dict_ref(d_meta, pmt::intern("TDMA_Done"), pmt::PMT_NIL);
+      // Set SDR PMT
+      switch (sdr_id)
+      {
+      case 1:
+        sdr_pmt = PMT_HARMONIA_SDR1;
+        break;
+      case 2:
+        sdr_pmt = PMT_HARMONIA_SDR2;
+        break;
+      case 3:
+        sdr_pmt = PMT_HARMONIA_SDR3;
+        break;
+      }
 
       // Check for 'rx_time'
       pmt::pmt_t rx_time_key = pmt::intern("rx_time");
@@ -143,7 +152,7 @@ namespace gr
         if (pmt::is_real(rx_time_val))
         {
           rx_time = pmt::to_double(rx_time_val);
-          std::cout << "rx_time = " << rx_time << std::endl;
+          // std::cout << "rx_time = " << rx_time << std::endl;
         }
       }
 
@@ -157,11 +166,18 @@ namespace gr
       size_t io(0);
       const gr_complex *in = pmt::c32vector_elements(samples, io);
 
-      // Apply the matched filter to each column
+      // Apply the matched filter
       af::array mf_resp(af::dim4(n), reinterpret_cast<const af::cfloat *>(in));
       mf_resp = af::convolve1(mf_resp, d_match_filt, AF_CONV_EXPAND, AF_CONV_AUTO);
       af::array mf_resp_abs = af::abs(mf_resp);
-      // std::cout << "Length of mf = " << mf_resp.elements() << std::endl;
+      // std::cout << "Length of mf = " << mf_resp_abs.elements() << std::endl;
+      // std::cout << "Length of nconv = " << nconv << std::endl;
+
+      d_data = pmt::make_c32vector(nconv, gr_complex{0, 0});
+      size_t out_io = 0;
+      gr_complex *out = pmt::c32vector_writable_elements(d_data, out_io);
+      mf_resp.host(reinterpret_cast<af::cfloat *>(out));
+      message_port_pub(d_out_port, pmt::cons(d_meta, d_data));
 
       // Output max and index of data
       double max_val;
@@ -169,108 +185,149 @@ namespace gr
       af::max(&max_val, &max_idx, mf_resp_abs);
 
       // Phase Estimates
-      af::array complex_peak = mf_resp(max_idx);   
-      af::array phase = af::arg(complex_peak);    
-      float p_est = phase.scalar<float>(); 
-      // std::cout << "Phase sigma boi: " << p_est << std::endl;
+      af::array complex_peak = mf_resp(max_idx);
+      af::array phase = af::arg(complex_peak);
+      float p_est = phase.scalar<float>();
+      // std::cout << "Phase: " << p_est << std::endl;
 
       // Generate time axis
-      af::array t =
-          (af::seq(0, nconv - 1)) * 1.0 / d_samp_rate + rx_time;
+      af::array t = (af::seq(0, nconv - 1)) * 1.0 / samp_rate;
 
-      af::array t_pk = t(max_idx); // Get the value at max_idx as an af::array
+      af::array t_pk = t(max_idx);
       // af_print(t_pk);
 
       // ----------------- Sinc-NLLS -----------------
       // Create lambda array
-      double lambda[] = {max_val, 0.0, d_bandwidth / d_samp_rate};
+      double lambda[] = {max_val, 0.0, bandwidth / samp_rate};
       af::array af_lambda(3, lambda, afHost);
 
       // Making Index for NLLS
-      af::array nlls_ind = af::seq(0.0, d_NLLS_pts - 1.0);
+      double NLLS_pts = std::ceil(2.0 * samp_rate / bandwidth) - 1.0;
+
+      // Minimum Number of Points = 5
+      if (NLLS_pts < 7.0)
+        NLLS_pts = 7.0;
+      // GR_LOG_INFO(d_logger, "NLLS Points: " + std::to_string(NLLS_pts));
+
+      // NLLS Infex Vector
+      af::array nlls_ind = af::seq(0.0, NLLS_pts - 1.0);
       nlls_ind = nlls_ind - af::median(nlls_ind);
-      nlls_ind = nlls_ind;
+      nlls_ind = nlls_ind.as(f64);
+      af::array max_vector = af::constant(static_cast<double>(max_idx), static_cast<dim_t>(NLLS_pts));
 
       // Output vector of points around max index
-      af::array nlls_y = mf_resp_abs(max_idx - nlls_ind);
+      af::array nlls_y = mf_resp_abs(max_vector - nlls_ind);
       nlls_y = nlls_y;
 
       // Iterates through NLLS x times
-      for (int i = 0; i < d_NLLS_iter; i++)
+      for (int i = 0; i < NLLS_iter; i++)
       {
+        af::array x = nlls_ind - af_lambda(1);
+        af::array z = x * af_lambda(2);
+        af::array sinc_z = sinc(z);
+        af::array cos_z = af::cos(af::Pi * z);
+        af::array nlls_f = af_lambda(0) * sinc_z;
 
-        af::array nlls_f = (lambda[0] * sinc((nlls_ind - lambda[1]) * lambda[2]));
+        // Jacobian Matrix
+        af::array GN1 = sinc_z;
+        af::array GN2 = af_lambda(0) * (sinc_z - cos_z) / (x);
+        af::array GN3 = af_lambda(0) * x * (cos_z - sinc_z) / af_lambda(2);
+        af::array J = af::join(1, GN1, GN2, GN3);
 
-        // Gaussian-Newton optimization
-        af::array GN1 = sinc(lambda[2] * (nlls_ind - lambda[1]));
-        af::array GN2 =
-            (lambda[0] * (sinc(lambda[2] * (nlls_ind - lambda[1])) -
-                          af::cos(af::Pi * lambda[2] * (nlls_ind - lambda[1])))) /
-            (nlls_ind - lambda[1]);
-        af::array GN3 =
-            (lambda[0] * (af::cos(af::Pi * lambda[2] * (nlls_ind - lambda[1])) -
-                          sinc(lambda[2] * (nlls_ind - lambda[1])))) /
-            (lambda[2]);
-        af::array nlls_J = af::join(1, GN1, GN2, GN3);
-        af::replace(nlls_J, !(af::isNaN(nlls_J)), 0.0);
+        // Replace Infinite and NaNs with zeros
+        af::replace(J, !(af::isInf(J)), 0.0);
+        af::replace(J, !(af::isNaN(J)), 0.0);
 
-        //  Residual errors
-        af::array nlls_delty = nlls_y - nlls_f;
+        // Residual
+        af::array r = nlls_y - nlls_f;
+        // Solve for lambda
+        af::array JTJ = af::matmulTN(J, J);
+        af::array JTr = af::matmulTN(J, r);
+        af::array delta = af::solve(JTJ, JTr);
 
-        // Parameter
-        af::array nlls_deltlambda = af::matmul((af::matmul((af::inverse(af::matmul(nlls_J.T(), nlls_J))), nlls_J.T())), nlls_delty);
-
-        // Estimate
-        af_lambda = af_lambda + nlls_deltlambda;
-        af_lambda.host(lambda);
+        af_lambda += delta;
       }
+      // Output Lambda
+      af_lambda.host(lambda);
 
       // Compute frequency estimate
-      af::array t_est_arr = t_pk + (af_lambda(1) / d_samp_rate);
+      af::array t_est_arr = t_pk + (af_lambda(1) / samp_rate);
+
+      // af_print(t_est_arr);
+
       // Extract scalar value from ArrayFire array
       t_est_arr.host(&t_est);
 
-      if (pmt::equal(src_val, PMT_HARMONIA_SDR1))
+      if (d_rx_count < 2)
       {
-        d_sdr1_time_est.push_back(t_est);
-        d_sdr1_phase_est.push_back(p_est);
+        switch (sdr_id)
+        {
+        case 1:
+          if (d_rx_count == 0)
+          {
+            d_sdr2_time_est.push_back(t_est);
+            d_sdr2_phase_est.push_back(p_est);
+          }
+          else
+          {
+            d_sdr3_time_est.push_back(t_est);
+            d_sdr3_phase_est.push_back(p_est);
+          }
+          break;
+        case 2:
+          if (d_rx_count == 0)
+          {
+            d_sdr1_time_est.push_back(t_est);
+            d_sdr1_phase_est.push_back(p_est);
+          }
+          else
+          {
+            d_sdr3_time_est.push_back(t_est);
+            d_sdr3_phase_est.push_back(p_est);
+          }
+          break;
+        case 3:
+          if (d_rx_count == 0)
+          {
+            d_sdr1_time_est.push_back(t_est);
+            d_sdr1_phase_est.push_back(p_est);
+          }
+          else
+          {
+            d_sdr2_time_est.push_back(t_est);
+            d_sdr2_phase_est.push_back(p_est);
+          }
+          break;
+        }
       }
-      else if (pmt::equal(src_val, PMT_HARMONIA_SDR2))
-      {
-        d_sdr2_time_est.push_back(t_est);
-        d_sdr2_phase_est.push_back(p_est);
-      }
-      else if (pmt::equal(src_val, PMT_HARMONIA_SDR3))
-      {
-        d_sdr3_time_est.push_back(t_est);
-        d_sdr3_phase_est.push_back(p_est);
-      }
-      else
-      {
-        GR_LOG_WARN(d_logger, "Unknown SDR source in metadata");
-      }
+      d_rx_count++;
 
       auto to_pmt_f32 = [&](const std::vector<float> &v)
       {
         return pmt::init_f32vector(v.size(), const_cast<float *>(v.data()));
       };
 
-      // Wait for TDMA to fully finish before outputting all data
-      if (pmt::equal(TDMA_val, pmt::PMT_T))
+      if (d_rx_count == 2)
       {
         d_tp_meta = pmt::dict_add(d_tp_meta, PMT_HARMONIA_SDR1, to_pmt_f32(d_sdr1_time_est));
-        d_tp_meta = pmt::dict_add(d_tp_meta, PMT_HARMONIA_SDR2, to_pmt_f32(d_sdr2_time_est));
-        d_tp_meta = pmt::dict_add(d_tp_meta, PMT_HARMONIA_SDR3, to_pmt_f32(d_sdr3_time_est));
         d_tp_meta = pmt::dict_add(d_tp_meta, PMT_HARMONIA_P_SDR1, to_pmt_f32(d_sdr1_phase_est));
+        d_tp_meta = pmt::dict_add(d_tp_meta, PMT_HARMONIA_SDR2, to_pmt_f32(d_sdr2_time_est));
         d_tp_meta = pmt::dict_add(d_tp_meta, PMT_HARMONIA_P_SDR2, to_pmt_f32(d_sdr2_phase_est));
+        d_tp_meta = pmt::dict_add(d_tp_meta, PMT_HARMONIA_SDR3, to_pmt_f32(d_sdr3_time_est));
         d_tp_meta = pmt::dict_add(d_tp_meta, PMT_HARMONIA_P_SDR3, to_pmt_f32(d_sdr3_phase_est));
-        GR_LOG_WARN(d_logger, "TDMA done");
-        // Send the frequency estimates as a message with metadata
-        message_port_pub(d_tp_out_port, d_tp_meta);
+        d_tp_meta = pmt::dict_add(d_tp_meta, PMT_HARMONIA_P_SDR3, to_pmt_f32(d_sdr3_phase_est));
+        d_tp_meta = pmt::dict_add(d_tp_meta, pmt::intern("rx_id"), sdr_pmt);
+
+        // Send the time estimates as a message with metadata
+        pmt::pmt_t empty_payload = pmt::make_u8vector(0, 0);
+        pmt::pmt_t pdu = pmt::cons(d_tp_meta, empty_payload);
+
+        // Now publish that PDU:
+        message_port_pub(d_tp_out_port, pdu);
       }
 
       // Reset the metadata output
-      d_meta = pmt::make_dict();
+      d_tp_meta = pmt::make_dict();
     }
 
     void time_pk_est_impl::set_msg_queue_depth(size_t depth) { d_msg_queue_depth = depth; }

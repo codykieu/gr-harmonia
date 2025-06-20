@@ -7,11 +7,11 @@ parameters:
   - id: frequency
     label: Baseband Frequency
     dtype: float
-    default: "fb"
+    default: "baseband_freq"
   - id: center_freq
     label: Center Frequency
     dtype: float
-    default: "fc"
+    default: "center_freq"
   - id: phase
     label: Phase
     dtype: float
@@ -19,7 +19,7 @@ parameters:
   - id: pulse_width
     label: Pulse width
     dtype: float
-    default: "10e-6"
+    default: "Tp"
   - id: samp_rate
     label: Sample rate
     dtype: float

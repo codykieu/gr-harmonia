@@ -42,6 +42,7 @@ namespace gr
       std::string tx_cpu_format, rx_cpu_format;
       std::string tx_otw_format, rx_otw_format;
       double prf;
+      double cap_length;
 
       bool elevate_priority;
       std::string calibration_file;
@@ -70,9 +71,7 @@ namespace gr
     private:
       void handle_msg(pmt::pmt_t msg);
       void config_usrp(uhd::usrp::multi_usrp::sptr &usrp_tx,
-                       uhd::usrp::multi_usrp::sptr &usrp_rx,
                        const std::string &args_tx,
-                       const std::string &args_rx,
                        const double tx_rate,
                        const double rx_rate,
                        const double tx_freq,
@@ -88,9 +87,6 @@ namespace gr
       void transmit_bursts(uhd::usrp::multi_usrp::sptr usrp_tx,
                            uhd::tx_streamer::sptr tx_stream,
                            double start_time);
-      void transmit_continuous(uhd::usrp::multi_usrp::sptr usrp_tx,
-                               uhd::tx_streamer::sptr tx_stream,
-                               double start_time);
       void read_calibration_file(const std::string &filename);
       void set_metadata_keys(const std::string &tx_freq_key,
                              const std::string &rx_freq_key,
@@ -99,7 +95,6 @@ namespace gr
 
     public:
       usrp_radar_2_impl(const std::string &args_tx,
-                        const std::string &args_rx,
                         const double tx_rate,
                         const double rx_rate,
                         const double tx_freq,
@@ -109,7 +104,8 @@ namespace gr
                         const double start_delay,
                         const bool elevate_priority,
                         const std::string &cal_file,
-                        const bool verbose);
+                        const bool verbose,
+                      double cap_length);
       ~usrp_radar_2_impl();
 
       void run();

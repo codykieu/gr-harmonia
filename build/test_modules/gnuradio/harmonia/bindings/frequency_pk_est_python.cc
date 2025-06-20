@@ -16,7 +16,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0) */
 /* BINDTOOL_USE_PYGCCXML(0) */
 /* BINDTOOL_HEADER_FILE(frequency_pk_est.h) */
-/* BINDTOOL_HEADER_FILE_HASH(0f896eafea88ac2d6f6123337f2ae015) */
+/* BINDTOOL_HEADER_FILE_HASH(5c4717b6183d6efe4cfc954091170617) */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -37,9 +37,9 @@ void bind_frequency_pk_est(py::module &m) {
              std::shared_ptr<frequency_pk_est>>(m, "frequency_pk_est",
                                                 D(frequency_pk_est))
 
-      .def(py::init(&frequency_pk_est::make), py::arg("nfft"),
+      .def(py::init(&frequency_pk_est::make), py::arg("fft_ratio"),
            py::arg("pulse_width"), py::arg("cap_length"), py::arg("samp_rate"),
-           py::arg("NLLS_iter"), py::arg("enable_out"),
+           py::arg("NLLS_iter"), py::arg("sdr_id"), py::arg("enable_out"),
            D(frequency_pk_est, make))
 
       .def("set_msg_queue_depth", &frequency_pk_est::set_msg_queue_depth,

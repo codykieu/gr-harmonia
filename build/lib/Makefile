@@ -255,6 +255,30 @@ harmonia_qa_device.cc_autogen/fast:
 	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/harmonia_qa_device.cc_autogen.dir/build.make lib/CMakeFiles/harmonia_qa_device.cc_autogen.dir/build
 .PHONY : harmonia_qa_device.cc_autogen/fast
 
+LFM_src_impl.o: LFM_src_impl.cc.o
+.PHONY : LFM_src_impl.o
+
+# target to build an object file
+LFM_src_impl.cc.o:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.o
+.PHONY : LFM_src_impl.cc.o
+
+LFM_src_impl.i: LFM_src_impl.cc.i
+.PHONY : LFM_src_impl.i
+
+# target to preprocess a source file
+LFM_src_impl.cc.i:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.i
+.PHONY : LFM_src_impl.cc.i
+
+LFM_src_impl.s: LFM_src_impl.cc.s
+.PHONY : LFM_src_impl.s
+
+# target to generate assembly for a file
+LFM_src_impl.cc.s:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.s
+.PHONY : LFM_src_impl.cc.s
+
 QPSK_demod_impl.o: QPSK_demod_impl.cc.o
 .PHONY : QPSK_demod_impl.o
 
@@ -398,6 +422,30 @@ clockbias_phase_est_impl.s: clockbias_phase_est_impl.cc.s
 clockbias_phase_est_impl.cc.s:
 	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/clockbias_phase_est_impl.cc.s
 .PHONY : clockbias_phase_est_impl.cc.s
+
+compensation_impl.o: compensation_impl.cc.o
+.PHONY : compensation_impl.o
+
+# target to build an object file
+compensation_impl.cc.o:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.o
+.PHONY : compensation_impl.cc.o
+
+compensation_impl.i: compensation_impl.cc.i
+.PHONY : compensation_impl.i
+
+# target to preprocess a source file
+compensation_impl.cc.i:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.i
+.PHONY : compensation_impl.cc.i
+
+compensation_impl.s: compensation_impl.cc.s
+.PHONY : compensation_impl.s
+
+# target to generate assembly for a file
+compensation_impl.cc.s:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.s
+.PHONY : compensation_impl.cc.s
 
 device.o: device.cc.o
 .PHONY : device.o
@@ -730,6 +778,9 @@ help:
 	@echo "... harmonia_qa_device.cc_autogen_timestamp_deps"
 	@echo "... gnuradio-harmonia"
 	@echo "... harmonia_qa_device.cc"
+	@echo "... LFM_src_impl.o"
+	@echo "... LFM_src_impl.i"
+	@echo "... LFM_src_impl.s"
 	@echo "... QPSK_demod_impl.o"
 	@echo "... QPSK_demod_impl.i"
 	@echo "... QPSK_demod_impl.s"
@@ -748,6 +799,9 @@ help:
 	@echo "... clockbias_phase_est_impl.o"
 	@echo "... clockbias_phase_est_impl.i"
 	@echo "... clockbias_phase_est_impl.s"
+	@echo "... compensation_impl.o"
+	@echo "... compensation_impl.i"
+	@echo "... compensation_impl.s"
 	@echo "... device.o"
 	@echo "... device.i"
 	@echo "... device.s"

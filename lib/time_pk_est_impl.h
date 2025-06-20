@@ -10,6 +10,7 @@
 
 #include <gnuradio/harmonia/time_pk_est.h>
 #include <gnuradio/harmonia/pmt_constants.h>
+#include <plasma_dsp/fft.h>
 #include <arrayfire.h>
 
 namespace gr
@@ -21,11 +22,10 @@ namespace gr
     {
     private:
       // Parameters
-      size_t d_fftsize;
-      double d_samp_rate;
-      double d_bandwidth;
-      double d_NLLS_iter;
-      double d_NLLS_pts;
+      double samp_rate;
+      double bandwidth;
+      double NLLS_iter;
+      int sdr_id;
 
       // Variables
       af::array d_match_filt;
@@ -40,6 +40,7 @@ namespace gr
       std::vector<float> d_sdr1_phase_est;
       std::vector<float> d_sdr2_phase_est;
       std::vector<float> d_sdr3_phase_est;
+      int d_rx_count;
 
       // Message Ports
       pmt::pmt_t d_tx_port;
@@ -51,13 +52,15 @@ namespace gr
       pmt::pmt_t d_meta;
       pmt::pmt_t d_data;
       pmt::pmt_t d_tp_meta;
+      pmt::pmt_t sdr_pmt;
+
       af::array sinc(const af::array &x);
 
       void handle_tx_msg(pmt::pmt_t);
       void handle_rx_msg(pmt::pmt_t);
 
     public:
-      time_pk_est_impl(size_t nfft, double samp_rate, double bandwidth, double NLLS_iter, double NLLS_pts);
+      time_pk_est_impl(double samp_rate, double bandwidth, double NLLS_iter, int sdr_id);
       ~time_pk_est_impl();
 
       void set_msg_queue_depth(size_t) override;

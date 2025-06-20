@@ -16,35 +16,39 @@ namespace gr
     namespace harmonia
     {
 
-        frequency_pk_est::sptr frequency_pk_est::make(size_t nfft,
+        frequency_pk_est::sptr frequency_pk_est::make(size_t fft_ratio,
                                                       double pulse_width,
                                                       double cap_length,
                                                       double samp_rate,
                                                       double NLLS_iter,
+                                                      int sdr_id,
                                                       bool enable_out)
         {
             return gnuradio::make_block_sptr<frequency_pk_est_impl>(
-                nfft, pulse_width, cap_length, samp_rate, NLLS_iter, enable_out);
+                fft_ratio, pulse_width, cap_length, samp_rate, NLLS_iter, sdr_id, enable_out);
         }
 
         /*
          * The private constructor
          */
-        frequency_pk_est_impl::frequency_pk_est_impl(size_t nfft,
+        frequency_pk_est_impl::frequency_pk_est_impl(size_t fft_ratio,
                                                      double pulse_width,
                                                      double cap_length,
                                                      double samp_rate,
                                                      double NLLS_iter,
+                                                     int sdr_id,
                                                      bool enable_out)
             : gr::block("frequency_pk_est",
                         gr::io_signature::make(0, 0, 0),
                         gr::io_signature::make(0, 0, 0)),
-              d_fftsize(nfft),
-              d_pulse_width(pulse_width),
-              d_cap_length(cap_length),
-              d_samp_rate(samp_rate),
-              d_NLLS_iter(NLLS_iter),
-              d_enable_out(enable_out)
+              fft_ratio(fft_ratio),
+              pulse_width(pulse_width),
+              cap_length(cap_length),
+              samp_rate(samp_rate),
+              NLLS_iter(NLLS_iter),
+              sdr_id(sdr_id),
+              enable_out(enable_out),
+              d_rx_count(0)
         {
             d_in_port = PMT_HARMONIA_IN;
             d_f_out_port = PMT_HARMONIA_F_OUT;
@@ -98,15 +102,24 @@ namespace gr
                 return;
             }
 
-            // Check which SDR TX the signal
-            pmt::pmt_t src_val = pmt::dict_ref(d_meta, pmt::intern("src"), pmt::PMT_NIL);
-            // std::cout << "[SDR ID]: " << pmt::write_string(src_val) << std::endl;
-            pmt::pmt_t TDMA_val = pmt::dict_ref(d_meta, pmt::intern("TDMA_Done"), pmt::PMT_NIL);
+            // Set SDR PMT
+            switch (sdr_id)
+            {
+            case 1:
+                sdr_pmt = PMT_HARMONIA_SDR1;
+                break;
+            case 2:
+                sdr_pmt = PMT_HARMONIA_SDR2;
+                break;
+            case 3:
+                sdr_pmt = PMT_HARMONIA_SDR3;
+                break;
+            }
 
             // Retrieves length of samples
             size_t n = pmt::length(samples);
             // GR_LOG_INFO(d_logger, "Received PDU with length: " + std::to_string(n));
-            double NFFT = d_fftsize * n;
+            double NFFT = fft_ratio * n;
             // GR_LOG_INFO(d_logger, "NFFT: " + std::to_string(NFFT));
 
             // Casting data into array
@@ -127,7 +140,7 @@ namespace gr
             af_abs_fft.host(out);
 
             // Send the data as a message
-            if (d_enable_out)
+            if (enable_out)
             {
                 message_port_pub(d_out_port, pmt::cons(d_meta, d_data));
             }
@@ -137,28 +150,31 @@ namespace gr
             unsigned max_idx;
             af::max(&max_fft, &max_idx, af_abs_fft);
 
-            // // Calculate frequency at peak
-            // double f_pk = -d_samp_rate / 2 + double(max_idx) * d_samp_rate / double(NFFT);
-            // GR_LOG_INFO(d_logger, "Frequency Peak: " + std::to_string(f_pk));
-
             // Generate frequency axis
             af::array f_axis =
-                (-d_samp_rate / 2.0) + ((af::seq(0, NFFT - 1)) * (d_samp_rate / (NFFT)));
+                (-samp_rate / 2.0) + ((af::seq(0, NFFT - 1)) * (samp_rate / (NFFT)));
 
             af::array f_pk = f_axis(max_idx); // Get the value at max_idx as an af::array
             // af_print(f_pk);
 
             // ----------------- Sinc-NLLS -----------------
             // Create lambda array
-            double lambda[] = {max_fft, 0.0, d_pulse_width / d_cap_length};
+            double lambda[] = {max_fft, 0.0, pulse_width / cap_length};
             af::array af_lambda(3, lambda, afHost);
 
             // Making Index for NLLS
-            double NLLS_pts = std::ceil(d_fftsize * 2.0 * d_pulse_width / d_cap_length) - 1.0;
+            double NLLS_pts = std::ceil(fft_ratio * 2.0 * pulse_width / cap_length) - 1.0;
+
+            // Minimum Number of Points = 3
+            if (NLLS_pts < 5.0)
+                NLLS_pts = 5.0;
             // GR_LOG_INFO(d_logger, "NLLS Points: " + std::to_string(NLLS_pts));
+
+            // NLLS Index Vector
             af::array nlls_ind = af::seq(0.0, NLLS_pts - 1.0);
             nlls_ind = nlls_ind - af::median(nlls_ind);
             nlls_ind = nlls_ind.as(f64);
+            // af_print(nlls_ind);
             af::array max_vector = af::constant(static_cast<double>(max_idx), static_cast<dim_t>(NLLS_pts));
 
             // Output vector of points around max index
@@ -167,7 +183,7 @@ namespace gr
             // af_print(nlls_y);
 
             // Iterates through NLLS x times
-            for (int iter = 0; iter < d_NLLS_iter; ++iter)
+            for (int iter = 0; iter < NLLS_iter; ++iter)
             {
                 af::array x = nlls_ind - af_lambda(1);
                 af::array z = x * af_lambda(2);
@@ -176,9 +192,9 @@ namespace gr
                 af::array nlls_f = af_lambda(0) * sinc_z;
 
                 // Jacobian Matrix
-                af::array GN1 = sinc_z;                                             
-                af::array GN2 = af_lambda(0) * (sinc_z - cos_z) / (x);              
-                af::array GN3 = af_lambda(0) * x * (cos_z - sinc_z) / af_lambda(2); 
+                af::array GN1 = sinc_z;
+                af::array GN2 = af_lambda(0) * (sinc_z - cos_z) / (x);
+                af::array GN3 = af_lambda(0) * x * (cos_z - sinc_z) / af_lambda(2);
                 af::array J = af::join(1, GN1, GN2, GN3);
 
                 // Replace Infinite and NaNs with zeros
@@ -186,7 +202,8 @@ namespace gr
                 af::replace(J, !(af::isNaN(J)), 0.0);
 
                 // Residual
-                af::array r = nlls_y - nlls_f; 
+                af::array r = nlls_y - nlls_f;
+
                 // Solve for lambda
                 af::array JTJ = af::matmulTN(J, J);
                 af::array JTr = af::matmulTN(J, r);
@@ -199,45 +216,53 @@ namespace gr
             // af_print(af_lambda);
 
             // Compute frequency estimate
-            af::array f_est_arr = f_pk + (af_lambda(1) / d_cap_length);
+            af::array f_est_arr = f_pk + (af_lambda(1) / (cap_length * fft_ratio));
             // af_print(f_est_arr);
 
             // Output frequency estimate
             f_est_arr.host(&f_est);
 
-            // Assign estimates to designated transmitted SDRs
-            if (pmt::equal(src_val, PMT_HARMONIA_SDR1))
+            if (d_rx_count < 2)
             {
-                d_sdr1_estimates.push_back(f_est);
+                switch (sdr_id)
+                {
+                case 1:
+                    if (d_rx_count == 0)
+                        d_sdr2_estimates.push_back(f_est);
+                    else
+                        d_sdr3_estimates.push_back(f_est);
+                    break;
+                case 2:
+                    if (d_rx_count == 0)
+                        d_sdr1_estimates.push_back(f_est);
+                    else
+                        d_sdr3_estimates.push_back(f_est);
+                    break;
+                case 3:
+                    if (d_rx_count == 0)
+                        d_sdr1_estimates.push_back(f_est);
+                    else
+                        d_sdr2_estimates.push_back(f_est);
+                    break;
+                }
             }
-            else if (pmt::equal(src_val, PMT_HARMONIA_SDR2))
-            {
-                d_sdr2_estimates.push_back(f_est);
-            }
-            else if (pmt::equal(src_val, PMT_HARMONIA_SDR3))
-            {
-                d_sdr3_estimates.push_back(f_est);
-            }
-            else
-            {
-                GR_LOG_WARN(d_logger, "Unknown SDR source in metadata");
-            }
+            d_rx_count++;
 
             auto to_pmt_f32 = [&](const std::vector<float> &v)
             {
                 return pmt::init_f32vector(v.size(), const_cast<float *>(v.data()));
             };
 
-            // Wait for TDMA to fully finish before outputting all data
-            if (pmt::equal(TDMA_val, pmt::PMT_T))
+            if (d_rx_count == 2)
             {
                 d_meta_f = pmt::dict_add(d_meta_f, PMT_HARMONIA_SDR1, to_pmt_f32(d_sdr1_estimates));
                 d_meta_f = pmt::dict_add(d_meta_f, PMT_HARMONIA_SDR2, to_pmt_f32(d_sdr2_estimates));
                 d_meta_f = pmt::dict_add(d_meta_f, PMT_HARMONIA_SDR3, to_pmt_f32(d_sdr3_estimates));
+                d_meta_f = pmt::dict_add(d_meta_f, pmt::intern("rx_id"), sdr_pmt);
 
-                GR_LOG_INFO(d_logger, "TDMA done");
-                // Send the frequency estimates as a message with metadata
-                message_port_pub(d_f_out_port, d_meta_f);
+                pmt::pmt_t empty_payload = pmt::make_u8vector(0, 0);
+                pmt::pmt_t pdu = pmt::cons(d_meta_f, empty_payload);
+                message_port_pub(d_f_out_port, pdu);
             }
 
             // Reset the metadata output

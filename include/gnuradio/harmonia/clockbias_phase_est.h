@@ -35,7 +35,7 @@ namespace gr
        * class. harmonia::clockbias_phase_est::make is the public interface for
        * creating new instances.
        */
-      static sptr make(int num_platforms, int platform_num, double baseband_freq,
+      static sptr make(int num_platforms, double baseband_freq,
                        double center_freq, double samp_rate, double pulse_width,
                        double SNR);
     };

@@ -37,6 +37,8 @@ namespace py = pybind11;
     void bind_clockbias_phase_est(py::module& m);
     void bind_QPSK_mod(py::module& m);
     void bind_QPSK_demod(py::module& m);
+    void bind_LFM_src(py::module& m);
+    void bind_compensation(py::module& m);
 // ) END BINDING_FUNCTION_PROTOTYPES
 
 
@@ -81,5 +83,7 @@ PYBIND11_MODULE(harmonia_python, m)
     bind_clockbias_phase_est(m);
     bind_QPSK_mod(m);
     bind_QPSK_demod(m);
+    bind_LFM_src(m);
+    bind_compensation(m);
     // ) END BINDING_FUNCTION_CALLS
 }

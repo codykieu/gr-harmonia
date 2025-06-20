@@ -16,7 +16,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0) */
 /* BINDTOOL_USE_PYGCCXML(0) */
 /* BINDTOOL_HEADER_FILE(usrp_radar_2.h) */
-/* BINDTOOL_HEADER_FILE_HASH(c0f5ed5687c6ef5b19529c7625a9c038) */
+/* BINDTOOL_HEADER_FILE_HASH(b44d555881e47418502e8017c8fe3737) */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -37,10 +37,10 @@ void bind_usrp_radar_2(py::module &m) {
              std::shared_ptr<usrp_radar_2>>(m, "usrp_radar_2", D(usrp_radar_2))
 
       .def(py::init(&usrp_radar_2::make), py::arg("args_tx"),
-           py::arg("args_rx"), py::arg("tx_rate"), py::arg("rx_rate"),
-           py::arg("tx_freq"), py::arg("rx_freq"), py::arg("tx_gain"),
-           py::arg("rx_gain"), py::arg("start_delay"),
-           py::arg("elevate_priority"), py::arg("cal_file"), py::arg("verbose"),
+           py::arg("tx_rate"), py::arg("rx_rate"), py::arg("tx_freq"),
+           py::arg("rx_freq"), py::arg("tx_gain"), py::arg("rx_gain"),
+           py::arg("start_delay"), py::arg("elevate_priority"),
+           py::arg("cal_file"), py::arg("verbose"), py::arg("cap_length"),
            D(usrp_radar_2, make))
 
       .def("set_metadata_keys", &usrp_radar_2::set_metadata_keys,

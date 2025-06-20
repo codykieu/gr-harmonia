@@ -33,8 +33,8 @@ public:
      * class. harmonia::frequency_pk_est::make is the public interface for
      * creating new instances.
      */
-    static sptr make(size_t nfft, double pulse_width, double cap_length,
-        double samp_rate, double NLLS_iter, bool enable_out);
+    static sptr make(size_t fft_ratio, double pulse_width, double cap_length,
+        double samp_rate, double NLLS_iter, int sdr_id, bool enable_out);
 
     virtual void set_msg_queue_depth(size_t) = 0;
 

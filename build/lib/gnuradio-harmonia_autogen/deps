@@ -1,6 +1,8 @@
 gnuradio-harmonia_autogen/timestamp: \
 	/home/cody/gr-harmonia/cmake/Modules/targetConfig.cmake.in \
 	/home/cody/gr-harmonia/lib/CMakeLists.txt \
+	/home/cody/gr-harmonia/lib/LFM_src_impl.cc \
+	/home/cody/gr-harmonia/lib/LFM_src_impl.h \
 	/home/cody/gr-harmonia/lib/QPSK_demod_impl.cc \
 	/home/cody/gr-harmonia/lib/QPSK_demod_impl.h \
 	/home/cody/gr-harmonia/lib/QPSK_mod_impl.cc \
@@ -13,6 +15,8 @@ gnuradio-harmonia_autogen/timestamp: \
 	/home/cody/gr-harmonia/lib/clock_drift_est_impl.h \
 	/home/cody/gr-harmonia/lib/clockbias_phase_est_impl.cc \
 	/home/cody/gr-harmonia/lib/clockbias_phase_est_impl.h \
+	/home/cody/gr-harmonia/lib/compensation_impl.cc \
+	/home/cody/gr-harmonia/lib/compensation_impl.h \
 	/home/cody/gr-harmonia/lib/device.cc \
 	/home/cody/gr-harmonia/lib/frequency_pk_est_impl.cc \
 	/home/cody/gr-harmonia/lib/frequency_pk_est_impl.h \

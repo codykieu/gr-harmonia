@@ -68,18 +68,15 @@ class test(gr.top_block, Qt.QWidget):
         # Blocks
         ##################################################
 
-        self.plasma_pdu_file_sink_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/waveform', '')
-        self.harmonia_usrp_radar_2_0 = harmonia.usrp_radar_2("addr=192.168.60.2, use_dpkg=1", "addr=192.168.80.2, use_dpkg=1", samp_rate, samp_rate, 3e9, 3e9, 0, 0, 0.1, False, "", False)
-        self.harmonia_usrp_radar_2_0.set_metadata_keys('core:tx_freq', 'core:rx_freq', 'core:sample_start', 'radar:prf')
-        self.harmonia_single_tone_src_0 = harmonia.single_tone_src(0, 0, 0, 300e-6, samp_rate, 0, 1996, 1)
+        self.plasma_pdu_file_sink_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/waveform', '/home/cody/gr-MATLAB/waveform_meta')
+        self.harmonia_single_tone_src_0 = harmonia.single_tone_src(10e3, 0, 0, 300e-6, samp_rate, 0, 1996, 1)
         self.harmonia_single_tone_src_0.init_meta_dict('radar:frequency', 'radar:phase', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
 
 
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.harmonia_single_tone_src_0, 'out'), (self.harmonia_usrp_radar_2_0, 'in'))
-        self.msg_connect((self.harmonia_usrp_radar_2_0, 'out'), (self.plasma_pdu_file_sink_0, 'in'))
+        self.msg_connect((self.harmonia_single_tone_src_0, 'out'), (self.plasma_pdu_file_sink_0, 'in'))
 
 
     def closeEvent(self, event):

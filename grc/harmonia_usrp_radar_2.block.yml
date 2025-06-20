@@ -8,11 +8,6 @@ parameters:
     dtype: string
     default: '""'
     hide: ${ ('part' if args_tx == "" else 'none') }
-  - id: args_rx
-    label: RX Device Arguments
-    dtype: string
-    default: '""'
-    hide: ${ ('part' if args_rx == "" else 'none') }    
   - id: samp_rate
     label: Sample Rate
     dtype: float
@@ -54,6 +49,10 @@ parameters:
     options: [False, True]
     default: False
     hide: part
+  - id: cap_length
+    label: Capture Length
+    dtype: float
+    default: 1e-6
   # Metadata keys
   - id: tx_freq_key
     label: Tx frequency key
@@ -93,7 +92,7 @@ outputs:
 templates:
   imports: from gnuradio import harmonia
   make: |-
-    harmonia.usrp_radar_2(${args_tx}, ${args_rx}, ${samp_rate}, ${samp_rate}, ${tx_freq}, ${rx_freq}, ${tx_gain}, ${rx_gain}, ${start_delay}, ${elevate_priority}, ${cal_file}, ${verbose})
+    harmonia.usrp_radar_2(${args_tx}, ${samp_rate}, ${samp_rate}, ${tx_freq}, ${rx_freq}, ${tx_gain}, ${rx_gain}, ${start_delay}, ${elevate_priority}, ${cal_file}, ${verbose}, ${cap_length})
     self.${id}.set_metadata_keys(${tx_freq_key}, ${rx_freq_key}, ${sample_start_key}, ${prf_key})
 
 #  'file_format' specifies the version of the GRC yml format used in the file

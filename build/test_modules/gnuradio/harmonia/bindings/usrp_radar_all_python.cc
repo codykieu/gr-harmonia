@@ -16,7 +16,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0) */
 /* BINDTOOL_USE_PYGCCXML(0) */
 /* BINDTOOL_HEADER_FILE(usrp_radar_all.h) */
-/* BINDTOOL_HEADER_FILE_HASH(6342091e0cb1408f1d2b0e42e83fb958) */
+/* BINDTOOL_HEADER_FILE_HASH(64768e42de5cd01b54c7e8da87843461) */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -38,11 +38,12 @@ void bind_usrp_radar_all(py::module &m) {
                                               D(usrp_radar_all))
 
       .def(py::init(&usrp_radar_all::make), py::arg("args_1"),
-           py::arg("args_2"), py::arg("sdr1_rate"), py::arg("sdr2_rate"),
-           py::arg("sdr1_freq"), py::arg("sdr2_freq"), py::arg("sdr1_gain"),
-           py::arg("sdr2_gain"), py::arg("start_delay"), py::arg("cap_length"),
-           py::arg("wait_time"), py::arg("TDMA_time"), py::arg("verbose"),
-           D(usrp_radar_all, make))
+           py::arg("args_2"), py::arg("args_3"), py::arg("sdr1_rate"),
+           py::arg("sdr2_rate"), py::arg("sdr3_rate"), py::arg("sdr1_freq"),
+           py::arg("sdr2_freq"), py::arg("sdr3_freq"), py::arg("sdr1_gain"),
+           py::arg("sdr2_gain"), py::arg("sdr3_gain"), py::arg("start_delay"),
+           py::arg("cap_length"), py::arg("wait_time"), py::arg("TDMA_time"),
+           py::arg("verbose"), D(usrp_radar_all, make))
 
       .def("set_metadata_keys", &usrp_radar_all::set_metadata_keys,
            py::arg("sdr1_freq_key"), py::arg("sdr2_freq_key"),

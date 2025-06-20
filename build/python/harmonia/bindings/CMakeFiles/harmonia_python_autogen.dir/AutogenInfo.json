@@ -105,6 +105,11 @@
 	"SOURCES" : 
 	[
 		[
+			"/home/cody/gr-harmonia/python/harmonia/bindings/LFM_src_python.cc",
+			"Mu",
+			null
+		],
+		[
 			"/home/cody/gr-harmonia/python/harmonia/bindings/QPSK_demod_python.cc",
 			"Mu",
 			null
@@ -131,6 +136,11 @@
 		],
 		[
 			"/home/cody/gr-harmonia/python/harmonia/bindings/clockbias_phase_est_python.cc",
+			"Mu",
+			null
+		],
+		[
+			"/home/cody/gr-harmonia/python/harmonia/bindings/compensation_python.cc",
 			"Mu",
 			null
 		],

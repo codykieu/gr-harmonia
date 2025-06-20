@@ -16,7 +16,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0) */
 /* BINDTOOL_USE_PYGCCXML(0) */
 /* BINDTOOL_HEADER_FILE(clockbias_phase_est.h) */
-/* BINDTOOL_HEADER_FILE_HASH(89688cbd3484d08527c61e9ce22a9c30) */
+/* BINDTOOL_HEADER_FILE_HASH(1963b53d5fd0ddd741060fc74571d9b1) */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -38,9 +38,9 @@ void bind_clockbias_phase_est(py::module &m) {
                                                    D(clockbias_phase_est))
 
       .def(py::init(&clockbias_phase_est::make), py::arg("num_platforms"),
-           py::arg("platform_num"), py::arg("baseband_freq"),
-           py::arg("center_freq"), py::arg("samp_rate"), py::arg("pulse_width"),
-           py::arg("SNR"), D(clockbias_phase_est, make))
+           py::arg("baseband_freq"), py::arg("center_freq"),
+           py::arg("samp_rate"), py::arg("pulse_width"), py::arg("SNR"),
+           D(clockbias_phase_est, make))
 
       ;
 }

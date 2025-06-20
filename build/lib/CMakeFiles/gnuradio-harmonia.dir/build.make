@@ -313,6 +313,34 @@ lib/CMakeFiles/gnuradio-harmonia.dir/QPSK_demod_impl.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/gnuradio-harmonia.dir/QPSK_demod_impl.cc.s"
 	cd /home/cody/gr-harmonia/build/lib && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/cody/gr-harmonia/lib/QPSK_demod_impl.cc -o CMakeFiles/gnuradio-harmonia.dir/QPSK_demod_impl.cc.s
 
+lib/CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.o: lib/CMakeFiles/gnuradio-harmonia.dir/flags.make
+lib/CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.o: /home/cody/gr-harmonia/lib/LFM_src_impl.cc
+lib/CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.o: lib/CMakeFiles/gnuradio-harmonia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object lib/CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.o"
+	cd /home/cody/gr-harmonia/build/lib && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT lib/CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.o -MF CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.o.d -o CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.o -c /home/cody/gr-harmonia/lib/LFM_src_impl.cc
+
+lib/CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.i"
+	cd /home/cody/gr-harmonia/build/lib && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/cody/gr-harmonia/lib/LFM_src_impl.cc > CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.i
+
+lib/CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.s"
+	cd /home/cody/gr-harmonia/build/lib && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/cody/gr-harmonia/lib/LFM_src_impl.cc -o CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.s
+
+lib/CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.o: lib/CMakeFiles/gnuradio-harmonia.dir/flags.make
+lib/CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.o: /home/cody/gr-harmonia/lib/compensation_impl.cc
+lib/CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.o: lib/CMakeFiles/gnuradio-harmonia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object lib/CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.o"
+	cd /home/cody/gr-harmonia/build/lib && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT lib/CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.o -MF CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.o.d -o CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.o -c /home/cody/gr-harmonia/lib/compensation_impl.cc
+
+lib/CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.i"
+	cd /home/cody/gr-harmonia/build/lib && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/cody/gr-harmonia/lib/compensation_impl.cc > CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.i
+
+lib/CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.s"
+	cd /home/cody/gr-harmonia/build/lib && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/cody/gr-harmonia/lib/compensation_impl.cc -o CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.s
+
 # Object files for target gnuradio-harmonia
 gnuradio__harmonia_OBJECTS = \
 "CMakeFiles/gnuradio-harmonia.dir/gnuradio-harmonia_autogen/mocs_compilation.cpp.o" \
@@ -331,7 +359,9 @@ gnuradio__harmonia_OBJECTS = \
 "CMakeFiles/gnuradio-harmonia.dir/buffer_corrector_impl.cc.o" \
 "CMakeFiles/gnuradio-harmonia.dir/clockbias_phase_est_impl.cc.o" \
 "CMakeFiles/gnuradio-harmonia.dir/QPSK_mod_impl.cc.o" \
-"CMakeFiles/gnuradio-harmonia.dir/QPSK_demod_impl.cc.o"
+"CMakeFiles/gnuradio-harmonia.dir/QPSK_demod_impl.cc.o" \
+"CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.o" \
+"CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.o"
 
 # External object files for target gnuradio-harmonia
 gnuradio__harmonia_EXTERNAL_OBJECTS =
@@ -353,6 +383,8 @@ lib/libgnuradio-harmonia.so.1.1.0.0: lib/CMakeFiles/gnuradio-harmonia.dir/buffer
 lib/libgnuradio-harmonia.so.1.1.0.0: lib/CMakeFiles/gnuradio-harmonia.dir/clockbias_phase_est_impl.cc.o
 lib/libgnuradio-harmonia.so.1.1.0.0: lib/CMakeFiles/gnuradio-harmonia.dir/QPSK_mod_impl.cc.o
 lib/libgnuradio-harmonia.so.1.1.0.0: lib/CMakeFiles/gnuradio-harmonia.dir/QPSK_demod_impl.cc.o
+lib/libgnuradio-harmonia.so.1.1.0.0: lib/CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.o
+lib/libgnuradio-harmonia.so.1.1.0.0: lib/CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.o
 lib/libgnuradio-harmonia.so.1.1.0.0: lib/CMakeFiles/gnuradio-harmonia.dir/build.make
 lib/libgnuradio-harmonia.so.1.1.0.0: /usr/local/lib/libgnuradio-blocks.so.3.10.12.0
 lib/libgnuradio-harmonia.so.1.1.0.0: /usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5.15.13
@@ -373,7 +405,7 @@ lib/libgnuradio-harmonia.so.1.1.0.0: /usr/lib/x86_64-linux-gnu/libQt5Core.so.5.1
 lib/libgnuradio-harmonia.so.1.1.0.0: /usr/lib/libqwt-qt5.so
 lib/libgnuradio-harmonia.so.1.1.0.0: /usr/lib/x86_64-linux-gnu/libpython3.12.so
 lib/libgnuradio-harmonia.so.1.1.0.0: lib/CMakeFiles/gnuradio-harmonia.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Linking CXX shared library libgnuradio-harmonia.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Linking CXX shared library libgnuradio-harmonia.so"
 	cd /home/cody/gr-harmonia/build/lib && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/gnuradio-harmonia.dir/link.txt --verbose=$(VERBOSE)
 	cd /home/cody/gr-harmonia/build/lib && $(CMAKE_COMMAND) -E cmake_symlink_library libgnuradio-harmonia.so.1.1.0.0 libgnuradio-harmonia.so.1.1.0 libgnuradio-harmonia.so
 

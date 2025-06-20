@@ -13,6 +13,11 @@ parameters:
     dtype: string
     default: '""'
     hide: ${ ('part' if args_2 == "" else 'none') }    
+  - id: args_3
+    label: SDR 3 Device Arguments
+    dtype: string
+    default: '""'
+    hide: ${ ('part' if args_3 == "" else 'none') }  
   - id: samp_rate
     label: Sample Rate (Hz)
     dtype: float
@@ -25,12 +30,20 @@ parameters:
     label: SDR 2 Frequency (Hz)
     dtype: float
     default: "center_freq"
+  - id: sdr3_freq
+    label: SDR 3 Frequency (Hz)
+    dtype: float
+    default: "center_freq"
   - id: sdr1_gain
     label: SDR 1 Gain (dB)
     dtype: float
     default: 0
   - id: sdr2_gain
     label: SDR 2 Gain (dB)
+    dtype: float
+    default: 0
+  - id: sdr3_gain
+    label: SDR 3 Gain (dB)
     dtype: float
     default: 0
   - id: start_delay
@@ -91,7 +104,15 @@ inputs:
   - id: in3
     domain: message
     optional: true
-
+  - id: LFM_in
+    domain: message
+    optional: true
+  - id: LFM_in2
+    domain: message
+    optional: true
+  - id: LFM_in3
+    domain: message
+    optional: true
 outputs:
   - id: out
     domain: message
@@ -99,11 +120,33 @@ outputs:
   - id: out2
     domain: message
     optional: true
-
+  - id: out3
+    domain: message
+    optional: true
+  - id: cd_out
+    domain: message
+    optional: true
+  - id: cd_out2
+    domain: message
+    optional: true
+  - id: cd_out3
+    domain: message
+    optional: true
+  - id: cb_out
+    domain: message
+    optional: true
+  - id: cb_out2
+    domain: message
+    optional: true
+  - id: cb_out3
+    domain: message
+    optional: true
+    
 templates:
   imports: from gnuradio import harmonia
   make: |-
-    harmonia.usrp_radar_all(${args_1}, ${args_2}, ${samp_rate}, ${samp_rate}, ${sdr1_freq}, ${sdr2_freq}, ${sdr1_gain}, ${sdr2_gain}, ${start_delay}, ${cap_length}, ${wait_time}, ${TDMA_time}, ${verbose})
+    harmonia.usrp_radar_all(${args_1}, ${args_2}, ${args_3}, ${samp_rate}, ${samp_rate}, ${samp_rate}, ${sdr1_freq}, ${sdr2_freq}, ${sdr3_freq}, ${sdr1_gain},
+     ${sdr2_gain}, ${sdr3_gain}, ${start_delay}, ${cap_length}, ${wait_time}, ${TDMA_time}, ${verbose})
     self.${id}.set_metadata_keys(${sdr1_freq_key}, ${sdr2_freq_key}, ${sample_start_key}, ${prf_key})
 
 #  'file_format' specifies the version of the GRC yml format used in the file

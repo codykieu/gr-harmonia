@@ -11,7 +11,6 @@
 
 from PyQt5 import Qt
 from gnuradio import qtgui
-from gnuradio import blocks, gr
 from gnuradio import gr
 from gnuradio.filter import firdes
 from gnuradio.fft import window
@@ -23,7 +22,6 @@ from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
 from gnuradio import harmonia
 from gnuradio import plasma
-import sip
 import threading
 
 
@@ -64,89 +62,148 @@ class time_peak_estimation_test(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.samp_rate = samp_rate = 10e6
+        self.tdma_time = tdma_time = 9e-3
+        self.samp_rate = samp_rate = 100e6
+        self.run_id = run_id = 0
         self.prf = prf = 0
         self.center_freq = center_freq = 1e9
-        self.bw = bw = samp_rate/2
-        self.Tp = Tp = 200e-6
-        self.Tc = Tc = 200e-3
+        self.bw = bw = 50e6
+        self.baseband_freq = baseband_freq = 10e6
+        self.Tw = Tw = 4e-3
+        self.Tp = Tp = 1e-3
+        self.Tc = Tc = 9e-3
 
         ##################################################
         # Blocks
         ##################################################
 
-        self.qtgui_time_sink_x_0_0 = qtgui.time_sink_c(
-            1024, #size
-            samp_rate, #samp_rate
-            "RX", #name
-            0, #number of inputs
-            None # parent
-        )
-        self.qtgui_time_sink_x_0_0.set_update_time(0.10)
-        self.qtgui_time_sink_x_0_0.set_y_axis(-1, 1)
-
-        self.qtgui_time_sink_x_0_0.set_y_label('Amplitude', "")
-
-        self.qtgui_time_sink_x_0_0.enable_tags(True)
-        self.qtgui_time_sink_x_0_0.set_trigger_mode(qtgui.TRIG_MODE_AUTO, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_0_0.enable_autoscale(False)
-        self.qtgui_time_sink_x_0_0.enable_grid(False)
-        self.qtgui_time_sink_x_0_0.enable_axis_labels(True)
-        self.qtgui_time_sink_x_0_0.enable_control_panel(False)
-        self.qtgui_time_sink_x_0_0.enable_stem_plot(False)
-
-
-        labels = ['Signal 1', 'Signal 2', 'Signal 3', 'Signal 4', 'Signal 5',
-            'Signal 6', 'Signal 7', 'Signal 8', 'Signal 9', 'Signal 10']
-        widths = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        colors = ['blue', 'red', 'green', 'black', 'cyan',
-            'magenta', 'yellow', 'dark red', 'dark green', 'dark blue']
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0, 1.0]
-        styles = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        markers = [-1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1]
-
-
-        for i in range(2):
-            if len(labels[i]) == 0:
-                if (i % 2 == 0):
-                    self.qtgui_time_sink_x_0_0.set_line_label(i, "Re{{Data {0}}}".format(i/2))
-                else:
-                    self.qtgui_time_sink_x_0_0.set_line_label(i, "Im{{Data {0}}}".format(i/2))
-            else:
-                self.qtgui_time_sink_x_0_0.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_0_0.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_0_0.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_0_0.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_0_0.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_0_0.set_line_alpha(i, alphas[i])
-
-        self._qtgui_time_sink_x_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0.qwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_time_sink_x_0_0_win)
-        self.plasma_lfm_source_0 = plasma.lfm_source(bw, center_freq-bw/2, Tp, samp_rate, prf)
-        self.plasma_lfm_source_0.init_meta_dict('radar:bandwidth', 'radar:start_freq', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
-        self.harmonia_usrp_radar_all_0 = harmonia.usrp_radar_all("addr=192.168.60.2, use_dpkg=1", "addr=192.168.80.2, use_dpkg=1", samp_rate, samp_rate, center_freq, center_freq, 20, 10, 0.1, Tc, 0, False)
+        self.plasma_pdu_file_sink_0_0_3_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/lfm_post3', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.plasma_pdu_file_sink_0_0_3_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/lfm3', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.plasma_pdu_file_sink_0_0_3 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/st3', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.plasma_pdu_file_sink_0_0_2_0_0_2 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/comp3', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.plasma_pdu_file_sink_0_0_2_0_0_1 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/comp2', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.plasma_pdu_file_sink_0_0_2_0_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/comp1', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.plasma_pdu_file_sink_0_0_2_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/lfm_post2', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.plasma_pdu_file_sink_0_0_2_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/lfm2', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.plasma_pdu_file_sink_0_0_2 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/st2', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.plasma_pdu_file_sink_0_0_1_0_0_1 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/time_out3', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.plasma_pdu_file_sink_0_0_1_0_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/time_out2', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.plasma_pdu_file_sink_0_0_1_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/time_out', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.plasma_pdu_file_sink_0_0_1_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/lfm_post1', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.plasma_pdu_file_sink_0_0_1 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/lfm1', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.plasma_pdu_file_sink_0_0_0_2 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/waverform3', '/home/cody/gr-MATLAB/freq_pk_est_meta')
+        self.plasma_pdu_file_sink_0_0_0_1 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/waverform2', '/home/cody/gr-MATLAB/freq_pk_est_meta')
+        self.plasma_pdu_file_sink_0_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/waverform', '/home/cody/gr-MATLAB/freq_pk_est_meta')
+        self.plasma_pdu_file_sink_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/st1', '/home/cody/gr-MATLAB/TDMA_meta')
+        self.harmonia_usrp_radar_all_0 = harmonia.usrp_radar_all("addr=192.168.40.2, use_dpkg=1", "addr=192.168.60.2, use_dpkg=1", "addr=192.168.80.2, use_dpkg=1", samp_rate, samp_rate, samp_rate, center_freq, center_freq, center_freq, 0,
+         0, 0, 1.5, Tc, Tw, tdma_time, False)
         self.harmonia_usrp_radar_all_0.set_metadata_keys('core:tx_freq', 'core:rx_freq', 'core:sample_start', 'radar:prf')
-        self.harmonia_time_pk_est_0 = harmonia.time_pk_est(4, samp_rate, bw, 15, 7)
-        self.harmonia_time_pk_est_0.set_metadata_keys()
-        self.harmonia_time_pk_est_0.set_msg_queue_depth(10000)
-        self.harmonia_time_pk_est_0.set_backend(plasma.Device.CPU)
-        self.harmonia_buffer_corrector_0 = harmonia.buffer_corrector(1996)
-        self.blocks_message_debug_0 = blocks.message_debug(True, gr.log_levels.info)
+        self.harmonia_time_pk_est_0_1 = harmonia.time_pk_est(samp_rate, bw, 10, 3)
+        self.harmonia_time_pk_est_0_1.set_msg_queue_depth(1)
+        self.harmonia_time_pk_est_0_1.set_backend(harmonia.Device.DEFAULT)
+        self.harmonia_time_pk_est_0_0 = harmonia.time_pk_est(samp_rate, bw, 10, 2)
+        self.harmonia_time_pk_est_0_0.set_msg_queue_depth(1)
+        self.harmonia_time_pk_est_0_0.set_backend(harmonia.Device.DEFAULT)
+        self.harmonia_time_pk_est_0 = harmonia.time_pk_est(samp_rate, bw, 10, 1)
+        self.harmonia_time_pk_est_0.set_msg_queue_depth(1)
+        self.harmonia_time_pk_est_0.set_backend(harmonia.Device.DEFAULT)
+        self.harmonia_single_tone_src_0_1 = harmonia.single_tone_src(baseband_freq, center_freq, 0, Tp, samp_rate, prf, 1996, 2)
+        self.harmonia_single_tone_src_0_1.init_meta_dict('radar:frequency', 'radar:phase', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
+        self.harmonia_single_tone_src_0_0 = harmonia.single_tone_src(baseband_freq, center_freq, 0, Tp, samp_rate, prf, 1996, 1)
+        self.harmonia_single_tone_src_0_0.init_meta_dict('radar:frequency', 'radar:phase', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
+        self.harmonia_single_tone_src_0 = harmonia.single_tone_src(baseband_freq, center_freq, 0, Tp, samp_rate, prf, 1996, 3)
+        self.harmonia_single_tone_src_0.init_meta_dict('radar:frequency', 'radar:phase', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
+        self.harmonia_frequency_pk_est_0_1 = harmonia.frequency_pk_est(4, Tp, Tc, samp_rate, 10, 2, False)
+        self.harmonia_frequency_pk_est_0_1.set_msg_queue_depth(1)
+        self.harmonia_frequency_pk_est_0_1.set_backend(harmonia.Device.CPU)
+        self.harmonia_frequency_pk_est_0_0 = harmonia.frequency_pk_est(32, Tp, Tc, samp_rate, 10, 3, False)
+        self.harmonia_frequency_pk_est_0_0.set_msg_queue_depth(1)
+        self.harmonia_frequency_pk_est_0_0.set_backend(harmonia.Device.CPU)
+        self.harmonia_frequency_pk_est_0 = harmonia.frequency_pk_est(4, Tp, Tc, samp_rate, 10, 1, False)
+        self.harmonia_frequency_pk_est_0.set_msg_queue_depth(1)
+        self.harmonia_frequency_pk_est_0.set_backend(harmonia.Device.CPU)
+        self.harmonia_compensation_0_2 = harmonia.compensation(center_freq, samp_rate, 1)
+        self.harmonia_compensation_0_1_0 = harmonia.compensation(center_freq, samp_rate, 3)
+        self.harmonia_compensation_0_1 = harmonia.compensation(center_freq, samp_rate, 3)
+        self.harmonia_compensation_0_0_0 = harmonia.compensation(center_freq, samp_rate, 2)
+        self.harmonia_compensation_0_0 = harmonia.compensation(center_freq, samp_rate, 2)
+        self.harmonia_compensation_0 = harmonia.compensation(center_freq, samp_rate, 1)
+        self.harmonia_clockbias_phase_est_0 = harmonia.clockbias_phase_est(3, 1e6, center_freq, samp_rate, Tp, 0)
+        self.harmonia_clock_drift_est_0 = harmonia.clock_drift_est(3, baseband_freq, center_freq, samp_rate, Tp, 0)
+        self.harmonia_LFM_src_0_2 = harmonia.LFM_src(bw, 0, center_freq, Tp, samp_rate, 0, 1)
+        self.harmonia_LFM_src_0_2.init_meta_dict('radar:bandwidth', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
+        self.harmonia_LFM_src_0_1 = harmonia.LFM_src(bw, 0, center_freq, Tp, samp_rate, 0, 3)
+        self.harmonia_LFM_src_0_1.init_meta_dict('radar:bandwidth', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
+        self.harmonia_LFM_src_0_0 = harmonia.LFM_src(bw, 0, center_freq, Tp, samp_rate, 0, 2)
+        self.harmonia_LFM_src_0_0.init_meta_dict('radar:bandwidth', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
+        self.harmonia_LFM_src_0 = harmonia.LFM_src(bw, 0, center_freq, Tp, samp_rate, 0, 1)
+        self.harmonia_LFM_src_0.init_meta_dict('radar:bandwidth', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
 
 
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.harmonia_buffer_corrector_0, 'out'), (self.harmonia_usrp_radar_all_0, 'in'))
-        self.msg_connect((self.harmonia_time_pk_est_0, 'out'), (self.blocks_message_debug_0, 'print'))
-        self.msg_connect((self.harmonia_usrp_radar_all_0, 'out'), (self.harmonia_time_pk_est_0, 'rx'))
-        self.msg_connect((self.harmonia_usrp_radar_all_0, 'out'), (self.qtgui_time_sink_x_0_0, 'in'))
-        self.msg_connect((self.plasma_lfm_source_0, 'out'), (self.harmonia_buffer_corrector_0, 'in'))
-        self.msg_connect((self.plasma_lfm_source_0, 'out'), (self.harmonia_time_pk_est_0, 'tx'))
+        self.msg_connect((self.harmonia_LFM_src_0, 'out'), (self.harmonia_time_pk_est_0, 'tx'))
+        self.msg_connect((self.harmonia_LFM_src_0, 'out'), (self.harmonia_usrp_radar_all_0, 'LFM_in'))
+        self.msg_connect((self.harmonia_LFM_src_0, 'out'), (self.plasma_pdu_file_sink_0_0_0, 'in'))
+        self.msg_connect((self.harmonia_LFM_src_0_0, 'out'), (self.harmonia_time_pk_est_0_0, 'tx'))
+        self.msg_connect((self.harmonia_LFM_src_0_0, 'out'), (self.harmonia_usrp_radar_all_0, 'LFM_in2'))
+        self.msg_connect((self.harmonia_LFM_src_0_0, 'out'), (self.plasma_pdu_file_sink_0_0_0_1, 'in'))
+        self.msg_connect((self.harmonia_LFM_src_0_1, 'out'), (self.harmonia_time_pk_est_0_1, 'tx'))
+        self.msg_connect((self.harmonia_LFM_src_0_1, 'out'), (self.harmonia_usrp_radar_all_0, 'LFM_in3'))
+        self.msg_connect((self.harmonia_LFM_src_0_1, 'out'), (self.plasma_pdu_file_sink_0_0_0_2, 'in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_LFM_src_0, 'cd_in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_LFM_src_0_0, 'cd_in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_LFM_src_0_1, 'cd_in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_clockbias_phase_est_0, 'cd_in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_compensation_0, 'cd_in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_compensation_0_0, 'cd_in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_compensation_0_0_0, 'cd_in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_compensation_0_1, 'cd_in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_compensation_0_1_0, 'cd_in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_compensation_0_2, 'cd_in'))
+        self.msg_connect((self.harmonia_clockbias_phase_est_0, 't_out'), (self.harmonia_LFM_src_0, 'cbp_in'))
+        self.msg_connect((self.harmonia_clockbias_phase_est_0, 't_out'), (self.harmonia_LFM_src_0_0, 'cbp_in'))
+        self.msg_connect((self.harmonia_clockbias_phase_est_0, 't_out'), (self.harmonia_LFM_src_0_1, 'cbp_in'))
+        self.msg_connect((self.harmonia_clockbias_phase_est_0, 't_out'), (self.harmonia_compensation_0_0_0, 'cbp_in'))
+        self.msg_connect((self.harmonia_clockbias_phase_est_0, 't_out'), (self.harmonia_compensation_0_1_0, 'cbp_in'))
+        self.msg_connect((self.harmonia_clockbias_phase_est_0, 't_out'), (self.harmonia_compensation_0_2, 'cbp_in'))
+        self.msg_connect((self.harmonia_compensation_0, 'out'), (self.harmonia_time_pk_est_0, 'rx'))
+        self.msg_connect((self.harmonia_compensation_0_0, 'out'), (self.harmonia_time_pk_est_0_0, 'rx'))
+        self.msg_connect((self.harmonia_compensation_0_0_0, 'out'), (self.plasma_pdu_file_sink_0_0_2_0_0_1, 'in'))
+        self.msg_connect((self.harmonia_compensation_0_1, 'out'), (self.harmonia_time_pk_est_0_1, 'rx'))
+        self.msg_connect((self.harmonia_compensation_0_1_0, 'out'), (self.plasma_pdu_file_sink_0_0_2_0_0_2, 'in'))
+        self.msg_connect((self.harmonia_compensation_0_2, 'out'), (self.plasma_pdu_file_sink_0_0_2_0_0_0, 'in'))
+        self.msg_connect((self.harmonia_frequency_pk_est_0, 'f_out'), (self.harmonia_clock_drift_est_0, 'in'))
+        self.msg_connect((self.harmonia_frequency_pk_est_0_0, 'f_out'), (self.harmonia_clock_drift_est_0, 'in3'))
+        self.msg_connect((self.harmonia_frequency_pk_est_0_1, 'f_out'), (self.harmonia_clock_drift_est_0, 'in2'))
+        self.msg_connect((self.harmonia_single_tone_src_0, 'out'), (self.harmonia_usrp_radar_all_0, 'in3'))
+        self.msg_connect((self.harmonia_single_tone_src_0_0, 'out'), (self.harmonia_usrp_radar_all_0, 'in'))
+        self.msg_connect((self.harmonia_single_tone_src_0_1, 'out'), (self.harmonia_usrp_radar_all_0, 'in2'))
+        self.msg_connect((self.harmonia_time_pk_est_0, 'tp_out'), (self.harmonia_clockbias_phase_est_0, 'in'))
+        self.msg_connect((self.harmonia_time_pk_est_0, 'out'), (self.plasma_pdu_file_sink_0_0_1_0_0, 'in'))
+        self.msg_connect((self.harmonia_time_pk_est_0_0, 'tp_out'), (self.harmonia_clockbias_phase_est_0, 'in2'))
+        self.msg_connect((self.harmonia_time_pk_est_0_0, 'out'), (self.plasma_pdu_file_sink_0_0_1_0_0_0, 'in'))
+        self.msg_connect((self.harmonia_time_pk_est_0_1, 'tp_out'), (self.harmonia_clockbias_phase_est_0, 'in3'))
+        self.msg_connect((self.harmonia_time_pk_est_0_1, 'out'), (self.plasma_pdu_file_sink_0_0_1_0_0_1, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'cd_out2'), (self.harmonia_compensation_0, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'cd_out2'), (self.harmonia_compensation_0_0, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'cb_out2'), (self.harmonia_compensation_0_0_0, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'cd_out3'), (self.harmonia_compensation_0_1, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'cb_out3'), (self.harmonia_compensation_0_1_0, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'cb_out'), (self.harmonia_compensation_0_2, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'out'), (self.harmonia_frequency_pk_est_0, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'out3'), (self.harmonia_frequency_pk_est_0_0, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'out2'), (self.harmonia_frequency_pk_est_0_1, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'out'), (self.plasma_pdu_file_sink_0_0, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'cd_out'), (self.plasma_pdu_file_sink_0_0_1, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'cb_out'), (self.plasma_pdu_file_sink_0_0_1_0, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'out2'), (self.plasma_pdu_file_sink_0_0_2, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'cd_out2'), (self.plasma_pdu_file_sink_0_0_2_0, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'cb_out2'), (self.plasma_pdu_file_sink_0_0_2_0_0, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'out3'), (self.plasma_pdu_file_sink_0_0_3, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'cd_out3'), (self.plasma_pdu_file_sink_0_0_3_0, 'in'))
+        self.msg_connect((self.harmonia_usrp_radar_all_0, 'cb_out3'), (self.plasma_pdu_file_sink_0_0_3_0_0, 'in'))
 
 
     def closeEvent(self, event):
@@ -157,13 +214,23 @@ class time_peak_estimation_test(gr.top_block, Qt.QWidget):
 
         event.accept()
 
+    def get_tdma_time(self):
+        return self.tdma_time
+
+    def set_tdma_time(self, tdma_time):
+        self.tdma_time = tdma_time
+
     def get_samp_rate(self):
         return self.samp_rate
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.set_bw(self.samp_rate/2)
-        self.qtgui_time_sink_x_0_0.set_samp_rate(self.samp_rate)
+
+    def get_run_id(self):
+        return self.run_id
+
+    def set_run_id(self, run_id):
+        self.run_id = run_id
 
     def get_prf(self):
         return self.prf
@@ -182,6 +249,18 @@ class time_peak_estimation_test(gr.top_block, Qt.QWidget):
 
     def set_bw(self, bw):
         self.bw = bw
+
+    def get_baseband_freq(self):
+        return self.baseband_freq
+
+    def set_baseband_freq(self, baseband_freq):
+        self.baseband_freq = baseband_freq
+
+    def get_Tw(self):
+        return self.Tw
+
+    def set_Tw(self, Tw):
+        self.Tw = Tw
 
     def get_Tp(self):
         return self.Tp

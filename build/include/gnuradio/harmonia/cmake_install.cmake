@@ -62,6 +62,8 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
     "/home/cody/gr-harmonia/include/gnuradio/harmonia/clockbias_phase_est.h"
     "/home/cody/gr-harmonia/include/gnuradio/harmonia/QPSK_mod.h"
     "/home/cody/gr-harmonia/include/gnuradio/harmonia/QPSK_demod.h"
+    "/home/cody/gr-harmonia/include/gnuradio/harmonia/LFM_src.h"
+    "/home/cody/gr-harmonia/include/gnuradio/harmonia/compensation.h"
     )
 endif()
 

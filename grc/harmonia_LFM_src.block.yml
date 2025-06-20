@@ -1,0 +1,91 @@
+id: harmonia_LFM_src
+label: LFM Source
+category: '[harmonia]'
+
+parameters:
+  # Waveform parameters
+  - id: bandwidth
+    label: Bandwidth
+    dtype: float
+    default: "bw"
+  - id: start_freq
+    label: Starting Frequency
+    dtype: float
+    default: "start_freq"
+  - id: center_freq
+    label: Center Frequency
+    dtype: float
+    default: "center_freq"
+  - id: pulse_width
+    label: Pulse width
+    dtype: float
+    default: "Tp"
+  - id: samp_rate
+    label: Sample rate
+    dtype: float
+    default: "samp_rate"
+  - id: prf
+    label: PRF
+    dtype: float
+    default: 0
+    hide: ${ ('part' if prf == 0 else 'none') }
+  - id: sdr_id
+    label: SDR Number
+    dtype: int
+    default: 1
+  # Metadata fields
+  - id: bandwidth_key
+    label: Bandwidth Key
+    dtype: string
+    category: Metadata
+    hide: part
+    default: radar:bandwidth
+  - id: duration_key
+    label: Duration Key
+    dtype: string
+    category: Metadata
+    hide: part
+    default: radar:duration
+  - id: sample_rate_key
+    label: Sample Rate Key
+    dtype: string
+    category: Metadata
+    hide: part
+    default: core:sample_rate
+  - id: label_key
+    label: Label Key
+    dtype: string
+    category: Metadata
+    hide: part
+    default: core:label
+  - id: prf_key
+    label: PRF Key
+    dtype: string
+    category: Metadata
+    hide: part
+    default: radar:prf
+
+inputs:
+  - domain: message
+    id: cd_in
+    optional: true
+  - domain: message
+    id: cbp_in
+    optional: true
+outputs:
+  - domain: message
+    id: out
+    optional: false
+
+templates:
+  imports: from gnuradio import harmonia
+  make: |-
+    harmonia.LFM_src(${bandwidth}, ${start_freq}, ${center_freq}, ${pulse_width}, ${samp_rate}, ${prf}, ${sdr_id})
+    self.${id}.init_meta_dict(${bandwidth_key}, ${duration_key}, ${sample_rate_key}, ${label_key}, ${prf_key})
+
+documentation: |-
+  Generates a LFM radar waveform.
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1

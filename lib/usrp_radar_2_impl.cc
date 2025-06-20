@@ -17,7 +17,6 @@ namespace gr
   {
 
     usrp_radar_2::sptr usrp_radar_2::make(const std::string &args_tx,
-                                          const std::string &args_rx,
                                           const double tx_rate,
                                           const double rx_rate,
                                           const double tx_freq,
@@ -27,10 +26,10 @@ namespace gr
                                           const double start_delay,
                                           const bool elevate_priority,
                                           const std::string &cal_file,
-                                          const bool verbose)
+                                          const bool verbose,
+                                          double cap_length)
     {
       return gnuradio::make_block_sptr<usrp_radar_2_impl>(args_tx,
-                                                          args_rx,
                                                           tx_rate,
                                                           rx_rate,
                                                           tx_freq,
@@ -40,11 +39,11 @@ namespace gr
                                                           start_delay,
                                                           elevate_priority,
                                                           cal_file,
-                                                          verbose);
+                                                          verbose,
+                                                          cap_length);
     }
 
     usrp_radar_2_impl::usrp_radar_2_impl(const std::string &args_tx,
-                                         const std::string &args_rx,
                                          const double tx_rate,
                                          const double rx_rate,
                                          const double tx_freq,
@@ -54,11 +53,11 @@ namespace gr
                                          const double start_delay,
                                          const bool elevate_priority,
                                          const std::string &cal_file,
-                                         const bool verbose)
+                                         const bool verbose,
+                                         double cap_length)
         : gr::block(
               "usrp_radar_2", gr::io_signature::make(0, 0, 0), gr::io_signature::make(0, 0, 0)),
           usrp_args_tx(args_tx),
-          usrp_args_rx(args_rx),
           tx_rate(tx_rate),
           rx_rate(rx_rate),
           tx_freq(tx_freq),
@@ -68,16 +67,17 @@ namespace gr
           start_delay(start_delay),
           elevate_priority(elevate_priority),
           calibration_file(cal_file),
-          verbose(verbose)
+          verbose(verbose),
+          cap_length(cap_length)
     {
       // Additional parameters. I have the hooks in to make them configurable, but we don't
       // need them right now.
-      this->tx_subdev = "";
-      this->rx_subdev = "";
+      this->tx_subdev = this->rx_subdev = "";
+      // this->rx_subdev = "";
       this->tx_cpu_format = this->rx_cpu_format = "fc32";
       this->tx_otw_format = this->rx_otw_format = "sc16";
-      this->tx_device_addr = "";
-      this->rx_device_addr = "";
+      this->tx_device_addr = this->rx_device_addr = "";
+      // this->rx_device_addr = "";
       this->tx_channel_nums = std::vector<size_t>(1, 0);
       this->rx_channel_nums = std::vector<size_t>(1, 0);
       this->tx_buffs = std::vector<std::vector<gr_complex>>(tx_channel_nums.size());
@@ -87,9 +87,7 @@ namespace gr
       this->meta = pmt::make_dict();
 
       config_usrp(this->usrp_tx,
-                  this->usrp_rx,
                   this->usrp_args_tx,
-                  this->usrp_args_rx,
                   this->tx_rate,
                   this->rx_rate,
                   this->tx_freq,
@@ -156,18 +154,6 @@ namespace gr
 
     void usrp_radar_2_impl::run()
     {
-      while (not new_msg_received)
-      { // Wait for Tx data
-        if (finished)
-        {
-          return;
-        }
-        else
-        {
-          std::this_thread::sleep_for(std::chrono::microseconds(10));
-        }
-      }
-
       double start_time = usrp_tx->get_time_now().get_real_secs() + start_delay;
 
       /***********************************************************************
@@ -188,25 +174,16 @@ namespace gr
       tx_stream_args.channels = tx_channel_nums;
       tx_stream_args.args = uhd::device_addr_t(tx_device_addr);
       uhd::tx_streamer::sptr tx_stream = usrp_tx->get_tx_stream(tx_stream_args);
-      if (prf > 0)
-      {
-        tx_thread = gr::thread::thread(
-            &usrp_radar_2_impl::transmit_bursts, this, usrp_tx, tx_stream, start_time);
-      }
-      else
-      {
-        tx_thread = gr::thread::thread(
-            &usrp_radar_2_impl::transmit_continuous, this, usrp_tx, tx_stream, start_time);
-      }
+
+      tx_thread = gr::thread::thread(
+          &usrp_radar_2_impl::transmit_bursts, this, usrp_tx, tx_stream, start_time);
 
       tx_thread.join();
       rx_thread.join();
     }
 
     void usrp_radar_2_impl::config_usrp(uhd::usrp::multi_usrp::sptr &usrp_tx,
-      uhd::usrp::multi_usrp::sptr &usrp_rx,
                                         const std::string &args_tx,
-                                        const std::string &args_rx,
                                         const double tx_rate,
                                         const double rx_rate,
                                         const double tx_freq,
@@ -233,25 +210,8 @@ namespace gr
       usrp_tx->set_tx_gain(tx_gain);
       usrp_tx->set_rx_gain(rx_gain);
 
-      usrp_rx = uhd::usrp::multi_usrp::make(args_rx);
-      if (not tx_subdev.empty())
-      {
-        usrp_rx->set_tx_subdev_spec(rx_subdev);
-      }
-      if (not rx_subdev.empty())
-      {
-        usrp_rx->set_rx_subdev_spec(rx_subdev);
-      }
-      usrp_rx->set_tx_rate(tx_rate);
-      usrp_rx->set_rx_rate(rx_rate);
-      usrp_rx->set_tx_freq(tx_freq);
-      usrp_rx->set_rx_freq(rx_freq);
-      usrp_rx->set_tx_gain(tx_gain);
-      usrp_rx->set_rx_gain(rx_gain);
-
       usrp_tx->set_time_now(uhd::time_spec_t(0.0));
-      usrp_rx->set_time_now(uhd::time_spec_t(0.0));
-
+      // usrp_rx->set_time_now(uhd::time_spec_t(0.0));
 
       if (verbose)
       {
@@ -274,7 +234,7 @@ namespace gr
       }
     }
 
-    void usrp_radar_2_impl::receive(uhd::usrp::multi_usrp::sptr usrp_rx,
+    void usrp_radar_2_impl::receive(uhd::usrp::multi_usrp::sptr usrp_tx,
                                     uhd::rx_streamer::sptr rx_stream,
                                     double start_time)
     {
@@ -284,52 +244,34 @@ namespace gr
       }
       // setup variables
       uhd::rx_metadata_t md;
-      uhd::stream_cmd_t cmd(uhd::stream_cmd_t::STREAM_MODE_START_CONTINUOUS);
+      // Total samples to receive based on capture time
+      size_t total_samps_to_rx = cap_length * tx_rate;
+      size_t samps_received = 0;
+
+      // Set up UHD receive mode
+      uhd::stream_cmd_t cmd(uhd::stream_cmd_t::STREAM_MODE_NUM_SAMPS_AND_DONE);
+      cmd.num_samps = total_samps_to_rx;
+      cmd.stream_now = usrp_tx->get_time_now().get_real_secs() >= start_time;
+
       cmd.time_spec = uhd::time_spec_t(start_time);
-      cmd.stream_now = usrp_rx->get_time_now().get_real_secs() >= start_time;
       rx_stream->issue_stream_cmd(cmd);
 
-      // Set up and allocate buffers
-      pmt::pmt_t rx_data_pmt = pmt::make_c32vector(rx_buff_size, 0);
-      gr_complex *rx_data_ptr = pmt::c32vector_writable_elements(rx_data_pmt, rx_buff_size);
+      // Allocate buffer
+      pmt::pmt_t rx_data_pmt = pmt::make_c32vector(total_samps_to_rx, 0);
+      gr_complex *rx_data_ptr = pmt::c32vector_writable_elements(rx_data_pmt, total_samps_to_rx);
 
-      double time_until_start = start_time - usrp_rx->get_time_now().get_real_secs();
-      double timeout = 0.1 + time_until_start;
-
-      // TODO: Handle multiple channels (e.g., one out port per channel)
-      while (true)
+      double timeout = 0.1;
+      // Counts number of samples received until end of capture time
+      while (samps_received < total_samps_to_rx)
       {
-        if (finished)
-        {
-          rx_stream->issue_stream_cmd(uhd::stream_cmd_t::STREAM_MODE_STOP_CONTINUOUS);
-        }
+        size_t samps_to_recv = total_samps_to_rx - samps_received;
+        size_t num_rx = rx_stream->recv(rx_data_ptr + samps_received, samps_to_recv, md, timeout);
 
-        if (n_delay > 0)
-        {
-          // Throw away n_delay samples at the beginning
-          std::vector<gr_complex> dummy_vec(n_delay);
-          n_delay -= rx_stream->recv(dummy_vec.data(), n_delay, md, timeout);
-        }
-        rx_stream->recv(rx_data_ptr, rx_buff_size, md, timeout);
-        timeout = 0.1;
-
-        if (pmt::length(this->meta) > 0)
-        {
-          this->meta = pmt::dict_add(
-              this->meta, pmt::intern(rx_freq_key), pmt::from_double(rx_freq));
-        }
-        message_port_pub(PMT_HARMONIA_OUT, pmt::cons(this->meta, rx_data_pmt));
-        this->meta = pmt::make_dict();
-
-        if (finished and md.end_of_burst)
-        {
-          
-          std::cout << "Current device time, TX: " << usrp_tx->get_time_now().get_real_secs() << std::endl;
-          std::cout << "Current device time, RX: " << usrp_rx->get_time_now().get_real_secs() << std::endl;
-
-          return;
-        }
+        samps_received += num_rx;
       }
+
+      message_port_pub(PMT_HARMONIA_OUT, pmt::cons(this->meta, rx_data_pmt));
+      this->meta = pmt::make_dict();
     }
 
     void usrp_radar_2_impl::transmit_bursts(uhd::usrp::multi_usrp::sptr usrp_tx,
@@ -342,84 +284,26 @@ namespace gr
       }
       // Create the metadata, and populate the time spec at the latest possible moment
       uhd::tx_metadata_t md;
-      std::vector<gr_complex> cooldown_zeros(round(BURST_COOLDOWN_TIME * tx_rate),
-                                             gr_complex(0, 0));
-      std::vector<gr_complex> warmup_zeros(round(BURST_WARMUP_TIME * tx_rate),
-                                           gr_complex(0, 0));
-      while (not finished)
+
+      if (new_msg_received)
       {
-        if (new_msg_received)
-        {
-          std::vector<gr_complex> tx_data_vector = pmt::c32vector_elements(tx_data);
-          tx_buffs[0] = tx_data_vector;
-          meta =
-              pmt::dict_add(meta, pmt::intern(tx_freq_key), pmt::from_double(tx_freq));
-          meta = pmt::dict_add(
-              meta, pmt::intern(sample_start_key), pmt::from_long(n_tx_total));
-          new_msg_received = false;
-        }
-        md.start_of_burst = true;
-        md.end_of_burst = false;
-        md.has_time_spec = true;
-        md.time_spec = uhd::time_spec_t(start_time) - BURST_WARMUP_TIME;
-
-        double timeout = 0.1 + std::max(1 / prf, start_time);
-
-        tx_stream->send(warmup_zeros.data(), warmup_zeros.size(), md);
-        md.start_of_burst = false;
-        md.has_time_spec = false;
-        n_tx_total +=
-            tx_stream->send(tx_buffs[0].data(), tx_buffs[0].size(), md, timeout);
-
-        md.end_of_burst = true;
-        tx_stream->send(cooldown_zeros.data(), cooldown_zeros.size(), md);
-
-        start_time += 1 / prf;
-        finished = true;
-
+        std::vector<gr_complex> tx_data_vector = pmt::c32vector_elements(tx_data);
+        tx_buffs[0] = tx_data_vector;
+        meta =
+            pmt::dict_add(meta, pmt::intern(tx_freq_key), pmt::from_double(tx_freq));
+        meta = pmt::dict_add(
+            meta, pmt::intern(sample_start_key), pmt::from_long(n_tx_total));
+        new_msg_received = false;
       }
-    }
 
-    void usrp_radar_2_impl::transmit_continuous(uhd::usrp::multi_usrp::sptr usrp_tx,
-                                                uhd::tx_streamer::sptr tx_stream,
-                                                double start_time)
-    {
-      if (elevate_priority)
-      {
-        uhd::set_thread_priority(1.0);
-      }
-      // Create the metadata, and populate the time spec at the latest possible moment
-      uhd::tx_metadata_t md;
+      // Populate metadata
+      md.start_of_burst = true;
+      md.end_of_burst = true;
       md.has_time_spec = true;
       md.time_spec = uhd::time_spec_t(start_time);
 
-      double timeout = 0.1 + start_time;
-      bool first = true;
-      while (not finished)
-      {
-        if (new_msg_received)
-        {
-          tx_buffs[0] = pmt::c32vector_elements(tx_data);
-          meta =
-              pmt::dict_add(meta, pmt::intern(tx_freq_key), pmt::from_double(tx_freq));
-          meta = pmt::dict_add(
-              meta, pmt::intern(sample_start_key), pmt::from_long(n_tx_total));
-          new_msg_received = false;
-        }
-        n_tx_total += tx_stream->send(tx_buffs[0].data(), tx_buff_size, md, timeout) *
-                      tx_stream->get_num_channels();
-
-        if (first)
-        {
-          first = false;
-          md.has_time_spec = false;
-          timeout = 0.5;
-        }
-      }
-
-      // send a mini EOB packet
-      md.end_of_burst = true;
-      tx_stream->send("", 0, md);
+      double timeout = 0.1;
+      tx_stream->send(tx_buffs[0].data(), tx_buffs[0].size(), md, timeout);
     }
 
     void usrp_radar_2_impl::read_calibration_file(const std::string &filename)

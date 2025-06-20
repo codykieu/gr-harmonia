@@ -7,10 +7,6 @@ parameters:
   label: Number of Platforms
   dtype: int
   default: "num_platforms"
-- id: platform_num
-  label: Platform Number
-  dtype: int
-  default: "1"
 - id: baseband_freq
   label: Baseband Frequency
   dtype: float
@@ -35,14 +31,20 @@ parameters:
 inputs:
 -   domain: message
     id: in
-
+-   domain: message
+    id: in2
+-   domain: message
+    id: in3
+-   domain: message
+    id: cd_in
+    
 outputs:
 -   domain: message
-    id: out
+    id: t_out
     
 templates:
   imports: from gnuradio import harmonia
-  make: harmonia.clockbias_phase_est(${num_platforms}, ${platform_num}, ${baseband_freq}, ${center_freq}, ${samp_rate}, ${pulse_width}, ${SNR})
+  make: harmonia.clockbias_phase_est(${num_platforms}, ${baseband_freq}, ${center_freq}, ${samp_rate}, ${pulse_width}, ${SNR})
 
 #  'file_format' specifies the version of the GRC yml format used in the file
 #  and should usually not be changed.

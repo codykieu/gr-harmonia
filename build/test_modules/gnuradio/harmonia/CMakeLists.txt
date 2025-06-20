@@ -48,3 +48,5 @@ GR_ADD_TEST(qa_time_pk_est ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_t
 GR_ADD_TEST(qa_buffer_corrector ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_buffer_corrector.py)
 GR_ADD_TEST(qa_clockbias_phase_est ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_clockbias_phase_est.py)
 GR_ADD_TEST(qa_QPSK_demod ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_QPSK_demod.py)
+GR_ADD_TEST(qa_LFM_src ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_LFM_src.py)
+GR_ADD_TEST(qa_compensation ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_compensation.py)

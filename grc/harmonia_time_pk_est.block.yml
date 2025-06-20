@@ -3,10 +3,6 @@ label: Time Peak Estimation
 category: '[harmonia]'
 
 parameters:
-- id: nfft
-  label: FFT Ratio
-  dtype: int
-  default: "4"
 - id: samp_rate
   label: Sample Rate
   dtype: float
@@ -19,27 +15,20 @@ parameters:
   label: NLLS Iterations
   dtype: float
   default: "15"
-- id: NLLS_pts
-  label: NLLS Points
-  dtype: float
-  default: "7"
+- id: sdr_id
+  label: Platform Number
+  dtype: int
+  default: "1"
 - id: backend
   label: Backend
   dtype: enum
-  options: [plasma.Device.DEFAULT, plasma.Device.CPU, plasma.Device.CUDA, plasma.Device.OPENCL]
+  options: [harmonia.Device.DEFAULT, harmonia.Device.CPU, harmonia.Device.CUDA, harmonia.Device.OPENCL]
   option_labels: [Default, CPU, Cuda, OpenCL]
 - id: depth
   label: Message Queue Depth
   dtype: int
   default: 1
   hide: part
-# Metadata keys
-- id: current_sdr
-  label: Processing SDR
-  dtype: string
-  default: 'PMT_HARMONIA_SDR1'
-  hide: part
-  category: Metadata
 
 inputs:
 - id: tx
@@ -50,11 +39,13 @@ inputs:
 outputs:
 - id: tp_out
   domain: message
+- id: out
+  domain: message
 
 templates:
   imports: from gnuradio import harmonia
   make: |-
-    harmonia.time_pk_est(${nfft}, ${samp_rate}, ${bandwidth}, ${NLLS_iter}, ${NLLS_pts})
+    harmonia.time_pk_est(${samp_rate}, ${bandwidth}, ${NLLS_iter}, ${sdr_id})
     self.${id}.set_msg_queue_depth(${depth})
     self.${id}.set_backend(${backend})
 

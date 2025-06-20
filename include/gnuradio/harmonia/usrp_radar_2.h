@@ -35,7 +35,6 @@ namespace gr
        * creating new instances.
        */
       static sptr make(const std::string &args_tx,
-                       const std::string &args_rx,
                        const double tx_rate,
                        const double rx_rate,
                        const double tx_freq,
@@ -45,7 +44,8 @@ namespace gr
                        const double start_delay,
                        const bool elevate_priority,
                        const std::string &cal_file,
-                       const bool verbose);
+                       const bool verbose,
+                      double cap_length);
       virtual void set_metadata_keys(const std::string &tx_freq_key,
                                      const std::string &rx_freq_key,
                                      const std::string &sample_start_key,

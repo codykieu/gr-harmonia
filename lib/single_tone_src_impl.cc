@@ -99,57 +99,6 @@ namespace gr
       return block::start();
     }
 
-    // void single_tone_src_impl::handle_msg(pmt::pmt_t msg)
-    // {
-    //   // TODO: Handle dictionary inputs for changing many parameters at once
-    //   pmt::pmt_t key = pmt::car(msg);
-    //   pmt::pmt_t value = pmt::cdr(msg);
-
-    //   // Default alpha_hat
-    //   double alpha_hat = 1.0;
-
-    //   pmt::pmt_t val;
-    //   if (sdr_id == 1)
-    //   {
-    //     val = pmt::dict_ref(msg, PMT_HARMONIA_SDR1, pmt::PMT_NIL);
-    //     // val = pmt::form_double(1.0);
-    //     // GR_LOG_ERROR(d_logger, "Using for new waveform:" + std::to_string(sdr_id));
-    //   }
-    //   else if (sdr_id == 2)
-    //   {
-    //     val = pmt::dict_ref(msg, PMT_HARMONIA_SDR2, pmt::PMT_NIL);
-    //     // val = pmt::from_double(1.00001);
-    //     // GR_LOG_ERROR(d_logger, "Using for new waveform:" + std::to_string(sdr_id));
-    //   }
-    //   else if (sdr_id == 3)
-    //   {
-    //     val = pmt::dict_ref(msg, PMT_HARMONIA_SDR3, pmt::PMT_NIL);
-    //   }
-    //   else
-    //   {
-    //     GR_LOG_ERROR(d_logger, "Unknown SDR ID");
-    //     return;
-    //   }
-
-    //   // Check if clock drift value is valid
-    //   if (!pmt::is_number(val))
-    //   {
-    //     GR_LOG_ERROR(d_logger, "Clock drift not found or invalid for this SDR ID");
-    //     return;
-    //   }
-
-    //   alpha_hat = pmt::to_double(val);
-    //   // GR_LOG_ERROR(d_logger, "ALPHA_HAT" + std::to_string(alpha_hat));
-
-    //   // Create the new waveform vector and emit it as a PDU
-    //   af::array waveform =
-    //       single_tone(frequency, center_freq, phase, pulse_width, samp_rate, prf, max_buffer_size, alpha_hat).as(c32);
-    //   d_data = pmt::init_c32vector(
-    //       waveform.elements(), reinterpret_cast<gr_complex *>(waveform.host<af::cfloat>()));
-
-    //   message_port_pub(out_port, pmt::cons(meta, d_data));
-    // }
-
     void single_tone_src_impl::handle_msg(pmt::pmt_t msg)
     {
       // Validate message is a PDU
@@ -169,18 +118,18 @@ namespace gr
       // Select the right drift value based on SDR ID
       if (sdr_id == 1)
       {
-        // val = pmt::dict_ref(msg, PMT_HARMONIA_SDR1, pmt::PMT_NIL);
-        val = pmt::from_double(1.0);
+        val = pmt::dict_ref(msg, PMT_HARMONIA_SDR1, pmt::PMT_NIL);
+        // val = pmt::from_double(1.0);
       }
       else if (sdr_id == 2)
       {
-        // val = pmt::dict_ref(msg, PMT_HARMONIA_SDR2, pmt::PMT_NIL);
-        val = pmt::from_double(1.00001);
-
+        val = pmt::dict_ref(msg, PMT_HARMONIA_SDR2, pmt::PMT_NIL);
+        // val = pmt::from_double(1.0000);
       }
       else if (sdr_id == 3)
       {
         val = pmt::dict_ref(msg, PMT_HARMONIA_SDR3, pmt::PMT_NIL);
+        // val = pmt::from_double(1.0);
       }
       else
       {
@@ -222,6 +171,7 @@ namespace gr
       {
         meta = pmt::dict_add(meta, pmt::intern("clock_drift_enable"), pmt::PMT_T);
       }
+      meta = pmt::dict_add(meta, PMT_HARMONIA_LABEL, pmt::intern("single_tone"));
 
       // Send updated message
       message_port_pub(out_port, pmt::cons(meta, d_data));

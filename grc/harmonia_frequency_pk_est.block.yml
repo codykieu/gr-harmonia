@@ -3,7 +3,7 @@ label: Frequency Peak Estimation
 category: '[harmonia]'
 
 parameters:
-- id: nfft
+- id: fft_ratio
   label: FFT Ratio
   dtype: int
   default: "8"
@@ -33,19 +33,16 @@ parameters:
   dtype: int
   default: 1
   hide: part
+- id: sdr_id
+  label: Platform Number
+  dtype: int
+  default: 1
 - id: enable_out
   label: Enable "out" Message Port
   dtype: bool
   options: [True, False]
   option_labels: ['Enabled', 'Disabled']
   default: True
-# Metadata keys
-- id: current_sdr
-  label: Processing SDR
-  dtype: string
-  default: 'PMT_HARMONIA_SDR1'
-  hide: part
-  category: Metadata
 
 inputs:
 -   domain: message
@@ -61,7 +58,7 @@ outputs:
 templates:
   imports: from gnuradio import harmonia
   make: |-
-    harmonia.frequency_pk_est(${nfft}, ${pulse_width}, ${cap_length}, ${samp_rate}, ${NLLS_iter}, ${enable_out})
+    harmonia.frequency_pk_est(${fft_ratio}, ${pulse_width}, ${cap_length}, ${samp_rate}, ${NLLS_iter}, ${sdr_id}, ${enable_out})
     self.${id}.set_msg_queue_depth(${depth})
     self.${id}.set_backend(${backend})
 

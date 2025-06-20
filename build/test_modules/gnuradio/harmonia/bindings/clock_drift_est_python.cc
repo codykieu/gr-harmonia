@@ -16,7 +16,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0) */
 /* BINDTOOL_USE_PYGCCXML(0) */
 /* BINDTOOL_HEADER_FILE(clock_drift_est.h) */
-/* BINDTOOL_HEADER_FILE_HASH(53bf5f49245c75bbe7228034033293b5) */
+/* BINDTOOL_HEADER_FILE_HASH(94fb367b6141e4508e98f4b66803972c) */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -38,9 +38,9 @@ void bind_clock_drift_est(py::module &m) {
                                                D(clock_drift_est))
 
       .def(py::init(&clock_drift_est::make), py::arg("num_platforms"),
-           py::arg("platform_num"), py::arg("baseband_freq"),
-           py::arg("center_freq"), py::arg("samp_rate"), py::arg("pulse_width"),
-           py::arg("SNR"), D(clock_drift_est, make))
+           py::arg("baseband_freq"), py::arg("center_freq"),
+           py::arg("samp_rate"), py::arg("pulse_width"), py::arg("SNR"),
+           D(clock_drift_est, make))
 
       ;
 }

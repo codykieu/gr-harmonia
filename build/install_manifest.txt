@@ -17,6 +17,8 @@
 /usr/local/include/gnuradio/harmonia/clockbias_phase_est.h
 /usr/local/include/gnuradio/harmonia/QPSK_mod.h
 /usr/local/include/gnuradio/harmonia/QPSK_demod.h
+/usr/local/include/gnuradio/harmonia/LFM_src.h
+/usr/local/include/gnuradio/harmonia/compensation.h
 /usr/local/lib/libgnuradio-harmonia.so.1.1.0.0
 /usr/local/lib/libgnuradio-harmonia.so.1.1.0
 /usr/local/lib/libgnuradio-harmonia.so
@@ -40,3 +42,5 @@
 /usr/local/share/gnuradio/grc/blocks/harmonia_clockbias_phase_est.block.yml
 /usr/local/share/gnuradio/grc/blocks/harmonia_QPSK_mod.block.yml
 /usr/local/share/gnuradio/grc/blocks/harmonia_QPSK_demod.block.yml
+/usr/local/share/gnuradio/grc/blocks/harmonia_LFM_src.block.yml
+/usr/local/share/gnuradio/grc/blocks/harmonia_compensation.block.yml

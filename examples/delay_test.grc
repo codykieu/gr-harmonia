@@ -1,0 +1,199 @@
+options:
+  parameters:
+    author: cody
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: delay_test
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Not titled yet
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: Tp
+  id: variable
+  parameters:
+    comment: ''
+    value: 500e-6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [168, 80.0]
+    rotation: 0
+    state: enabled
+- name: bw
+  id: variable
+  parameters:
+    comment: ''
+    value: 50e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [352, 8.0]
+    rotation: 0
+    state: enabled
+- name: center_freq
+  id: variable
+  parameters:
+    comment: ''
+    value: 1e9
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [256, 8.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 100e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [168, 8.0]
+    rotation: 0
+    state: enabled
+- name: harmonia_LFM_src_0
+  id: harmonia_LFM_src
+  parameters:
+    affinity: ''
+    alias: ''
+    bandwidth: bw
+    bandwidth_key: radar:bandwidth
+    center_freq: center_freq
+    comment: ''
+    duration_key: radar:duration
+    label_key: core:label
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    prf: '0'
+    prf_key: radar:prf
+    pulse_width: Tp
+    samp_rate: samp_rate
+    sample_rate_key: core:sample_rate
+    sdr_id: '1'
+    start_freq: -bw/2
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [256, 192.0]
+    rotation: 0
+    state: disabled
+- name: harmonia_single_tone_src_0_0
+  id: harmonia_single_tone_src
+  parameters:
+    affinity: ''
+    alias: ''
+    center_freq: center_freq
+    comment: ''
+    duration_key: radar:duration
+    frequency: 1e6
+    frequency_key: radar:frequency
+    label_key: core:label
+    max_buffer_size: '1996'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    phase: '0'
+    phase_key: radar:phase
+    prf: '0'
+    prf_key: radar:prf
+    pulse_width: Tp
+    samp_rate: samp_rate
+    sample_rate_key: core:sample_rate
+    sdr_id: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 340.0]
+    rotation: 0
+    state: enabled
+- name: harmonia_usrp_radar_all_0
+  id: harmonia_usrp_radar_all
+  parameters:
+    TDMA_time: '0'
+    affinity: ''
+    alias: ''
+    args_1: '"addr=192.168.80.2, use_dpkg=1"'
+    args_2: '"addr=192.168.60.2, use_dpkg=1"'
+    args_3: '"addr=192.168.40.2, use_dpkg=1"'
+    cap_length: '0.005'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    prf_key: radar:prf
+    samp_rate: samp_rate
+    sample_start_key: core:sample_start
+    sdr1_freq: center_freq
+    sdr1_freq_key: core:tx_freq
+    sdr1_gain: '0'
+    sdr2_freq: center_freq
+    sdr2_freq_key: core:rx_freq
+    sdr2_gain: '0'
+    sdr3_freq: center_freq
+    sdr3_gain: '0'
+    start_delay: '1.5'
+    verbose: 'False'
+    wait_time: '-0.001'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [536, 192.0]
+    rotation: 0
+    state: enabled
+- name: plasma_pdu_file_sink_0
+  id: plasma_pdu_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    data_filename: delay_test
+    meta_filename: ''
+    save_meta: 'False'
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1024, 176.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [harmonia_LFM_src_0, out, harmonia_usrp_radar_all_0, in]
+- [harmonia_single_tone_src_0_0, out, harmonia_usrp_radar_all_0, in]
+- [harmonia_usrp_radar_all_0, out, plasma_pdu_file_sink_0, in]
+
+metadata:
+  file_format: 1
+  grc_version: 3.10.12.0

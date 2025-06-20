@@ -21,12 +21,13 @@ class frequency_pk_est_impl : public frequency_pk_est
 {
 private:
     // Parameters
-    size_t d_fftsize;
-    double d_pulse_width;
-    double d_cap_length;
-    double d_samp_rate;
-    double d_NLLS_iter;
-    bool d_enable_out;
+    size_t fft_ratio;
+    double pulse_width;
+    double cap_length;
+    double samp_rate;
+    double NLLS_iter;
+    int sdr_id;
+    bool enable_out;
 
     // Variables
     af::Backend d_backend;
@@ -36,6 +37,7 @@ private:
     std::vector<float> d_sdr2_estimates;
     std::vector<float> d_sdr3_estimates;
     af::array nlls_ind;
+    int d_rx_count;
 
     // Message Ports    
     pmt::pmt_t d_out_port;
@@ -48,14 +50,15 @@ private:
     // Metadata 
     pmt::pmt_t d_meta;
     pmt::pmt_t d_meta_f;
+    pmt::pmt_t sdr_pmt;
 
     af::array sinc(const af::array &x);
 
     void handle_msg(pmt::pmt_t msg);
 
 public:
-    frequency_pk_est_impl(size_t nfft, double pulse_width, double cap_length,
-        double samp_rate, double NLLS_iter, bool enable_out);
+    frequency_pk_est_impl(size_t fft_ratio, double pulse_width, double cap_length,
+        double samp_rate, double NLLS_iter, int sdr_id, bool enable_out);
     ~frequency_pk_est_impl();
 
     void set_msg_queue_depth(size_t) override;

@@ -39,6 +39,8 @@ list(APPEND harmonia_python_files
     clockbias_phase_est_python.cc
     QPSK_mod_python.cc
     QPSK_demod_python.cc
+    LFM_src_python.cc
+    compensation_python.cc
     python_bindings.cc
     )
 

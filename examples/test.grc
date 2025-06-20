@@ -45,22 +45,6 @@ blocks:
     coordinate: [200, 12]
     rotation: 0
     state: enabled
-- name: harmonia_buffer_corrector_0
-  id: harmonia_buffer_corrector
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    max_buffer_size: '1996'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [456, 328.0]
-    rotation: 0
-    state: bypassed
 - name: harmonia_single_tone_src_0
   id: harmonia_single_tone_src
   parameters:
@@ -69,7 +53,7 @@ blocks:
     center_freq: '0'
     comment: ''
     duration_key: radar:duration
-    frequency: '0'
+    frequency: 10e3
     frequency_key: radar:frequency
     label_key: core:label
     max_buffer_size: '1996'
@@ -87,37 +71,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [264, 156.0]
-    rotation: 0
-    state: enabled
-- name: harmonia_usrp_radar_2_0
-  id: harmonia_usrp_radar_2
-  parameters:
-    affinity: ''
-    alias: ''
-    args_rx: '"addr=192.168.80.2, use_dpkg=1"'
-    args_tx: '"addr=192.168.60.2, use_dpkg=1"'
-    cal_file: '""'
-    comment: ''
-    elevate_priority: 'False'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    prf_key: radar:prf
-    rx_freq: 3e9
-    rx_freq_key: core:rx_freq
-    rx_gain: '0'
-    samp_rate: samp_rate
-    sample_start_key: core:sample_start
-    start_delay: '0.1'
-    tx_freq: 3e9
-    tx_freq_key: core:tx_freq
-    tx_gain: '0'
-    verbose: 'False'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [632, 152.0]
+    coordinate: [264, 164.0]
     rotation: 0
     state: enabled
 - name: plasma_pdu_file_sink_0
@@ -127,14 +81,14 @@ blocks:
     alias: ''
     comment: ''
     data_filename: /home/cody/gr-MATLAB/waveform
-    meta_filename: ''
-    save_meta: 'False'
+    meta_filename: /home/cody/gr-MATLAB/waveform_meta
+    save_meta: 'True'
     type: complex
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [920, 200.0]
+    coordinate: [504, 200.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -236,9 +190,7 @@ blocks:
     state: disabled
 
 connections:
-- [harmonia_buffer_corrector_0, out, harmonia_usrp_radar_2_0, in]
-- [harmonia_single_tone_src_0, out, harmonia_buffer_corrector_0, in]
-- [harmonia_usrp_radar_2_0, out, plasma_pdu_file_sink_0, in]
+- [harmonia_single_tone_src_0, out, plasma_pdu_file_sink_0, in]
 
 metadata:
   file_format: 1

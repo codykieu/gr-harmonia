@@ -1048,7 +1048,7 @@ lib/CMakeFiles/gnuradio-harmonia.dir/time_pk_est_impl.cc.o: \
  /home/cody/gr-harmonia/lib/../include/gnuradio/harmonia/api.h \
  /home/cody/gr-harmonia/lib/../include/gnuradio/harmonia/device.h \
  /home/cody/gr-harmonia/lib/../include/gnuradio/harmonia/pmt_constants.h \
- /opt/arrayfire/include/arrayfire.h \
+ /usr/local/include/plasma_dsp/fft.h /opt/arrayfire/include/arrayfire.h \
  /opt/arrayfire/include/af/compatible.h \
  /opt/arrayfire/include/af/defines.h \
  /opt/arrayfire/include/af/compilers.h \

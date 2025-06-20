@@ -26,7 +26,9 @@ list(APPEND harmonia_sources
     buffer_corrector_impl.cc
     clockbias_phase_est_impl.cc
     QPSK_mod_impl.cc
-    QPSK_demod_impl.cc )
+    QPSK_demod_impl.cc
+    LFM_src_impl.cc
+    compensation_impl.cc )
 
 set(harmonia_sources
     "${harmonia_sources}"

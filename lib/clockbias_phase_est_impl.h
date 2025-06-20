@@ -22,13 +22,8 @@ namespace gr
     class clockbias_phase_est_impl : public clockbias_phase_est
     {
     private:
-      const pmt::pmt_t msg_port;
-      const pmt::pmt_t out_port;
-      pmt::pmt_t d_msg;
-
       // Parameters
       int num_platforms;
-      int platform_num;
       double baseband_freq;
       double center_freq;
       double samp_rate;
@@ -36,19 +31,30 @@ namespace gr
       double SNR;
       af::array TOF_est, Phase_est;
 
+      // Variables
+      std::vector<std::vector<double>> time_matrix; 
+      std::vector<std::vector<double>> phase_matrix; 
+      bool send;
+      std::vector<bool> check_time;
+      std::vector<bool> check_phase; 
+      double alpha1, alpha2, alpha3;
+
       // Object and data
       pmt::pmt_t d_data;
 
       // Metadata fields
       pmt::pmt_t meta;
       pmt::pmt_t key;
+      pmt::pmt_t d_meta = pmt::make_dict();
+      pmt::pmt_t cd_meta = pmt::make_dict();
 
-      af::array to_af_array(const std::vector<std::vector<float>> &matrix);
+      // Functions
+      af::array to_af_array(const std::vector<std::vector<double>> &matrix);
       void handle_msg(pmt::pmt_t msg);
+      void handle_clock_drift(pmt::pmt_t msg);
 
     public:
       clockbias_phase_est_impl(int num_platforms,
-                               int platform_num,
                                double baseband_freq,
                                double center_freq,
                                double samp_rate,

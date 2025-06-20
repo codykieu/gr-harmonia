@@ -227,6 +227,30 @@ harmonia_python_autogen/fast:
 	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python_autogen.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python_autogen.dir/build
 .PHONY : harmonia_python_autogen/fast
 
+LFM_src_python.o: LFM_src_python.cc.o
+.PHONY : LFM_src_python.o
+
+# target to build an object file
+LFM_src_python.cc.o:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/LFM_src_python.cc.o
+.PHONY : LFM_src_python.cc.o
+
+LFM_src_python.i: LFM_src_python.cc.i
+.PHONY : LFM_src_python.i
+
+# target to preprocess a source file
+LFM_src_python.cc.i:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/LFM_src_python.cc.i
+.PHONY : LFM_src_python.cc.i
+
+LFM_src_python.s: LFM_src_python.cc.s
+.PHONY : LFM_src_python.s
+
+# target to generate assembly for a file
+LFM_src_python.cc.s:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/LFM_src_python.cc.s
+.PHONY : LFM_src_python.cc.s
+
 QPSK_demod_python.o: QPSK_demod_python.cc.o
 .PHONY : QPSK_demod_python.o
 
@@ -370,6 +394,30 @@ clockbias_phase_est_python.s: clockbias_phase_est_python.cc.s
 clockbias_phase_est_python.cc.s:
 	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.s
 .PHONY : clockbias_phase_est_python.cc.s
+
+compensation_python.o: compensation_python.cc.o
+.PHONY : compensation_python.o
+
+# target to build an object file
+compensation_python.cc.o:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compensation_python.cc.o
+.PHONY : compensation_python.cc.o
+
+compensation_python.i: compensation_python.cc.i
+.PHONY : compensation_python.i
+
+# target to preprocess a source file
+compensation_python.cc.i:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compensation_python.cc.i
+.PHONY : compensation_python.cc.i
+
+compensation_python.s: compensation_python.cc.s
+.PHONY : compensation_python.s
+
+# target to generate assembly for a file
+compensation_python.cc.s:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compensation_python.cc.s
+.PHONY : compensation_python.cc.s
 
 device_python.o: device_python.cc.o
 .PHONY : device_python.o
@@ -676,6 +724,9 @@ help:
 	@echo "... harmonia_python_autogen"
 	@echo "... harmonia_python_autogen_timestamp_deps"
 	@echo "... harmonia_python"
+	@echo "... LFM_src_python.o"
+	@echo "... LFM_src_python.i"
+	@echo "... LFM_src_python.s"
 	@echo "... QPSK_demod_python.o"
 	@echo "... QPSK_demod_python.i"
 	@echo "... QPSK_demod_python.s"
@@ -694,6 +745,9 @@ help:
 	@echo "... clockbias_phase_est_python.o"
 	@echo "... clockbias_phase_est_python.i"
 	@echo "... clockbias_phase_est_python.s"
+	@echo "... compensation_python.o"
+	@echo "... compensation_python.i"
+	@echo "... compensation_python.s"
 	@echo "... device_python.o"
 	@echo "... device_python.i"
 	@echo "... device_python.s"
