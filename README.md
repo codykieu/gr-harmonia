@@ -8,6 +8,7 @@ The following features have been implemented:
 - PDU Clock Drift Estimator
 - PDU Peak Time Estimator
 - PDU Clock Bias and Phase Estimator
+- PDU Clock Drift, Clock Bias, and Carrier Phase Compensation
 - UHD: USRP Block
 
 
