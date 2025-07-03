@@ -2,11 +2,11 @@
 
 The following features have been implemented:
 
-- PDU FFT
-- PDU Complex to Magnitude
-- PDU Frequency Peak Estimator
+- PDU Single Tone Waveform Source
+- PDU Linear Frequency Modulated Waveform Source
+- PDU Peak Frequency Estimator
 - PDU Clock Drift Estimator
-- PDU Time Peak Estimator
+- PDU Peak Time Estimator
 - PDU Clock Bias and Phase Estimator
 - UHD: USRP Block
 
