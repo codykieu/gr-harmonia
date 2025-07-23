@@ -1,0 +1,78 @@
+id: harmonia_usrp_radar_tdma
+label: UHD:USRP Radar TDMA
+category: '[harmonia]'
+
+parameters:
+  - id: args
+    label: Device Arguments
+    dtype: string
+    default: '""'
+    hide: ${ ('part' if args == "" else 'none') }
+  - id: samp_rate
+    label: Sample Rate
+    dtype: float
+    default: "samp_rate"
+  - id: sdr_freq
+    label: Tx Frequency
+    dtype: float
+    default: "center_freq"
+  - id: sdr_gain
+    label: Tx Gain (dB)
+    dtype: float
+    default: 0
+  - id: sdr_id
+    label: Platform Number
+    dtype: int
+    default: 1 
+  - id: start_delay
+    label: Start Delay
+    dtype: float
+    default: T_delay
+  - id: cap_length
+    label: Capture Time (s)
+    dtype: float
+    default: "Tc"
+  - id: cap_length2
+    label: Capture Time 2 (s)
+    dtype: float
+    default: "Tc2"
+  - id: wait_time
+    label: Wait Time (s)
+    dtype: float
+    default: "Tw"
+  - id: TDMA_time
+    label: TDMA Time 2 (s)
+    dtype: float
+    default: "tdma_time"
+  - id: TDMA_time2
+    label: TDMA Time (s)
+    dtype: float
+    default: "tdma_time2"
+
+inputs:
+  - id: in
+    domain: message
+    optional: true
+  - id: LFM_in
+    domain: message
+    optional: true
+
+outputs:
+  - id: out
+    domain: message
+    optional: true
+  - id: cd_out
+    domain: message
+    optional: true
+  - id: cb_out
+    domain: message
+    optional: true
+
+templates:
+  imports: from gnuradio import harmonia
+  make: |-
+    harmonia.usrp_radar_tdma(${args}, ${samp_rate}, ${sdr_freq}, ${sdr_gain}, ${sdr_id}, ${start_delay}, ${cap_length}, ${cap_length2}, ${wait_time}, ${TDMA_time}, ${TDMA_time2})
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1

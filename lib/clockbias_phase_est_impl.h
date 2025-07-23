@@ -24,21 +24,21 @@ namespace gr
     private:
       // Parameters
       int num_platforms;
-      double baseband_freq;
       double center_freq;
       double samp_rate;
       double pulse_width;
       double SNR;
-      af::array TOF_est, Phase_est;
+      bool bias_status, phase_status;
 
       // Variables
-      std::vector<std::vector<double>> time_matrix; 
-      std::vector<std::vector<double>> phase_matrix; 
-      bool send;
+      std::vector<std::vector<double>> time_matrix;
+      std::vector<std::vector<double>> phase_matrix;
       std::vector<bool> check_time;
-      std::vector<bool> check_phase; 
+      std::vector<bool> check_phase;
       double alpha1, alpha2, alpha3;
-
+      af::array TOF_est, Phase_est;
+      af::array cb_est, x_gamma_est;
+      
       // Object and data
       pmt::pmt_t d_data;
 
@@ -55,11 +55,12 @@ namespace gr
 
     public:
       clockbias_phase_est_impl(int num_platforms,
-                               double baseband_freq,
                                double center_freq,
                                double samp_rate,
                                double pulse_width,
-                               double SNR);
+                               double SNR,
+                               bool bias_status,
+                               bool phase_status);
       ~clockbias_phase_est_impl();
     };
 

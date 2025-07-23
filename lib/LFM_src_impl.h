@@ -26,15 +26,16 @@ namespace gr
       double start_freq;
       double center_freq;
       double pulse_width;
+      double pulse_width2;
       double samp_rate;
       double prf;
       int sdr_id;
 
       // Waveform object and IQ data
       pmt::pmt_t d_data;
-      double alpha_hat;
-      double phi_hat;
-
+      double alpha_hat, phi_hat, gamma_hat;
+      af::array waveform;
+      
       // Metadata fields
       pmt::pmt_t label_key;
       pmt::pmt_t sample_rate_key;
@@ -44,6 +45,7 @@ namespace gr
       pmt::pmt_t meta;
       pmt::pmt_t cd_val;
       pmt::pmt_t cb_val;
+      pmt::pmt_t cp_val;
 
       void handle_msg(pmt::pmt_t msg);
 
@@ -52,6 +54,7 @@ namespace gr
                    double start_freq,
                    double center_freq,
                    double pulse_width,
+                   double pulse_width2,
                    double samp_rate,
                    double prf,
                    int sdr_id);

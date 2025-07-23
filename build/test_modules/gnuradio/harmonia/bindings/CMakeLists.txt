@@ -28,19 +28,15 @@ list(APPEND harmonia_python_files
     device_python.cc
     frequency_pk_est_python.cc
     single_tone_src_python.cc
-    usrp_radar_2_python.cc
     SDR_tagger_python.cc
     usrp_radar_all_python.cc
-    usrp_radar_tx_python.cc
-    usrp_radar_rx_python.cc
     clock_drift_est_python.cc
     time_pk_est_python.cc
     buffer_corrector_python.cc
     clockbias_phase_est_python.cc
-    QPSK_mod_python.cc
-    QPSK_demod_python.cc
     LFM_src_python.cc
     compensation_python.cc
+    usrp_radar_tdma_python.cc
     python_bindings.cc
     )
 

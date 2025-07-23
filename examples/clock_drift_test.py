@@ -28,7 +28,7 @@ import threading
 
 class clock_drift_test(gr.top_block, Qt.QWidget):
 
-    def __init__(self):
+    def __init__(self, run_id=0):
         gr.top_block.__init__(self, "Clock Drift Synchronization Test", catch_exceptions=True)
         Qt.QWidget.__init__(self)
         self.setWindowTitle("Clock Drift Synchronization Test")
@@ -64,7 +64,7 @@ class clock_drift_test(gr.top_block, Qt.QWidget):
         ##################################################
         self.tdma_time = tdma_time = 10e-3
         self.samp_rate = samp_rate = 100e6
-        self.run_id = run_id = 0
+        self.run_id = 0
         self.prf = prf = 0
         self.center_freq = center_freq = 1e9
         self.bw = bw = 25e6

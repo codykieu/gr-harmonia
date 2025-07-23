@@ -1069,4 +1069,8 @@ lib/CMakeFiles/gnuradio-harmonia.dir/compensation_impl.cc.o: \
  /opt/arrayfire/include/af/random.h /opt/arrayfire/include/af/signal.h \
  /opt/arrayfire/include/af/sparse.h \
  /opt/arrayfire/include/af/statistics.h \
- /opt/arrayfire/include/af/timing.h /opt/arrayfire/include/af/vision.h
+ /opt/arrayfire/include/af/timing.h /opt/arrayfire/include/af/vision.h \
+ /usr/local/include/plasma_dsp/pulsed_waveform.h \
+ /usr/local/include/plasma_dsp/waveform.h \
+ /usr/local/include/plasma_dsp/constants.h \
+ /usr/local/include/plasma_dsp/fft.h

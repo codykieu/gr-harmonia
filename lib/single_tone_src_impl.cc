@@ -15,14 +15,14 @@ namespace gr
 
     using output_type = gr_complex;
     single_tone_src::sptr single_tone_src::make(
-        double frequency, double center_freq, double phase, double pulse_width, double samp_rate, double prf, int max_buffer_size, int sdr_id)
+        double frequency, double center_freq, double phase, double pulse_width, double samp_rate, double prf, int sdr_id)
     {
       return gnuradio::make_block_sptr<single_tone_src_impl>(
-          frequency, center_freq, phase, pulse_width, samp_rate, prf, max_buffer_size, sdr_id);
+          frequency, center_freq, phase, pulse_width, samp_rate, prf, sdr_id);
     }
 
     af::array single_tone(double frequency, double center_freq, double phase, double pulse_width,
-                          double samp_rate, double prf, int max_buffer_size, double alpha_hat = 1.0)
+                          double samp_rate, double prf, double alpha_hat = 1.0)
     {
       double ts = 1 / samp_rate;
       size_t n_samp_pulse = round(samp_rate * pulse_width);
@@ -60,7 +60,7 @@ namespace gr
      * The private constructor
      */
     single_tone_src_impl::single_tone_src_impl(
-        double frequency, double center_freq, double phase, double pulse_width, double samp_rate, double prf, int max_buffer_size, int sdr_id)
+        double frequency, double center_freq, double phase, double pulse_width, double samp_rate, double prf, int sdr_id)
         : gr::block(
               "single_tone_src", gr::io_signature::make(0, 0, 0), gr::io_signature::make(0, 0, 0)),
           msg_port(PMT_HARMONIA_IN),
@@ -71,10 +71,9 @@ namespace gr
           pulse_width(pulse_width),
           samp_rate(samp_rate),
           prf(prf),
-          max_buffer_size(max_buffer_size),
           sdr_id(sdr_id)
     {
-      af::array waveform = single_tone(frequency, center_freq, phase, pulse_width, samp_rate, prf, max_buffer_size).as(c32);
+      af::array waveform = single_tone(frequency, center_freq, phase, pulse_width, samp_rate, prf).as(c32);
 
       d_data = pmt::init_c32vector(
           waveform.elements(), reinterpret_cast<gr_complex *>(waveform.host<af::cfloat>()));
@@ -150,7 +149,7 @@ namespace gr
       // Generate waveform with corrected drift
       af::array waveform = single_tone(
                                frequency, center_freq, phase, pulse_width,
-                               samp_rate, prf, max_buffer_size, alpha_hat)
+                               samp_rate, prf, alpha_hat)
                                .as(c32);
 
       d_data = pmt::init_c32vector(

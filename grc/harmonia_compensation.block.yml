@@ -25,9 +25,11 @@ inputs:
     id: cd_in
     optional: true 
   - domain: message
-    id: cbp_in
+    id: cb_in
     optional: true
-
+  - domain: message
+    id: cp_in
+    optional: true
 outputs:
   - domain: message
     id: out

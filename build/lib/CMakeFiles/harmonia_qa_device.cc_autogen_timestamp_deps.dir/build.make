@@ -66,8 +66,8 @@ include lib/CMakeFiles/harmonia_qa_device.cc_autogen_timestamp_deps.dir/compiler
 # Include the progress variables for this target.
 include lib/CMakeFiles/harmonia_qa_device.cc_autogen_timestamp_deps.dir/progress.make
 
-lib/CMakeFiles/harmonia_qa_device.cc_autogen_timestamp_deps: /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.so.1.83.0
 lib/CMakeFiles/harmonia_qa_device.cc_autogen_timestamp_deps: /usr/lib/qt5/bin/moc
+lib/CMakeFiles/harmonia_qa_device.cc_autogen_timestamp_deps: /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.so.1.83.0
 lib/CMakeFiles/harmonia_qa_device.cc_autogen_timestamp_deps: lib/libgnuradio-harmonia.so.1.1.0.0
 
 harmonia_qa_device.cc_autogen_timestamp_deps: lib/CMakeFiles/harmonia_qa_device.cc_autogen_timestamp_deps

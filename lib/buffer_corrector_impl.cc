@@ -62,7 +62,7 @@ namespace gr
       std::vector<gr_complex> data_vector = pmt::c32vector_elements(data);
       size_t tx_data_len = data_vector.size();
       size_t remainder = tx_data_len % max_buffer_size;
-
+      // GR_LOG_INFO(d_logger, "Remainder: " + std::to_string(remainder));
       if (remainder != 0)
       {
         size_t padding_needed = max_buffer_size - remainder;

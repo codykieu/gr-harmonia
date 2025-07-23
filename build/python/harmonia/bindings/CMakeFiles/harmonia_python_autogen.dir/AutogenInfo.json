@@ -110,16 +110,6 @@
 			null
 		],
 		[
-			"/home/cody/gr-harmonia/python/harmonia/bindings/QPSK_demod_python.cc",
-			"Mu",
-			null
-		],
-		[
-			"/home/cody/gr-harmonia/python/harmonia/bindings/QPSK_mod_python.cc",
-			"Mu",
-			null
-		],
-		[
 			"/home/cody/gr-harmonia/python/harmonia/bindings/SDR_tagger_python.cc",
 			"Mu",
 			null
@@ -180,22 +170,12 @@
 			null
 		],
 		[
-			"/home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_2_python.cc",
-			"Mu",
-			null
-		],
-		[
 			"/home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_all_python.cc",
 			"Mu",
 			null
 		],
 		[
-			"/home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_rx_python.cc",
-			"Mu",
-			null
-		],
-		[
-			"/home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_tx_python.cc",
+			"/home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_tdma_python.cc",
 			"Mu",
 			null
 		]

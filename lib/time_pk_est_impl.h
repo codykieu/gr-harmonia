@@ -8,6 +8,7 @@
 #ifndef INCLUDED_HARMONIA_TIME_PK_EST_IMPL_H
 #define INCLUDED_HARMONIA_TIME_PK_EST_IMPL_H
 
+#include <gnuradio/harmonia/device.h>
 #include <gnuradio/harmonia/time_pk_est.h>
 #include <gnuradio/harmonia/pmt_constants.h>
 #include <plasma_dsp/fft.h>
@@ -24,22 +25,27 @@ namespace gr
       // Parameters
       double samp_rate;
       double bandwidth;
+      double pulse_width;
+      double wait_time;
+      double sample_delay;
       double NLLS_iter;
       int sdr_id;
-
+      double wire_delay;
+      double wire_delay_tx;
+      double t_delay;
+      
       // Variables
       af::array d_match_filt;
       af::Backend d_backend;
       size_t d_msg_queue_depth;
       double t_est;
       double p_est;
-      double rx_time;
-      std::vector<float> d_sdr1_time_est;
-      std::vector<float> d_sdr2_time_est;
-      std::vector<float> d_sdr3_time_est;
-      std::vector<float> d_sdr1_phase_est;
-      std::vector<float> d_sdr2_phase_est;
-      std::vector<float> d_sdr3_phase_est;
+      std::vector<double> d_sdr1_time_est;
+      std::vector<double> d_sdr2_time_est;
+      std::vector<double> d_sdr3_time_est;
+      std::vector<double> d_sdr1_phase_est;
+      std::vector<double> d_sdr2_phase_est;
+      std::vector<double> d_sdr3_phase_est;
       int d_rx_count;
 
       // Message Ports
@@ -60,7 +66,7 @@ namespace gr
       void handle_rx_msg(pmt::pmt_t);
 
     public:
-      time_pk_est_impl(double samp_rate, double bandwidth, double NLLS_iter, int sdr_id);
+      time_pk_est_impl(double samp_rate, double bandwidth, double pulse_width, double wait_time, double sample_delay, double NLLS_iter, int sdr_id);
       ~time_pk_est_impl();
 
       void set_msg_queue_depth(size_t) override;

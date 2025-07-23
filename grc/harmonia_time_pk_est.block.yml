@@ -11,6 +11,18 @@ parameters:
   label: Bandwidth
   dtype: float
   default: "bw"
+- id: pulse_width
+  label: Pulse Width
+  dtype: float
+  default: "Tp"
+- id: wait_time
+  label: Wait Time
+  dtype: float
+  default: "Tw"
+- id: sample_delay
+  label: Samples to Delay
+  dtype: float
+  default: "82"
 - id: NLLS_iter
   label: NLLS Iterations
   dtype: float
@@ -45,7 +57,7 @@ outputs:
 templates:
   imports: from gnuradio import harmonia
   make: |-
-    harmonia.time_pk_est(${samp_rate}, ${bandwidth}, ${NLLS_iter}, ${sdr_id})
+    harmonia.time_pk_est(${samp_rate}, ${bandwidth}, ${pulse_width}, ${wait_time}, ${sample_delay}, ${NLLS_iter}, ${sdr_id})
     self.${id}.set_msg_queue_depth(${depth})
     self.${id}.set_backend(${backend})
 

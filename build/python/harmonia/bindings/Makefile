@@ -251,54 +251,6 @@ LFM_src_python.cc.s:
 	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/LFM_src_python.cc.s
 .PHONY : LFM_src_python.cc.s
 
-QPSK_demod_python.o: QPSK_demod_python.cc.o
-.PHONY : QPSK_demod_python.o
-
-# target to build an object file
-QPSK_demod_python.cc.o:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.o
-.PHONY : QPSK_demod_python.cc.o
-
-QPSK_demod_python.i: QPSK_demod_python.cc.i
-.PHONY : QPSK_demod_python.i
-
-# target to preprocess a source file
-QPSK_demod_python.cc.i:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.i
-.PHONY : QPSK_demod_python.cc.i
-
-QPSK_demod_python.s: QPSK_demod_python.cc.s
-.PHONY : QPSK_demod_python.s
-
-# target to generate assembly for a file
-QPSK_demod_python.cc.s:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.s
-.PHONY : QPSK_demod_python.cc.s
-
-QPSK_mod_python.o: QPSK_mod_python.cc.o
-.PHONY : QPSK_mod_python.o
-
-# target to build an object file
-QPSK_mod_python.cc.o:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.o
-.PHONY : QPSK_mod_python.cc.o
-
-QPSK_mod_python.i: QPSK_mod_python.cc.i
-.PHONY : QPSK_mod_python.i
-
-# target to preprocess a source file
-QPSK_mod_python.cc.i:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.i
-.PHONY : QPSK_mod_python.cc.i
-
-QPSK_mod_python.s: QPSK_mod_python.cc.s
-.PHONY : QPSK_mod_python.s
-
-# target to generate assembly for a file
-QPSK_mod_python.cc.s:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.s
-.PHONY : QPSK_mod_python.cc.s
-
 SDR_tagger_python.o: SDR_tagger_python.cc.o
 .PHONY : SDR_tagger_python.o
 
@@ -611,30 +563,6 @@ time_pk_est_python.cc.s:
 	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/time_pk_est_python.cc.s
 .PHONY : time_pk_est_python.cc.s
 
-usrp_radar_2_python.o: usrp_radar_2_python.cc.o
-.PHONY : usrp_radar_2_python.o
-
-# target to build an object file
-usrp_radar_2_python.cc.o:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.o
-.PHONY : usrp_radar_2_python.cc.o
-
-usrp_radar_2_python.i: usrp_radar_2_python.cc.i
-.PHONY : usrp_radar_2_python.i
-
-# target to preprocess a source file
-usrp_radar_2_python.cc.i:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.i
-.PHONY : usrp_radar_2_python.cc.i
-
-usrp_radar_2_python.s: usrp_radar_2_python.cc.s
-.PHONY : usrp_radar_2_python.s
-
-# target to generate assembly for a file
-usrp_radar_2_python.cc.s:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.s
-.PHONY : usrp_radar_2_python.cc.s
-
 usrp_radar_all_python.o: usrp_radar_all_python.cc.o
 .PHONY : usrp_radar_all_python.o
 
@@ -659,53 +587,29 @@ usrp_radar_all_python.cc.s:
 	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_all_python.cc.s
 .PHONY : usrp_radar_all_python.cc.s
 
-usrp_radar_rx_python.o: usrp_radar_rx_python.cc.o
-.PHONY : usrp_radar_rx_python.o
+usrp_radar_tdma_python.o: usrp_radar_tdma_python.cc.o
+.PHONY : usrp_radar_tdma_python.o
 
 # target to build an object file
-usrp_radar_rx_python.cc.o:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.o
-.PHONY : usrp_radar_rx_python.cc.o
+usrp_radar_tdma_python.cc.o:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.o
+.PHONY : usrp_radar_tdma_python.cc.o
 
-usrp_radar_rx_python.i: usrp_radar_rx_python.cc.i
-.PHONY : usrp_radar_rx_python.i
-
-# target to preprocess a source file
-usrp_radar_rx_python.cc.i:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.i
-.PHONY : usrp_radar_rx_python.cc.i
-
-usrp_radar_rx_python.s: usrp_radar_rx_python.cc.s
-.PHONY : usrp_radar_rx_python.s
-
-# target to generate assembly for a file
-usrp_radar_rx_python.cc.s:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.s
-.PHONY : usrp_radar_rx_python.cc.s
-
-usrp_radar_tx_python.o: usrp_radar_tx_python.cc.o
-.PHONY : usrp_radar_tx_python.o
-
-# target to build an object file
-usrp_radar_tx_python.cc.o:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.o
-.PHONY : usrp_radar_tx_python.cc.o
-
-usrp_radar_tx_python.i: usrp_radar_tx_python.cc.i
-.PHONY : usrp_radar_tx_python.i
+usrp_radar_tdma_python.i: usrp_radar_tdma_python.cc.i
+.PHONY : usrp_radar_tdma_python.i
 
 # target to preprocess a source file
-usrp_radar_tx_python.cc.i:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.i
-.PHONY : usrp_radar_tx_python.cc.i
+usrp_radar_tdma_python.cc.i:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.i
+.PHONY : usrp_radar_tdma_python.cc.i
 
-usrp_radar_tx_python.s: usrp_radar_tx_python.cc.s
-.PHONY : usrp_radar_tx_python.s
+usrp_radar_tdma_python.s: usrp_radar_tdma_python.cc.s
+.PHONY : usrp_radar_tdma_python.s
 
 # target to generate assembly for a file
-usrp_radar_tx_python.cc.s:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.s
-.PHONY : usrp_radar_tx_python.cc.s
+usrp_radar_tdma_python.cc.s:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.s
+.PHONY : usrp_radar_tdma_python.cc.s
 
 # Help Target
 help:
@@ -727,12 +631,6 @@ help:
 	@echo "... LFM_src_python.o"
 	@echo "... LFM_src_python.i"
 	@echo "... LFM_src_python.s"
-	@echo "... QPSK_demod_python.o"
-	@echo "... QPSK_demod_python.i"
-	@echo "... QPSK_demod_python.s"
-	@echo "... QPSK_mod_python.o"
-	@echo "... QPSK_mod_python.i"
-	@echo "... QPSK_mod_python.s"
 	@echo "... SDR_tagger_python.o"
 	@echo "... SDR_tagger_python.i"
 	@echo "... SDR_tagger_python.s"
@@ -772,18 +670,12 @@ help:
 	@echo "... time_pk_est_python.o"
 	@echo "... time_pk_est_python.i"
 	@echo "... time_pk_est_python.s"
-	@echo "... usrp_radar_2_python.o"
-	@echo "... usrp_radar_2_python.i"
-	@echo "... usrp_radar_2_python.s"
 	@echo "... usrp_radar_all_python.o"
 	@echo "... usrp_radar_all_python.i"
 	@echo "... usrp_radar_all_python.s"
-	@echo "... usrp_radar_rx_python.o"
-	@echo "... usrp_radar_rx_python.i"
-	@echo "... usrp_radar_rx_python.s"
-	@echo "... usrp_radar_tx_python.o"
-	@echo "... usrp_radar_tx_python.i"
-	@echo "... usrp_radar_tx_python.s"
+	@echo "... usrp_radar_tdma_python.o"
+	@echo "... usrp_radar_tdma_python.i"
+	@echo "... usrp_radar_tdma_python.s"
 .PHONY : help
 
 

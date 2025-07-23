@@ -33,7 +33,6 @@ namespace gr
       double pulse_width;
       double samp_rate;
       double prf;
-      int max_buffer_size;
       int sdr_id;
 
       // Waveform object and IQ data
@@ -59,7 +58,6 @@ namespace gr
                            double pulse_width,
                            double samp_rate,
                            double prf,
-                           int max_buffer_size,
                            int sdr_id);
       ~single_tone_src_impl();
 

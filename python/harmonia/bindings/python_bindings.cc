@@ -26,17 +26,15 @@ namespace py = pybind11;
     void bind_device(py::module& m);
     void bind_frequency_pk_est(py::module& m);
     void bind_single_tone_src(py::module& m);
-    void bind_usrp_radar_2(py::module& m);
     void bind_SDR_tagger(py::module& m);
     void bind_usrp_radar_all(py::module& m);
-    void bind_usrp_radar_tx(py::module& m);
-    void bind_usrp_radar_rx(py::module& m);
     void bind_clock_drift_est(py::module& m);
     void bind_time_pk_est(py::module& m);
     void bind_buffer_corrector(py::module& m);
     void bind_clockbias_phase_est(py::module& m);
     void bind_LFM_src(py::module& m);
     void bind_compensation(py::module& m);
+    void bind_usrp_radar_tdma(py::module& m);
 // ) END BINDING_FUNCTION_PROTOTYPES
 
 
@@ -70,16 +68,14 @@ PYBIND11_MODULE(harmonia_python, m)
     bind_device(m);
     bind_frequency_pk_est(m);
     bind_single_tone_src(m);
-    bind_usrp_radar_2(m);
     bind_SDR_tagger(m);
     bind_usrp_radar_all(m);
-    bind_usrp_radar_tx(m);
-    bind_usrp_radar_rx(m);
     bind_clock_drift_est(m);
     bind_time_pk_est(m);
     bind_buffer_corrector(m);
     bind_clockbias_phase_est(m);
     bind_LFM_src(m);
     bind_compensation(m);
+    bind_usrp_radar_tdma(m);
     // ) END BINDING_FUNCTION_CALLS
 }

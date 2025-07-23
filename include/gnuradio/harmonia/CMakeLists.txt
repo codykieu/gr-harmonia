@@ -17,15 +17,13 @@ install(FILES
     device.h
     frequency_pk_est.h
     single_tone_src.h
-    usrp_radar_2.h
     SDR_tagger.h
     usrp_radar_all.h
-    usrp_radar_tx.h
-    usrp_radar_rx.h
     clock_drift_est.h
     time_pk_est.h
     buffer_corrector.h
     clockbias_phase_est.h
     LFM_src.h
-    compensation.h DESTINATION include/gnuradio/harmonia
+    compensation.h
+    usrp_radar_tdma.h DESTINATION include/gnuradio/harmonia
 )

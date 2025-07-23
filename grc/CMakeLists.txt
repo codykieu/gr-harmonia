@@ -10,14 +10,12 @@ install(FILES
     harmonia_pdu_fft.block.yml
     harmonia_frequency_pk_est.block.yml
     harmonia_single_tone_src.block.yml
-    harmonia_usrp_radar_2.block.yml
     harmonia_SDR_tagger.block.yml
     harmonia_usrp_radar_all.block.yml
-    harmonia_usrp_radar_tx.block.yml
-    harmonia_usrp_radar_rx.block.yml
     harmonia_clock_drift_est.block.yml
     harmonia_time_pk_est.block.yml
     harmonia_buffer_corrector.block.yml
     harmonia_clockbias_phase_est.block.yml
     harmonia_LFM_src.block.yml
-    harmonia_compensation.block.yml DESTINATION share/gnuradio/grc/blocks)
+    harmonia_compensation.block.yml
+    harmonia_usrp_radar_tdma.block.yml DESTINATION share/gnuradio/grc/blocks)

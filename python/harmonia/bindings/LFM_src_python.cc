@@ -16,7 +16,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0) */
 /* BINDTOOL_USE_PYGCCXML(0) */
 /* BINDTOOL_HEADER_FILE(LFM_src.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(8c42e5a9bd7b0996724c188be87b0f86) */
+/* BINDTOOL_HEADER_FILE_HASH(63c6a8b4e77ede3a058a2f0279c9cc49) */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -38,8 +38,9 @@ void bind_LFM_src(py::module &m) {
 
       .def(py::init(&LFM_src::make), py::arg("bandwidth"),
            py::arg("start_freq"), py::arg("center_freq"),
-           py::arg("pulse_width"), py::arg("samp_rate"), py::arg("prf"),
-           py::arg("sdr_id"), D(LFM_src, make))
+           py::arg("pulse_width"), py::arg("pulse_width2"),
+           py::arg("samp_rate"), py::arg("prf"), py::arg("sdr_id"),
+           D(LFM_src, make))
 
       .def("init_meta_dict", &LFM_src::init_meta_dict, py::arg("bandwidth_key"),
            py::arg("duration_key"), py::arg("sample_rate_key"),

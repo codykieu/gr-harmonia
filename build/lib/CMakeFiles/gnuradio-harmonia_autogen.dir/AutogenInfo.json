@@ -26,18 +26,6 @@
 			null
 		],
 		[
-			"/home/cody/gr-harmonia/lib/QPSK_demod_impl.h",
-			"Mu",
-			"EWIEGA46WW/moc_QPSK_demod_impl.cpp",
-			null
-		],
-		[
-			"/home/cody/gr-harmonia/lib/QPSK_mod_impl.h",
-			"Mu",
-			"EWIEGA46WW/moc_QPSK_mod_impl.cpp",
-			null
-		],
-		[
 			"/home/cody/gr-harmonia/lib/SDR_tagger_impl.h",
 			"Mu",
 			"EWIEGA46WW/moc_SDR_tagger_impl.cpp",
@@ -98,27 +86,15 @@
 			null
 		],
 		[
-			"/home/cody/gr-harmonia/lib/usrp_radar_2_impl.h",
-			"Mu",
-			"EWIEGA46WW/moc_usrp_radar_2_impl.cpp",
-			null
-		],
-		[
 			"/home/cody/gr-harmonia/lib/usrp_radar_all_impl.h",
 			"Mu",
 			"EWIEGA46WW/moc_usrp_radar_all_impl.cpp",
 			null
 		],
 		[
-			"/home/cody/gr-harmonia/lib/usrp_radar_rx_impl.h",
+			"/home/cody/gr-harmonia/lib/usrp_radar_tdma_impl.h",
 			"Mu",
-			"EWIEGA46WW/moc_usrp_radar_rx_impl.cpp",
-			null
-		],
-		[
-			"/home/cody/gr-harmonia/lib/usrp_radar_tx_impl.h",
-			"Mu",
-			"EWIEGA46WW/moc_usrp_radar_tx_impl.cpp",
+			"EWIEGA46WW/moc_usrp_radar_tdma_impl.cpp",
 			null
 		]
 	],
@@ -196,8 +172,6 @@
 	"SOURCES" : 
 	[
 		[ "/home/cody/gr-harmonia/lib/LFM_src_impl.cc", "Mu", null ],
-		[ "/home/cody/gr-harmonia/lib/QPSK_demod_impl.cc", "Mu", null ],
-		[ "/home/cody/gr-harmonia/lib/QPSK_mod_impl.cc", "Mu", null ],
 		[ "/home/cody/gr-harmonia/lib/SDR_tagger_impl.cc", "Mu", null ],
 		[ "/home/cody/gr-harmonia/lib/buffer_corrector_impl.cc", "Mu", null ],
 		[ "/home/cody/gr-harmonia/lib/clock_drift_est_impl.cc", "Mu", null ],
@@ -209,10 +183,8 @@
 		[ "/home/cody/gr-harmonia/lib/pdu_fft_impl.cc", "Mu", null ],
 		[ "/home/cody/gr-harmonia/lib/single_tone_src_impl.cc", "Mu", null ],
 		[ "/home/cody/gr-harmonia/lib/time_pk_est_impl.cc", "Mu", null ],
-		[ "/home/cody/gr-harmonia/lib/usrp_radar_2_impl.cc", "Mu", null ],
 		[ "/home/cody/gr-harmonia/lib/usrp_radar_all_impl.cc", "Mu", null ],
-		[ "/home/cody/gr-harmonia/lib/usrp_radar_rx_impl.cc", "Mu", null ],
-		[ "/home/cody/gr-harmonia/lib/usrp_radar_tx_impl.cc", "Mu", null ]
+		[ "/home/cody/gr-harmonia/lib/usrp_radar_tdma_impl.cc", "Mu", null ]
 	],
 	"VERBOSITY" : 0
 }

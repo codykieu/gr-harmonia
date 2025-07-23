@@ -10,6 +10,9 @@
 
 #include <gnuradio/harmonia/pmt_constants.h>
 #include <gnuradio/harmonia/usrp_radar_all.h>
+#include <arrayfire.h>
+#include <plasma_dsp/pulsed_waveform.h>
+#include <plasma_dsp/fft.h>
 #include <nlohmann/json.hpp>
 #include <uhd/convert.hpp>
 #include <uhd/types/time_spec.hpp>
@@ -36,24 +39,24 @@ namespace gr
       double sdr1_rate, sdr2_rate, sdr3_rate;
       double sdr1_freq, sdr2_freq, sdr3_freq;
       double sdr1_gain, sdr2_gain, sdr3_gain;
-      double start_delay, cap_length;
-      double wait_time;
-      double TDMA_time;
+      double start_delay, cap_length, cap_length2;
+      double wait_time, wait_time2;
+      double TDMA_time, TDMA_time2;
       std::vector<size_t> sdr1_channel_nums, sdr2_channel_nums, sdr3_channel_nums;
       std::string sdr1_subdev, sdr2_subdev, sdr3_subdev;
       std::string sdr1_device_addr, sdr2_device_addr, sdr3_device_addr;
       std::string sdr1_cpu_format, sdr2_cpu_format, sdr3_cpu_format;
       std::string sdr1_otw_format, sdr2_otw_format, sdr3_otw_format;
-      double prf;
       bool verbose;
       size_t n_delay;
 
-      
       // Clock Drift/Bias Params
       bool clock_drift_enabled = false;
       bool clock_bias_enabled = false;
+      bool carrier_phase_enabled = false;
       bool cd_run_executed = false;
       bool cb_run_executed = false;
+      bool cp_run_executed = false;
       double cd1_est, cd2_est, cd3_est;
       double cb1_est, cb2_est, cb3_est;
       double alpha, phi;
@@ -66,9 +69,6 @@ namespace gr
       bool waveform1_ready = false;
       bool waveform2_ready = false;
       bool waveform3_ready = false;
-      bool cbwaveform1_ready = false;
-      bool cbwaveform2_ready = false;
-      bool cbwaveform3_ready = false;
       pmt::pmt_t updated_data1 = pmt::PMT_NIL;
       pmt::pmt_t updated_data2 = pmt::PMT_NIL;
       pmt::pmt_t updated_data3 = pmt::PMT_NIL;
@@ -103,6 +103,13 @@ namespace gr
       gr::thread::thread cb_sdr2_rx_thread;
       gr::thread::thread cb_sdr3_rx_thread;
 
+      gr::thread::thread cp_sdr1_tx_thread;
+      gr::thread::thread cp_sdr2_tx_thread;
+      gr::thread::thread cp_sdr3_tx_thread;
+      gr::thread::thread cp_sdr1_rx_thread;
+      gr::thread::thread cp_sdr2_rx_thread;
+      gr::thread::thread cp_sdr3_rx_thread;
+
       pmt::pmt_t tx_data_sdr1;
       pmt::pmt_t tx_data_sdr2;
       pmt::pmt_t tx_data_sdr3;
@@ -116,6 +123,7 @@ namespace gr
 
       size_t tx_buff_size, rx_buff_size;
       size_t n_tx_total;
+      size_t total_samps_to_rx;
 
       pmt::pmt_t tx_data;
       pmt::pmt_t meta;
@@ -148,10 +156,10 @@ namespace gr
                        bool verbose);
       void receive(uhd::usrp::multi_usrp::sptr usrp_rx,
                    uhd::rx_streamer::sptr rx_stream,
-                   double start_time, int sdr_rx);
+                   double start_time, double rx_time_error, int sdr_rx);
       void transmit_bursts(uhd::usrp::multi_usrp::sptr usrp_tx,
                            uhd::tx_streamer::sptr tx_stream,
-                           double start_time, int sdr_id);
+                           double start_time, double tx_time_error, int sdr_id);
       void set_metadata_keys(const std::string &sdr1_freq_key,
                              const std::string &sdr2_freq_key,
                              const std::string &sample_start_key,
@@ -168,12 +176,14 @@ namespace gr
           uhd::usrp::multi_usrp::sptr usrp,
           uhd::tx_streamer::sptr tx_stream,
           const std::vector<double> &times,
+          const std::vector<double> &tx_time_error,
           int sdr_id);
       void receive_all(
           uhd::usrp::multi_usrp::sptr usrp,
           uhd::rx_streamer::sptr rx_stream,
           const std::vector<double> &times,
-          const std::vector<int> &rx_tags);
+          const std::vector<double> &rx_time_error,
+          int sdr_id);
 
     public:
       usrp_radar_all_impl(const std::string &args_1,
@@ -190,8 +200,11 @@ namespace gr
                           const double sdr3_gain,
                           const double start_delay,
                           const double cap_length,
+                          const double cap_length2,
                           const double wait_time,
+                          const double wait_time2,
                           const double TDMA_time,
+                          const double TDMA_time2,
                           const bool verbose);
       ~usrp_radar_all_impl();
       void run();
@@ -199,6 +212,7 @@ namespace gr
       void check_cb_ready();
       void cd_run();
       void cb_run();
+      void cp_run();
       bool start() override;
       bool stop() override;
       void handle_message(const pmt::pmt_t &msg, int sdr_id);

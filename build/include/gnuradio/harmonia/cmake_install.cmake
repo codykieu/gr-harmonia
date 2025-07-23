@@ -51,19 +51,15 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
     "/home/cody/gr-harmonia/include/gnuradio/harmonia/device.h"
     "/home/cody/gr-harmonia/include/gnuradio/harmonia/frequency_pk_est.h"
     "/home/cody/gr-harmonia/include/gnuradio/harmonia/single_tone_src.h"
-    "/home/cody/gr-harmonia/include/gnuradio/harmonia/usrp_radar_2.h"
     "/home/cody/gr-harmonia/include/gnuradio/harmonia/SDR_tagger.h"
     "/home/cody/gr-harmonia/include/gnuradio/harmonia/usrp_radar_all.h"
-    "/home/cody/gr-harmonia/include/gnuradio/harmonia/usrp_radar_tx.h"
-    "/home/cody/gr-harmonia/include/gnuradio/harmonia/usrp_radar_rx.h"
     "/home/cody/gr-harmonia/include/gnuradio/harmonia/clock_drift_est.h"
     "/home/cody/gr-harmonia/include/gnuradio/harmonia/time_pk_est.h"
     "/home/cody/gr-harmonia/include/gnuradio/harmonia/buffer_corrector.h"
     "/home/cody/gr-harmonia/include/gnuradio/harmonia/clockbias_phase_est.h"
-    "/home/cody/gr-harmonia/include/gnuradio/harmonia/QPSK_mod.h"
-    "/home/cody/gr-harmonia/include/gnuradio/harmonia/QPSK_demod.h"
     "/home/cody/gr-harmonia/include/gnuradio/harmonia/LFM_src.h"
     "/home/cody/gr-harmonia/include/gnuradio/harmonia/compensation.h"
+    "/home/cody/gr-harmonia/include/gnuradio/harmonia/usrp_radar_tdma.h"
     )
 endif()
 

@@ -32,7 +32,7 @@ public:
    * class. harmonia::time_pk_est::make is the public interface for
    * creating new instances.
    */
-  static sptr make(double samp_rate, double bandwidth, double NLLS_iter, int sdr_id);
+  static sptr make(double samp_rate, double bandwidth, double pulse_width, double wait_time, double sample_delay, double NLLS_iter, int sdr_id);
 
   virtual void set_msg_queue_depth(size_t depth) = 0;
   virtual void set_backend(Device::Backend) = 0;

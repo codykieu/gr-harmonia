@@ -279,54 +279,6 @@ LFM_src_impl.cc.s:
 	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/LFM_src_impl.cc.s
 .PHONY : LFM_src_impl.cc.s
 
-QPSK_demod_impl.o: QPSK_demod_impl.cc.o
-.PHONY : QPSK_demod_impl.o
-
-# target to build an object file
-QPSK_demod_impl.cc.o:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/QPSK_demod_impl.cc.o
-.PHONY : QPSK_demod_impl.cc.o
-
-QPSK_demod_impl.i: QPSK_demod_impl.cc.i
-.PHONY : QPSK_demod_impl.i
-
-# target to preprocess a source file
-QPSK_demod_impl.cc.i:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/QPSK_demod_impl.cc.i
-.PHONY : QPSK_demod_impl.cc.i
-
-QPSK_demod_impl.s: QPSK_demod_impl.cc.s
-.PHONY : QPSK_demod_impl.s
-
-# target to generate assembly for a file
-QPSK_demod_impl.cc.s:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/QPSK_demod_impl.cc.s
-.PHONY : QPSK_demod_impl.cc.s
-
-QPSK_mod_impl.o: QPSK_mod_impl.cc.o
-.PHONY : QPSK_mod_impl.o
-
-# target to build an object file
-QPSK_mod_impl.cc.o:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/QPSK_mod_impl.cc.o
-.PHONY : QPSK_mod_impl.cc.o
-
-QPSK_mod_impl.i: QPSK_mod_impl.cc.i
-.PHONY : QPSK_mod_impl.i
-
-# target to preprocess a source file
-QPSK_mod_impl.cc.i:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/QPSK_mod_impl.cc.i
-.PHONY : QPSK_mod_impl.cc.i
-
-QPSK_mod_impl.s: QPSK_mod_impl.cc.s
-.PHONY : QPSK_mod_impl.s
-
-# target to generate assembly for a file
-QPSK_mod_impl.cc.s:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/QPSK_mod_impl.cc.s
-.PHONY : QPSK_mod_impl.cc.s
-
 SDR_tagger_impl.o: SDR_tagger_impl.cc.o
 .PHONY : SDR_tagger_impl.o
 
@@ -663,30 +615,6 @@ time_pk_est_impl.cc.s:
 	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/time_pk_est_impl.cc.s
 .PHONY : time_pk_est_impl.cc.s
 
-usrp_radar_2_impl.o: usrp_radar_2_impl.cc.o
-.PHONY : usrp_radar_2_impl.o
-
-# target to build an object file
-usrp_radar_2_impl.cc.o:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/usrp_radar_2_impl.cc.o
-.PHONY : usrp_radar_2_impl.cc.o
-
-usrp_radar_2_impl.i: usrp_radar_2_impl.cc.i
-.PHONY : usrp_radar_2_impl.i
-
-# target to preprocess a source file
-usrp_radar_2_impl.cc.i:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/usrp_radar_2_impl.cc.i
-.PHONY : usrp_radar_2_impl.cc.i
-
-usrp_radar_2_impl.s: usrp_radar_2_impl.cc.s
-.PHONY : usrp_radar_2_impl.s
-
-# target to generate assembly for a file
-usrp_radar_2_impl.cc.s:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/usrp_radar_2_impl.cc.s
-.PHONY : usrp_radar_2_impl.cc.s
-
 usrp_radar_all_impl.o: usrp_radar_all_impl.cc.o
 .PHONY : usrp_radar_all_impl.o
 
@@ -711,53 +639,29 @@ usrp_radar_all_impl.cc.s:
 	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/usrp_radar_all_impl.cc.s
 .PHONY : usrp_radar_all_impl.cc.s
 
-usrp_radar_rx_impl.o: usrp_radar_rx_impl.cc.o
-.PHONY : usrp_radar_rx_impl.o
+usrp_radar_tdma_impl.o: usrp_radar_tdma_impl.cc.o
+.PHONY : usrp_radar_tdma_impl.o
 
 # target to build an object file
-usrp_radar_rx_impl.cc.o:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/usrp_radar_rx_impl.cc.o
-.PHONY : usrp_radar_rx_impl.cc.o
+usrp_radar_tdma_impl.cc.o:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/usrp_radar_tdma_impl.cc.o
+.PHONY : usrp_radar_tdma_impl.cc.o
 
-usrp_radar_rx_impl.i: usrp_radar_rx_impl.cc.i
-.PHONY : usrp_radar_rx_impl.i
-
-# target to preprocess a source file
-usrp_radar_rx_impl.cc.i:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/usrp_radar_rx_impl.cc.i
-.PHONY : usrp_radar_rx_impl.cc.i
-
-usrp_radar_rx_impl.s: usrp_radar_rx_impl.cc.s
-.PHONY : usrp_radar_rx_impl.s
-
-# target to generate assembly for a file
-usrp_radar_rx_impl.cc.s:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/usrp_radar_rx_impl.cc.s
-.PHONY : usrp_radar_rx_impl.cc.s
-
-usrp_radar_tx_impl.o: usrp_radar_tx_impl.cc.o
-.PHONY : usrp_radar_tx_impl.o
-
-# target to build an object file
-usrp_radar_tx_impl.cc.o:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/usrp_radar_tx_impl.cc.o
-.PHONY : usrp_radar_tx_impl.cc.o
-
-usrp_radar_tx_impl.i: usrp_radar_tx_impl.cc.i
-.PHONY : usrp_radar_tx_impl.i
+usrp_radar_tdma_impl.i: usrp_radar_tdma_impl.cc.i
+.PHONY : usrp_radar_tdma_impl.i
 
 # target to preprocess a source file
-usrp_radar_tx_impl.cc.i:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/usrp_radar_tx_impl.cc.i
-.PHONY : usrp_radar_tx_impl.cc.i
+usrp_radar_tdma_impl.cc.i:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/usrp_radar_tdma_impl.cc.i
+.PHONY : usrp_radar_tdma_impl.cc.i
 
-usrp_radar_tx_impl.s: usrp_radar_tx_impl.cc.s
-.PHONY : usrp_radar_tx_impl.s
+usrp_radar_tdma_impl.s: usrp_radar_tdma_impl.cc.s
+.PHONY : usrp_radar_tdma_impl.s
 
 # target to generate assembly for a file
-usrp_radar_tx_impl.cc.s:
-	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/usrp_radar_tx_impl.cc.s
-.PHONY : usrp_radar_tx_impl.cc.s
+usrp_radar_tdma_impl.cc.s:
+	cd /home/cody/gr-harmonia/build && $(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gnuradio-harmonia.dir/build.make lib/CMakeFiles/gnuradio-harmonia.dir/usrp_radar_tdma_impl.cc.s
+.PHONY : usrp_radar_tdma_impl.cc.s
 
 # Help Target
 help:
@@ -781,12 +685,6 @@ help:
 	@echo "... LFM_src_impl.o"
 	@echo "... LFM_src_impl.i"
 	@echo "... LFM_src_impl.s"
-	@echo "... QPSK_demod_impl.o"
-	@echo "... QPSK_demod_impl.i"
-	@echo "... QPSK_demod_impl.s"
-	@echo "... QPSK_mod_impl.o"
-	@echo "... QPSK_mod_impl.i"
-	@echo "... QPSK_mod_impl.s"
 	@echo "... SDR_tagger_impl.o"
 	@echo "... SDR_tagger_impl.i"
 	@echo "... SDR_tagger_impl.s"
@@ -829,18 +727,12 @@ help:
 	@echo "... time_pk_est_impl.o"
 	@echo "... time_pk_est_impl.i"
 	@echo "... time_pk_est_impl.s"
-	@echo "... usrp_radar_2_impl.o"
-	@echo "... usrp_radar_2_impl.i"
-	@echo "... usrp_radar_2_impl.s"
 	@echo "... usrp_radar_all_impl.o"
 	@echo "... usrp_radar_all_impl.i"
 	@echo "... usrp_radar_all_impl.s"
-	@echo "... usrp_radar_rx_impl.o"
-	@echo "... usrp_radar_rx_impl.i"
-	@echo "... usrp_radar_rx_impl.s"
-	@echo "... usrp_radar_tx_impl.o"
-	@echo "... usrp_radar_tx_impl.i"
-	@echo "... usrp_radar_tx_impl.s"
+	@echo "... usrp_radar_tdma_impl.o"
+	@echo "... usrp_radar_tdma_impl.i"
+	@echo "... usrp_radar_tdma_impl.s"
 .PHONY : help
 
 

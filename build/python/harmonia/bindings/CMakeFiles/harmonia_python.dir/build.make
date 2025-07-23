@@ -159,24 +159,10 @@ python/harmonia/bindings/CMakeFiles/harmonia_python.dir/single_tone_src_python.c
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/harmonia_python.dir/single_tone_src_python.cc.s"
 	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/cody/gr-harmonia/python/harmonia/bindings/single_tone_src_python.cc -o CMakeFiles/harmonia_python.dir/single_tone_src_python.cc.s
 
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/flags.make
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.o: /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_2_python.cc
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.o"
-	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.o -MF CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.o.d -o CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.o -c /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_2_python.cc
-
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.i"
-	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_2_python.cc > CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.i
-
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.s"
-	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_2_python.cc -o CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.s
-
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/SDR_tagger_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/flags.make
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/SDR_tagger_python.cc.o: /home/cody/gr-harmonia/python/harmonia/bindings/SDR_tagger_python.cc
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/SDR_tagger_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/SDR_tagger_python.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/SDR_tagger_python.cc.o"
 	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT python/harmonia/bindings/CMakeFiles/harmonia_python.dir/SDR_tagger_python.cc.o -MF CMakeFiles/harmonia_python.dir/SDR_tagger_python.cc.o.d -o CMakeFiles/harmonia_python.dir/SDR_tagger_python.cc.o -c /home/cody/gr-harmonia/python/harmonia/bindings/SDR_tagger_python.cc
 
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/SDR_tagger_python.cc.i: cmake_force
@@ -190,7 +176,7 @@ python/harmonia/bindings/CMakeFiles/harmonia_python.dir/SDR_tagger_python.cc.s: 
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_all_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/flags.make
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_all_python.cc.o: /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_all_python.cc
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_all_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_all_python.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_all_python.cc.o"
 	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_all_python.cc.o -MF CMakeFiles/harmonia_python.dir/usrp_radar_all_python.cc.o.d -o CMakeFiles/harmonia_python.dir/usrp_radar_all_python.cc.o -c /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_all_python.cc
 
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_all_python.cc.i: cmake_force
@@ -201,38 +187,10 @@ python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_all_python.cc
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/harmonia_python.dir/usrp_radar_all_python.cc.s"
 	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_all_python.cc -o CMakeFiles/harmonia_python.dir/usrp_radar_all_python.cc.s
 
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/flags.make
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.o: /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_tx_python.cc
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.o"
-	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.o -MF CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.o.d -o CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.o -c /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_tx_python.cc
-
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.i"
-	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_tx_python.cc > CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.i
-
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.s"
-	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_tx_python.cc -o CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.s
-
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/flags.make
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.o: /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_rx_python.cc
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.o"
-	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.o -MF CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.o.d -o CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.o -c /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_rx_python.cc
-
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.i"
-	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_rx_python.cc > CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.i
-
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.s"
-	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_rx_python.cc -o CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.s
-
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clock_drift_est_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/flags.make
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clock_drift_est_python.cc.o: /home/cody/gr-harmonia/python/harmonia/bindings/clock_drift_est_python.cc
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clock_drift_est_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clock_drift_est_python.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clock_drift_est_python.cc.o"
 	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clock_drift_est_python.cc.o -MF CMakeFiles/harmonia_python.dir/clock_drift_est_python.cc.o.d -o CMakeFiles/harmonia_python.dir/clock_drift_est_python.cc.o -c /home/cody/gr-harmonia/python/harmonia/bindings/clock_drift_est_python.cc
 
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clock_drift_est_python.cc.i: cmake_force
@@ -246,7 +204,7 @@ python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clock_drift_est_python.c
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/time_pk_est_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/flags.make
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/time_pk_est_python.cc.o: /home/cody/gr-harmonia/python/harmonia/bindings/time_pk_est_python.cc
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/time_pk_est_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/time_pk_est_python.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/time_pk_est_python.cc.o"
 	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT python/harmonia/bindings/CMakeFiles/harmonia_python.dir/time_pk_est_python.cc.o -MF CMakeFiles/harmonia_python.dir/time_pk_est_python.cc.o.d -o CMakeFiles/harmonia_python.dir/time_pk_est_python.cc.o -c /home/cody/gr-harmonia/python/harmonia/bindings/time_pk_est_python.cc
 
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/time_pk_est_python.cc.i: cmake_force
@@ -260,7 +218,7 @@ python/harmonia/bindings/CMakeFiles/harmonia_python.dir/time_pk_est_python.cc.s:
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/buffer_corrector_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/flags.make
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/buffer_corrector_python.cc.o: /home/cody/gr-harmonia/python/harmonia/bindings/buffer_corrector_python.cc
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/buffer_corrector_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/buffer_corrector_python.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/buffer_corrector_python.cc.o"
 	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT python/harmonia/bindings/CMakeFiles/harmonia_python.dir/buffer_corrector_python.cc.o -MF CMakeFiles/harmonia_python.dir/buffer_corrector_python.cc.o.d -o CMakeFiles/harmonia_python.dir/buffer_corrector_python.cc.o -c /home/cody/gr-harmonia/python/harmonia/bindings/buffer_corrector_python.cc
 
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/buffer_corrector_python.cc.i: cmake_force
@@ -274,7 +232,7 @@ python/harmonia/bindings/CMakeFiles/harmonia_python.dir/buffer_corrector_python.
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/flags.make
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.o: /home/cody/gr-harmonia/python/harmonia/bindings/clockbias_phase_est_python.cc
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.o"
 	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.o -MF CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.o.d -o CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.o -c /home/cody/gr-harmonia/python/harmonia/bindings/clockbias_phase_est_python.cc
 
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.i: cmake_force
@@ -285,38 +243,10 @@ python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clockbias_phase_est_pyth
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.s"
 	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/cody/gr-harmonia/python/harmonia/bindings/clockbias_phase_est_python.cc -o CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.s
 
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/flags.make
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.o: /home/cody/gr-harmonia/python/harmonia/bindings/QPSK_mod_python.cc
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.o"
-	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.o -MF CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.o.d -o CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.o -c /home/cody/gr-harmonia/python/harmonia/bindings/QPSK_mod_python.cc
-
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.i"
-	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/cody/gr-harmonia/python/harmonia/bindings/QPSK_mod_python.cc > CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.i
-
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.s"
-	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/cody/gr-harmonia/python/harmonia/bindings/QPSK_mod_python.cc -o CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.s
-
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/flags.make
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.o: /home/cody/gr-harmonia/python/harmonia/bindings/QPSK_demod_python.cc
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.o"
-	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.o -MF CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.o.d -o CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.o -c /home/cody/gr-harmonia/python/harmonia/bindings/QPSK_demod_python.cc
-
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.i"
-	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/cody/gr-harmonia/python/harmonia/bindings/QPSK_demod_python.cc > CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.i
-
-python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.s"
-	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/cody/gr-harmonia/python/harmonia/bindings/QPSK_demod_python.cc -o CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.s
-
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/LFM_src_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/flags.make
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/LFM_src_python.cc.o: /home/cody/gr-harmonia/python/harmonia/bindings/LFM_src_python.cc
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/LFM_src_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/LFM_src_python.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/LFM_src_python.cc.o"
 	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT python/harmonia/bindings/CMakeFiles/harmonia_python.dir/LFM_src_python.cc.o -MF CMakeFiles/harmonia_python.dir/LFM_src_python.cc.o.d -o CMakeFiles/harmonia_python.dir/LFM_src_python.cc.o -c /home/cody/gr-harmonia/python/harmonia/bindings/LFM_src_python.cc
 
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/LFM_src_python.cc.i: cmake_force
@@ -330,7 +260,7 @@ python/harmonia/bindings/CMakeFiles/harmonia_python.dir/LFM_src_python.cc.s: cma
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compensation_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/flags.make
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compensation_python.cc.o: /home/cody/gr-harmonia/python/harmonia/bindings/compensation_python.cc
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compensation_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compensation_python.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compensation_python.cc.o"
 	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compensation_python.cc.o -MF CMakeFiles/harmonia_python.dir/compensation_python.cc.o.d -o CMakeFiles/harmonia_python.dir/compensation_python.cc.o -c /home/cody/gr-harmonia/python/harmonia/bindings/compensation_python.cc
 
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compensation_python.cc.i: cmake_force
@@ -341,10 +271,24 @@ python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compensation_python.cc.s
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/harmonia_python.dir/compensation_python.cc.s"
 	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/cody/gr-harmonia/python/harmonia/bindings/compensation_python.cc -o CMakeFiles/harmonia_python.dir/compensation_python.cc.s
 
+python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/flags.make
+python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.o: /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_tdma_python.cc
+python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.o"
+	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.o -MF CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.o.d -o CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.o -c /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_tdma_python.cc
+
+python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.i"
+	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_tdma_python.cc > CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.i
+
+python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.s"
+	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/cody/gr-harmonia/python/harmonia/bindings/usrp_radar_tdma_python.cc -o CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.s
+
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/python_bindings.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/flags.make
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/python_bindings.cc.o: /home/cody/gr-harmonia/python/harmonia/bindings/python_bindings.cc
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/python_bindings.cc.o: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/python_bindings.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object python/harmonia/bindings/CMakeFiles/harmonia_python.dir/python_bindings.cc.o"
 	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT python/harmonia/bindings/CMakeFiles/harmonia_python.dir/python_bindings.cc.o -MF CMakeFiles/harmonia_python.dir/python_bindings.cc.o.d -o CMakeFiles/harmonia_python.dir/python_bindings.cc.o -c /home/cody/gr-harmonia/python/harmonia/bindings/python_bindings.cc
 
 python/harmonia/bindings/CMakeFiles/harmonia_python.dir/python_bindings.cc.i: cmake_force
@@ -363,19 +307,15 @@ harmonia_python_OBJECTS = \
 "CMakeFiles/harmonia_python.dir/device_python.cc.o" \
 "CMakeFiles/harmonia_python.dir/frequency_pk_est_python.cc.o" \
 "CMakeFiles/harmonia_python.dir/single_tone_src_python.cc.o" \
-"CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.o" \
 "CMakeFiles/harmonia_python.dir/SDR_tagger_python.cc.o" \
 "CMakeFiles/harmonia_python.dir/usrp_radar_all_python.cc.o" \
-"CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.o" \
-"CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.o" \
 "CMakeFiles/harmonia_python.dir/clock_drift_est_python.cc.o" \
 "CMakeFiles/harmonia_python.dir/time_pk_est_python.cc.o" \
 "CMakeFiles/harmonia_python.dir/buffer_corrector_python.cc.o" \
 "CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.o" \
-"CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.o" \
-"CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.o" \
 "CMakeFiles/harmonia_python.dir/LFM_src_python.cc.o" \
 "CMakeFiles/harmonia_python.dir/compensation_python.cc.o" \
+"CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.o" \
 "CMakeFiles/harmonia_python.dir/python_bindings.cc.o"
 
 # External object files for target harmonia_python
@@ -387,19 +327,15 @@ python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/device_python.cc.o
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/frequency_pk_est_python.cc.o
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/single_tone_src_python.cc.o
-python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_2_python.cc.o
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/SDR_tagger_python.cc.o
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_all_python.cc.o
-python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tx_python.cc.o
-python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_rx_python.cc.o
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clock_drift_est_python.cc.o
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/time_pk_est_python.cc.o
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/buffer_corrector_python.cc.o
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/clockbias_phase_est_python.cc.o
-python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_mod_python.cc.o
-python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/QPSK_demod_python.cc.o
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/LFM_src_python.cc.o
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/compensation_python.cc.o
+python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/usrp_radar_tdma_python.cc.o
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/python_bindings.cc.o
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/build.make
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.83.0
@@ -427,7 +363,7 @@ python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: /usr/l
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: /usr/local/lib/libplasma_dsp.so
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: /opt/arrayfire/lib64/libaf.so.3.9.0
 python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so: python/harmonia/bindings/CMakeFiles/harmonia_python.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Linking CXX shared module harmonia_python.cpython-312-x86_64-linux-gnu.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/cody/gr-harmonia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Linking CXX shared module harmonia_python.cpython-312-x86_64-linux-gnu.so"
 	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/harmonia_python.dir/link.txt --verbose=$(VERBOSE)
 	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/strip /home/cody/gr-harmonia/build/python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so
 	cd /home/cody/gr-harmonia/build/python/harmonia/bindings && /usr/bin/cmake -E copy /home/cody/gr-harmonia/build/python/harmonia/bindings/harmonia_python.cpython-312-x86_64-linux-gnu.so /home/cody/gr-harmonia/build/test_modules/gnuradio/harmonia/

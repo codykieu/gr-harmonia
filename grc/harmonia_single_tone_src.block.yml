@@ -29,10 +29,6 @@ parameters:
     dtype: float
     default: 0
     hide: ${ ('part' if prf == 0 else 'none') }
-  - id: max_buffer_size
-    label: Max buffer size
-    dtype: int
-    default: 1996
   - id: sdr_id
     label: SDR Number
     dtype: int
@@ -88,7 +84,7 @@ outputs:
 templates:
   imports: from gnuradio import harmonia
   make: |-
-    harmonia.single_tone_src(${frequency}, ${center_freq}, ${phase}, ${pulse_width}, ${samp_rate}, ${prf}, ${max_buffer_size}, ${sdr_id})
+    harmonia.single_tone_src(${frequency}, ${center_freq}, ${phase}, ${pulse_width}, ${samp_rate}, ${prf}, ${sdr_id})
     self.${id}.init_meta_dict(${frequency_key}, ${phase_key}, ${duration_key}, ${sample_rate_key}, ${label_key}, ${prf_key})
 
 documentation: |-

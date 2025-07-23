@@ -16,17 +16,15 @@ list(APPEND harmonia_sources
     device.cc
     frequency_pk_est_impl.cc
     single_tone_src_impl.cc
-    usrp_radar_2_impl.cc
     SDR_tagger_impl.cc
     usrp_radar_all_impl.cc
-    usrp_radar_tx_impl.cc
-    usrp_radar_rx_impl.cc
     clock_drift_est_impl.cc
     time_pk_est_impl.cc
     buffer_corrector_impl.cc
     clockbias_phase_est_impl.cc
     LFM_src_impl.cc
-    compensation_impl.cc )
+    compensation_impl.cc
+    usrp_radar_tdma_impl.cc )
 
 set(harmonia_sources
     "${harmonia_sources}"

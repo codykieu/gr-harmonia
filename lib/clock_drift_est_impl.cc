@@ -199,16 +199,19 @@ namespace gr
         std::cout << std::fixed << std::setprecision(13) << val << std::endl;
 
       // Publish results once
-      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR1, pmt::from_double(x_host[0]));
-      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR2, pmt::from_double(x_host[1]));
-      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR3, pmt::from_double(x_host[2]));
+      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR1, pmt::from_double(1.0));
+      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR2, pmt::from_double(1.0));
+      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR3, pmt::from_double(1.0));
+      // meta = pmt::dict_add(meta, PMT_HARMONIA_SDR1, pmt::from_double(x_host[0]));
+      // meta = pmt::dict_add(meta, PMT_HARMONIA_SDR2, pmt::from_double(x_host[1]));
+      // meta = pmt::dict_add(meta, PMT_HARMONIA_SDR3, pmt::from_double(x_host[2]));
       meta = pmt::dict_add(meta, pmt::intern("clock_drift_enable"), pmt::PMT_T);
       message_port_pub(PMT_HARMONIA_OUT, meta);
 
       // pmt::pmt_t empty_vec = pmt::make_u8vector(0, 0);
       // message_port_pub(PMT_HARMONIA_OUT, pmt::cons(meta, empty_vec));
 
-      // 9) Reset for next frame
+      // Reset for next frame
       meta = pmt::make_dict();
     }
 

@@ -16,7 +16,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0) */
 /* BINDTOOL_USE_PYGCCXML(0) */
 /* BINDTOOL_HEADER_FILE(single_tone_src.h) */
-/* BINDTOOL_HEADER_FILE_HASH(f31a62a84a3febc452442dff4dd09cdb) */
+/* BINDTOOL_HEADER_FILE_HASH(1d8a8a2a4ff745fc8ac04f15e3fd0759) */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -39,8 +39,8 @@ void bind_single_tone_src(py::module &m) {
 
       .def(py::init(&single_tone_src::make), py::arg("frequency"),
            py::arg("center_freq"), py::arg("phase"), py::arg("pulse_width"),
-           py::arg("samp_rate"), py::arg("prf"), py::arg("max_buffer_size"),
-           py::arg("sdr_id"), D(single_tone_src, make))
+           py::arg("samp_rate"), py::arg("prf"), py::arg("sdr_id"),
+           D(single_tone_src, make))
 
       .def("init_meta_dict", &single_tone_src::init_meta_dict,
            py::arg("frequency_key"), py::arg("phase_key"),

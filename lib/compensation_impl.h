@@ -11,6 +11,8 @@
 #include <gnuradio/harmonia/compensation.h>
 #include <gnuradio/harmonia/pmt_constants.h>
 #include <arrayfire.h>
+#include <plasma_dsp/pulsed_waveform.h>
+#include <plasma_dsp/fft.h>
 
 namespace gr
 {
@@ -28,9 +30,13 @@ namespace gr
       // Variables
       std::array<double, 3> alpha = {{1.0, 1.0, 1.0}};
       std::array<double, 3> phi = {{0.0, 0.0, 0.0}};
+      std::array<double, 3> gamma = {{0.0, 0.0, 0.0}};
+
       bool alpha_ready = false;
       bool phi_ready = false;
-      double alpha_hat, phi_hat;
+      bool gamma_ready = false;
+      double alpha_hat, phi_hat, gamma_hat;
+      double t_delay;
 
       // Metadata
       pmt::pmt_t d_meta;
@@ -38,7 +44,8 @@ namespace gr
 
       void handle_msg(pmt::pmt_t);
       void handle_cd_msg(pmt::pmt_t);
-      void handle_cbp_msg(pmt::pmt_t);
+      void handle_cb_msg(pmt::pmt_t);
+      void handle_cp_msg(pmt::pmt_t);
 
     public:
       compensation_impl(double center_freq, double samp_rate, int sdr_id);

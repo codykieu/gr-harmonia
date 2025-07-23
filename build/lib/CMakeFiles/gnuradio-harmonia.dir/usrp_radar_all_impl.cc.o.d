@@ -1050,7 +1050,33 @@ lib/CMakeFiles/gnuradio-harmonia.dir/usrp_radar_all_impl.cc.o: \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/float.h \
  /usr/include/x86_64-linux-gnu/gmp.h \
  /home/cody/gr-harmonia/lib/../include/gnuradio/harmonia/api.h \
- /usr/include/nlohmann/json.hpp /usr/include/nlohmann/adl_serializer.hpp \
+ /opt/arrayfire/include/arrayfire.h \
+ /opt/arrayfire/include/af/compatible.h \
+ /opt/arrayfire/include/af/defines.h \
+ /opt/arrayfire/include/af/compilers.h \
+ /usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h \
+ /opt/arrayfire/include/af/version.h \
+ /opt/arrayfire/include/af/algorithm.h /opt/arrayfire/include/af/arith.h \
+ /opt/arrayfire/include/af/array.h /opt/arrayfire/include/af/device.h \
+ /opt/arrayfire/include/af/dim4.hpp /opt/arrayfire/include/af/seq.h \
+ /opt/arrayfire/include/af/exception.h /opt/arrayfire/include/af/index.h \
+ /opt/arrayfire/include/af/util.h /opt/arrayfire/include/af/traits.hpp \
+ /opt/arrayfire/include/af/complex.h /opt/arrayfire/include/af/half.h \
+ /opt/arrayfire/include/af/backend.h /opt/arrayfire/include/af/blas.h \
+ /opt/arrayfire/include/af/constants.h /opt/arrayfire/include/af/data.h \
+ /opt/arrayfire/include/af/event.h /opt/arrayfire/include/af/features.h \
+ /opt/arrayfire/include/af/gfor.h /opt/arrayfire/include/af/graphics.h \
+ /opt/arrayfire/include/af/image.h /opt/arrayfire/include/af/lapack.h \
+ /opt/arrayfire/include/af/memory.h /opt/arrayfire/include/af/ml.h \
+ /opt/arrayfire/include/af/random.h /opt/arrayfire/include/af/signal.h \
+ /opt/arrayfire/include/af/sparse.h \
+ /opt/arrayfire/include/af/statistics.h \
+ /opt/arrayfire/include/af/timing.h /opt/arrayfire/include/af/vision.h \
+ /usr/local/include/plasma_dsp/pulsed_waveform.h \
+ /usr/local/include/plasma_dsp/waveform.h \
+ /usr/local/include/plasma_dsp/constants.h \
+ /usr/local/include/plasma_dsp/fft.h /usr/include/nlohmann/json.hpp \
+ /usr/include/nlohmann/adl_serializer.hpp \
  /usr/include/nlohmann/detail/abi_macros.hpp \
  /usr/include/nlohmann/detail/conversions/from_json.hpp \
  /usr/include/c++/11/forward_list /usr/include/c++/11/bits/forward_list.h \

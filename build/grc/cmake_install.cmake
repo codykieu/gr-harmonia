@@ -48,19 +48,15 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
     "/home/cody/gr-harmonia/grc/harmonia_pdu_fft.block.yml"
     "/home/cody/gr-harmonia/grc/harmonia_frequency_pk_est.block.yml"
     "/home/cody/gr-harmonia/grc/harmonia_single_tone_src.block.yml"
-    "/home/cody/gr-harmonia/grc/harmonia_usrp_radar_2.block.yml"
     "/home/cody/gr-harmonia/grc/harmonia_SDR_tagger.block.yml"
     "/home/cody/gr-harmonia/grc/harmonia_usrp_radar_all.block.yml"
-    "/home/cody/gr-harmonia/grc/harmonia_usrp_radar_tx.block.yml"
-    "/home/cody/gr-harmonia/grc/harmonia_usrp_radar_rx.block.yml"
     "/home/cody/gr-harmonia/grc/harmonia_clock_drift_est.block.yml"
     "/home/cody/gr-harmonia/grc/harmonia_time_pk_est.block.yml"
     "/home/cody/gr-harmonia/grc/harmonia_buffer_corrector.block.yml"
     "/home/cody/gr-harmonia/grc/harmonia_clockbias_phase_est.block.yml"
-    "/home/cody/gr-harmonia/grc/harmonia_QPSK_mod.block.yml"
-    "/home/cody/gr-harmonia/grc/harmonia_QPSK_demod.block.yml"
     "/home/cody/gr-harmonia/grc/harmonia_LFM_src.block.yml"
     "/home/cody/gr-harmonia/grc/harmonia_compensation.block.yml"
+    "/home/cody/gr-harmonia/grc/harmonia_usrp_radar_tdma.block.yml"
     )
 endif()
 

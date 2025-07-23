@@ -48,8 +48,11 @@ namespace gr
                        const double sdr3_gain,
                        const double start_delay,
                        const double cap_length,
+                       const double cap_length2,
                        const double wait_time,
+                       const double wait_time2,
                        const double TDMA_time,
+                       const double TDMA_time2,
                        const bool verbose);
       virtual void set_metadata_keys(const std::string &sdr1_freq_key,
                                      const std::string &sdr2_freq_key,
@@ -57,7 +60,7 @@ namespace gr
                                      const std::string &prf_key) = 0;
     };
 
-} // namespace harmonia
+  } // namespace harmonia
 } // namespace gr
 
 #endif /* INCLUDED_HARMONIA_USRP_RADAR_ALL_H */

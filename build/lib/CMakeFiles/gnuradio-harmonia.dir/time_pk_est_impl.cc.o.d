@@ -1,6 +1,9 @@
 lib/CMakeFiles/gnuradio-harmonia.dir/time_pk_est_impl.cc.o: \
  /home/cody/gr-harmonia/lib/time_pk_est_impl.cc \
  /usr/include/stdc-predef.h /home/cody/gr-harmonia/lib/time_pk_est_impl.h \
+ /home/cody/gr-harmonia/lib/../include/gnuradio/harmonia/device.h \
+ /home/cody/gr-harmonia/lib/../include/gnuradio/harmonia/api.h \
+ /usr/local/include/gnuradio/attributes.h \
  /home/cody/gr-harmonia/lib/../include/gnuradio/harmonia/time_pk_est.h \
  /usr/local/include/gnuradio/block.h /usr/include/c++/11/memory \
  /usr/include/c++/11/bits/stl_algobase.h \
@@ -122,7 +125,6 @@ lib/CMakeFiles/gnuradio-harmonia.dir/time_pk_est_impl.cc.o: \
  /usr/include/c++/11/pstl/glue_memory_defs.h \
  /usr/include/c++/11/pstl/execution_defs.h \
  /usr/local/include/gnuradio/api.h \
- /usr/local/include/gnuradio/attributes.h \
  /usr/local/include/gnuradio/basic_block.h \
  /usr/local/include/gnuradio/io_signature.h /usr/include/spdlog/tweakme.h \
  /usr/include/spdlog/fmt/fmt.h /usr/include/fmt/core.h \
@@ -1045,8 +1047,6 @@ lib/CMakeFiles/gnuradio-harmonia.dir/time_pk_est_impl.cc.o: \
  /usr/include/c++/11/cfloat \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/float.h \
  /usr/include/x86_64-linux-gnu/gmp.h \
- /home/cody/gr-harmonia/lib/../include/gnuradio/harmonia/api.h \
- /home/cody/gr-harmonia/lib/../include/gnuradio/harmonia/device.h \
  /home/cody/gr-harmonia/lib/../include/gnuradio/harmonia/pmt_constants.h \
  /usr/local/include/plasma_dsp/fft.h /opt/arrayfire/include/arrayfire.h \
  /opt/arrayfire/include/af/compatible.h \
