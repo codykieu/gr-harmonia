@@ -8,6 +8,8 @@
 #include "LFM_src_impl.h"
 #include <gnuradio/io_signature.h>
 
+const double c = 299792458.0;
+
 namespace gr
 {
   namespace harmonia
@@ -15,31 +17,42 @@ namespace gr
 
     using output_type = gr_complex;
     LFM_src::sptr LFM_src::make(
-        double bandwidth, double start_freq, double center_freq, double pulse_width, double pulse_width2, double samp_rate, double prf, int sdr_id)
+        double bandwidth, double start_freq, double center_freq, double pulse_width, double pulse_width2, double samp_rate, double prf, int zeropad, int sdr_id)
     {
       return gnuradio::make_block_sptr<LFM_src_impl>(
-          bandwidth, start_freq, center_freq, pulse_width, pulse_width2, samp_rate, prf, sdr_id);
+          bandwidth, start_freq, center_freq, pulse_width, pulse_width2, samp_rate, prf, zeropad, sdr_id);
     }
 
     af::array LFM(double bandwidth, double start_freq, double center_freq, double pulse_width,
-                  double samp_rate, double prf, double alpha_hat = 1.0, double phi_hat = 0.0, double gamma_hat = 0.0)
+                  double samp_rate, double prf, int zeropad, double alpha_hat = 1.0, double phi_hat = 0.0, double R_hat = 0.0, double gamma_hat = 0.0)
     {
       // Sample interval
       double ts = 1 / samp_rate;
       size_t n_samp_pulse = round(samp_rate * pulse_width);
       af::array t = (af::range(af::dim4(n_samp_pulse), -1, f64) * ts);
+
+      // LFM Phase
       af::array phase =
           af::Im * 2 * M_PI *
-          (start_freq * ((t - phi_hat) / alpha_hat) + bandwidth / (2 * pulse_width) * af::pow(((t - phi_hat) / alpha_hat), 2));
+          (start_freq * ((t) / alpha_hat) + bandwidth / (2 * pulse_width) * af::pow(((t) / alpha_hat), 2));
+
+      // Clock Drift Phase Correction
       af::array cd_correction = af::Im * (2 * M_PI * center_freq * ((1 / alpha_hat) - 1) * t);
 
-      af::cdouble cb_scalar(0.0, 2 * M_PI * center_freq * phi_hat / alpha_hat);
+      // Clock Bias Phase Correction
+      af::cdouble cb_scalar(0.0, 2 * M_PI * center_freq * phi_hat);
       af::array cb_correction = af::constant(cb_scalar, 1, 1);
 
+      // Range Phase Correction
+      af::cdouble range_scalar(0.0, 2 * M_PI * center_freq * R_hat/c);
+      af::array range_correction = af::constant(range_scalar, 1, 1);
+
+      // Carrier Phase Correction
       af::cdouble phase_scalar(0.0, gamma_hat);
       af::array phase_correction = af::constant(phase_scalar, 1, 1);
 
-      af::array x = af::exp(phase + cd_correction - cb_correction - phase_correction);
+      // Create LFM
+      af::array x = af::exp(phase + cd_correction - cb_correction - phase_correction + range_correction);
 
       // Zero-pad to PRF
       if (prf > 0)
@@ -50,6 +63,14 @@ namespace gr
         x = af::join(0, x, zeros);
       }
 
+      if (zeropad > 0)
+      {
+        size_t n_pad = zeropad / 2;
+        af::array zeros = af::constant(af::cdouble(0, 0), af::dim4(n_pad));
+        x = af::join(0, zeros, x);
+        x = af::join(0, x, zeros);
+      }
+
       return x;
     }
 
@@ -57,7 +78,7 @@ namespace gr
      * The private constructor
      */
     LFM_src_impl::LFM_src_impl(
-        double bandwidth, double start_freq, double center_freq, double pulse_width, double pulse_width2, double samp_rate, double prf, int sdr_id)
+        double bandwidth, double start_freq, double center_freq, double pulse_width, double pulse_width2, double samp_rate, double prf, int zeropad, int sdr_id)
         : gr::block(
               "LFM_src", gr::io_signature::make(0, 0, 0), gr::io_signature::make(0, 0, 0)),
           bandwidth(bandwidth),
@@ -67,13 +88,14 @@ namespace gr
           pulse_width2(pulse_width2),
           samp_rate(samp_rate),
           prf(prf),
+          zeropad(zeropad),
           sdr_id(sdr_id)
     {
       cd_val = pmt::from_double(1.0);
       cb_val = pmt::from_double(0.0);
       cp_val = pmt::from_double(0.0);
-
-      af::array waveform = LFM(bandwidth, start_freq, center_freq, pulse_width, samp_rate, prf).as(c32);
+      R_val = pmt::from_double(0.0);
+      af::array waveform = LFM(bandwidth, start_freq, center_freq, pulse_width, samp_rate, prf, zeropad).as(c32);
 
       d_data = pmt::init_c32vector(
           waveform.elements(), reinterpret_cast<gr_complex *>(waveform.host<af::cfloat>()));
@@ -160,6 +182,12 @@ namespace gr
           cp_val = pmt::dict_ref(msg, PMT_HARMONIA_CP_TX_SDR2, pmt::PMT_NIL);
           meta = pmt::dict_add(meta, PMT_HARMONIA_CP_TX_SDR2, cp_val);
         }
+        // Extract Range
+        if (pmt::dict_has_key(msg, PMT_HARMONIA_R_SDR12))
+        {
+          R_val = pmt::dict_ref(msg, PMT_HARMONIA_R_SDR12, pmt::PMT_NIL);
+          meta = pmt::dict_add(meta, PMT_HARMONIA_R_SDR12, R_val);
+        }
         break;
       }
 
@@ -183,6 +211,12 @@ namespace gr
           cp_val = pmt::dict_ref(msg, PMT_HARMONIA_CP_TX_SDR3, pmt::PMT_NIL);
           meta = pmt::dict_add(meta, PMT_HARMONIA_CP_TX_SDR3, cp_val);
         }
+        // Extract Range
+        if (pmt::dict_has_key(msg, PMT_HARMONIA_R_SDR13))
+        {
+          R_val = pmt::dict_ref(msg, PMT_HARMONIA_R_SDR13, pmt::PMT_NIL);
+          meta = pmt::dict_add(meta, PMT_HARMONIA_R_SDR13, R_val);
+        }
         break;
       }
       }
@@ -191,7 +225,7 @@ namespace gr
       alpha_hat = pmt::to_double(cd_val);
       phi_hat = pmt::to_double(cb_val);
       gamma_hat = pmt::to_double(cp_val);
-
+      R_hat = pmt::to_double(R_val);
       // GR_LOG_INFO(d_logger, "SDR: " + std::to_string(sdr_id) + "Clock Drift: " + std::to_string(alpha_hat) + "Clock Bias: " + std::to_string(phi_hat));
 
       // Attatch Clock Drift flag
@@ -219,16 +253,16 @@ namespace gr
       meta = pmt::dict_add(meta, PMT_HARMONIA_LABEL, pmt::intern("LFM"));
 
       // Generate waveform with corrected drift/bias
-      if (pmt::equal(phase_flag, pmt::PMT_T))
+      if ((pmt::equal(phase_flag, pmt::PMT_T)) || pmt::equal(bias_flag, pmt::PMT_T))
       {
         waveform = LFM(bandwidth, start_freq, center_freq, pulse_width2,
-                       samp_rate, prf, alpha_hat, phi_hat, gamma_hat)
+                       samp_rate, prf, zeropad, alpha_hat, phi_hat, R_hat, gamma_hat)
                        .as(c32);
       }
       else
       {
         waveform = LFM(bandwidth, start_freq, center_freq, pulse_width,
-                       samp_rate, prf, alpha_hat, phi_hat, gamma_hat)
+                       samp_rate, prf, zeropad, alpha_hat, phi_hat, R_hat, gamma_hat)
                        .as(c32);
       }
 

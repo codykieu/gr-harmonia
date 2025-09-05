@@ -15,6 +15,7 @@ const double wdelay_tx2 = 0;
 const double wdelay_rx2 = 0;
 const double wdelay_tx3 = 0;
 const double wdelay_rx3 = 0;
+const double c = 299792458.0;
 
 namespace gr
 {
@@ -40,7 +41,9 @@ namespace gr
                                               const double wait_time2,
                                               const double TDMA_time,
                                               const double TDMA_time2,
-                                              const bool verbose)
+                                              const bool verbose,
+                                              const bool loopback,
+                                              const bool lfm_only)
     {
       return gnuradio::make_block_sptr<usrp_radar_all_impl>(args_1,
                                                             args_2,
@@ -61,7 +64,9 @@ namespace gr
                                                             wait_time2,
                                                             TDMA_time,
                                                             TDMA_time2,
-                                                            verbose);
+                                                            verbose,
+                                                            loopback,
+                                                            lfm_only);
     }
 
     /*
@@ -86,7 +91,9 @@ namespace gr
                                              const double wait_time2,
                                              const double TDMA_time,
                                              const double TDMA_time2,
-                                             const bool verbose)
+                                             const bool verbose,
+                                             const bool loopback,
+                                             const bool lfm_only)
         : gr::block("usrp_radar_all",
                     gr::io_signature::make(0, 0, 0),
                     gr::io_signature::make(0, 0, 0)),
@@ -109,11 +116,13 @@ namespace gr
           wait_time2(wait_time2),
           TDMA_time(TDMA_time),
           TDMA_time2(TDMA_time2),
-          verbose(verbose)
+          verbose(verbose),
+          loopback(loopback),
+          lfm_only(lfm_only)
     {
-      this->sdr1_subdev = "";
-      this->sdr2_subdev = "";
-      this->sdr3_subdev = "";
+      // this->sdr1_subdev = "A:1";
+      // this->sdr2_subdev = "A:1";
+      // this->sdr3_subdev = "A:1";
       this->sdr1_cpu_format = this->sdr2_cpu_format = this->sdr3_cpu_format = "fc32";
       this->sdr1_otw_format = this->sdr2_otw_format = this->sdr3_otw_format = "sc16";
       this->sdr1_device_addr = "";
@@ -215,7 +224,11 @@ namespace gr
     bool usrp_radar_all_impl::start()
     {
       finished = false;
-      main_thread = gr::thread::thread(&usrp_radar_all_impl::run, this);
+      if (!loopback)
+        main_thread = gr::thread::thread(&usrp_radar_all_impl::run, this);
+      else
+        main_thread = gr::thread::thread(&usrp_radar_all_impl::run_loopback, this);
+
       return block::start();
     }
 
@@ -242,118 +255,177 @@ namespace gr
       carrier_phase_enabled = pmt::to_bool(pmt::dict_ref(meta, pmt::intern("carrier_phase_enable"), pmt::PMT_F));
       // GR_LOG_INFO(d_logger,
       //   std::string("clock_drift_enabled=") + (clock_drift_enabled?"true":"false")
-      //   + ", clock_bias_enabled=" + (clock_bias_enabled?"true":"false"));
+      //   + ", clock_bias_enabled=" + (clock_bias_enabled?"true":"false") + ", carrier_phase_enabled=" + (carrier_phase_enabled?"true":"false"));
 
       // Update TX Data with New Waveforms
-      switch (sdr_id)
+      if (!loopback && !lfm_only)
       {
-      case 1:
-      {
-        if (pmt::is_symbol(label))
+        switch (sdr_id)
         {
-          if (pmt::equal(label, pmt::intern("single_tone")) && !clock_drift_enabled)
+        case 1:
+        {
+          if (pmt::is_symbol(label))
           {
-            GR_LOG_INFO(d_logger, "WAVEFORM 1 UPDATED (single_tone, no drift)");
-            tx_data_sdr1 = data;
-            meta_sdr1 = meta;
-            waveform1_ready = true;
+            if (pmt::equal(label, pmt::intern("single_tone")) && !clock_drift_enabled)
+            {
+              // GR_LOG_INFO(d_logger, "WAVEFORM 1 UPDATED (single_tone, no drift)");
+              tx_data_sdr1 = data;
+              meta_sdr1 = meta;
+              waveform1_ready = true;
+            }
+            else if (pmt::equal(label, pmt::intern("LFM")) && clock_drift_enabled && !clock_bias_enabled && !carrier_phase_enabled)
+            {
+              // GR_LOG_INFO(d_logger, "WAVEFORM 1 UPDATED (LFM, drift-enabled)");
+              tx_data_sdr1 = data;
+              meta_sdr1 = meta;
+              waveform1_ready = true;
+            }
+            else if (pmt::equal(label, pmt::intern("LFM")) && clock_bias_enabled && !carrier_phase_enabled)
+            {
+              // GR_LOG_INFO(d_logger, "WAVEFORM 1 UPDATED (LFM, bias-enabled)");
+              tx_data_sdr1 = data;
+              meta_sdr1 = meta;
+              waveform1_ready = true;
+            }
+            else if (pmt::equal(label, pmt::intern("LFM")) && clock_bias_enabled && carrier_phase_enabled)
+            {
+              // GR_LOG_INFO(d_logger, "WAVEFORM 1 UPDATED (LFM, phase-enabled)");
+              tx_data_sdr1 = data;
+              meta_sdr1 = meta;
+              waveform1_ready = true;
+            }
           }
-          else if (pmt::equal(label, pmt::intern("LFM")) && clock_drift_enabled && !clock_bias_enabled && !carrier_phase_enabled)
-          {
-            // GR_LOG_INFO(d_logger, "WAVEFORM 1 UPDATED (LFM, drift-enabled)");
-            tx_data_sdr1 = data;
-            meta_sdr1 = meta;
-            waveform1_ready = true;
-          }
-          else if (pmt::equal(label, pmt::intern("LFM")) && clock_drift_enabled && clock_bias_enabled && !carrier_phase_enabled)
-          {
-            // GR_LOG_INFO(d_logger, "WAVEFORM 1 UPDATED (LFM, bias-enabled)");
-            tx_data_sdr1 = data;
-            meta_sdr1 = meta;
-            waveform1_ready = true;
-          }
-          else if (pmt::equal(label, pmt::intern("LFM")) && clock_drift_enabled && clock_bias_enabled && carrier_phase_enabled)
-          {
-            // GR_LOG_INFO(d_logger, "WAVEFORM 1 UPDATED (LFM, phase-enabled)");
-            tx_data_sdr1 = data;
-            meta_sdr1 = meta;
-            waveform1_ready = true;
-          }
+          break;
         }
-        break;
-      }
 
-      case 2:
-      {
-        if (pmt::is_symbol(label))
+        case 2:
         {
-          if (pmt::equal(label, pmt::intern("single_tone")) && !clock_drift_enabled)
+          if (pmt::is_symbol(label))
           {
-            GR_LOG_INFO(d_logger, "WAVEFORM 2 UPDATED (single_tone, no drift)");
-            tx_data_sdr2 = data;
-            meta_sdr2 = meta;
-            waveform2_ready = true;
+            if (pmt::equal(label, pmt::intern("single_tone")) && !clock_drift_enabled)
+            {
+              // GR_LOG_INFO(d_logger, "WAVEFORM 2 UPDATED (single_tone, no drift)");
+              tx_data_sdr2 = data;
+              meta_sdr2 = meta;
+              waveform2_ready = true;
+            }
+            else if (pmt::equal(label, pmt::intern("LFM")) && clock_drift_enabled && !clock_bias_enabled && !carrier_phase_enabled)
+            {
+              // GR_LOG_INFO(d_logger, "WAVEFORM 2 UPDATED (LFM, drift-enabled)");
+              tx_data_sdr2 = data;
+              meta_sdr2 = meta;
+              waveform2_ready = true;
+            }
+            else if (pmt::equal(label, pmt::intern("LFM")) && clock_bias_enabled && !carrier_phase_enabled)
+            {
+              // GR_LOG_INFO(d_logger, "WAVEFORM 2 UPDATED (LFM, bias-enabled)");
+              tx_data_sdr2 = data;
+              meta_sdr2 = meta;
+              waveform2_ready = true;
+            }
+            else if (pmt::equal(label, pmt::intern("LFM")) && clock_bias_enabled && carrier_phase_enabled)
+            {
+              // GR_LOG_INFO(d_logger, "WAVEFORM 2 UPDATED (LFM, phase-enabled)");
+              tx_data_sdr2 = data;
+              meta_sdr2 = meta;
+              waveform2_ready = true;
+            }
           }
-          else if (pmt::equal(label, pmt::intern("LFM")) && clock_drift_enabled && !clock_bias_enabled && !carrier_phase_enabled)
-          {
-            // GR_LOG_INFO(d_logger, "WAVEFORM 2 UPDATED (LFM, drift-enabled)");
-            tx_data_sdr2 = data;
-            meta_sdr2 = meta;
-            waveform2_ready = true;
-          }
-          else if (pmt::equal(label, pmt::intern("LFM")) && clock_drift_enabled && clock_bias_enabled && !carrier_phase_enabled)
-          {
-            // GR_LOG_INFO(d_logger, "WAVEFORM 2 UPDATED (LFM, bias-enabled)");
-            tx_data_sdr2 = data;
-            meta_sdr2 = meta;
-            waveform2_ready = true;
-          }
-          else if (pmt::equal(label, pmt::intern("LFM")) && clock_drift_enabled && clock_bias_enabled && carrier_phase_enabled)
-          {
-            // GR_LOG_INFO(d_logger, "WAVEFORM 2 UPDATED (LFM, phase-enabled)");
-            tx_data_sdr2 = data;
-            meta_sdr2 = meta;
-            waveform2_ready = true;
-          }
+          break;
         }
-        break;
-      }
 
-      case 3:
-      {
-        if (pmt::is_symbol(label))
+        case 3:
         {
-          if (pmt::equal(label, pmt::intern("single_tone")) && !clock_drift_enabled)
+          if (pmt::is_symbol(label))
           {
-            GR_LOG_INFO(d_logger, "WAVEFORM 3 UPDATED (single_tone, no drift)");
-            tx_data_sdr3 = data;
-            meta_sdr3 = meta;
-            waveform3_ready = true;
+            if (pmt::equal(label, pmt::intern("single_tone")) && !clock_drift_enabled)
+            {
+              // GR_LOG_INFO(d_logger, "WAVEFORM 3 UPDATED (single_tone, no drift)");
+              tx_data_sdr3 = data;
+              meta_sdr3 = meta;
+              waveform3_ready = true;
+            }
+            else if (pmt::equal(label, pmt::intern("LFM")) && clock_drift_enabled && !clock_bias_enabled && !carrier_phase_enabled)
+            {
+              // GR_LOG_INFO(d_logger, "WAVEFORM 3 UPDATED (LFM, drift-enabled)");
+              tx_data_sdr3 = data;
+              meta_sdr3 = meta;
+              waveform3_ready = true;
+            }
+            else if (pmt::equal(label, pmt::intern("LFM")) && clock_bias_enabled && !carrier_phase_enabled)
+            {
+              // GR_LOG_INFO(d_logger, "WAVEFORM 3 UPDATED (LFM, bias-enabled)");
+              tx_data_sdr3 = data;
+              meta_sdr3 = meta;
+              waveform3_ready = true;
+            }
+            else if (pmt::equal(label, pmt::intern("LFM")) && clock_bias_enabled && carrier_phase_enabled)
+            {
+              // GR_LOG_INFO(d_logger, "WAVEFORM 3 UPDATED (LFM, phase-enabled)");
+              tx_data_sdr3 = data;
+              meta_sdr3 = meta;
+              waveform3_ready = true;
+            }
           }
-          else if (pmt::equal(label, pmt::intern("LFM")) && clock_drift_enabled && !clock_bias_enabled && !carrier_phase_enabled)
-          {
-            // GR_LOG_INFO(d_logger, "WAVEFORM 3 UPDATED (LFM, drift-enabled)");
-            tx_data_sdr3 = data;
-            meta_sdr3 = meta;
-            waveform3_ready = true;
-          }
-          else if (pmt::equal(label, pmt::intern("LFM")) && clock_drift_enabled && clock_bias_enabled && !carrier_phase_enabled)
-          {
-            // GR_LOG_INFO(d_logger, "WAVEFORM 3 UPDATED (LFM, bias-enabled)");
-            tx_data_sdr3 = data;
-            meta_sdr3 = meta;
-            waveform3_ready = true;
-          }
-          else if (pmt::equal(label, pmt::intern("LFM")) && clock_drift_enabled && clock_bias_enabled && carrier_phase_enabled)
-          {
-            // GR_LOG_INFO(d_logger, "WAVEFORM 3 UPDATED (LFM, phase-enabled)");
-            tx_data_sdr3 = data;
-            meta_sdr3 = meta;
-            waveform3_ready = true;
-          }
+          break;
         }
-        break;
+        }
       }
+      else
+      {
+        switch (sdr_id)
+        {
+        case 1:
+        {
+          if (pmt::is_symbol(label))
+          {
+            if (pmt::equal(label, pmt::intern("LFM")) && !clock_drift_enabled)
+            {
+              // GR_LOG_INFO(d_logger, "WAVEFORM 1 UPDATED (LFM, loopback)");
+              tx_data_sdr1 = data;
+              meta_sdr1 = meta;
+              waveform1_ready = true;
+            }
+            else
+              GR_LOG_INFO(d_logger, "WAVEFORM 1 Ruh-roh (LFM, no loopback)");
+          }
+          break;
+        }
+
+        case 2:
+        {
+          if (pmt::is_symbol(label))
+          {
+            if (pmt::equal(label, pmt::intern("LFM")) && !clock_drift_enabled)
+            {
+              // GR_LOG_INFO(d_logger, "WAVEFORM 2 UPDATED (LFM, loopback)");
+              tx_data_sdr2 = data;
+              meta_sdr2 = meta;
+              waveform2_ready = true;
+            }
+            else
+              GR_LOG_INFO(d_logger, "WAVEFORM 2 Ruh-roh (LFM, no loopback)");
+          }
+          break;
+        }
+
+        case 3:
+        {
+          if (pmt::is_symbol(label))
+          {
+            if (pmt::equal(label, pmt::intern("LFM")) && !clock_drift_enabled)
+            {
+              // GR_LOG_INFO(d_logger, "WAVEFORM 3 UPDATED (LFM, loopback)");
+              tx_data_sdr3 = data;
+              meta_sdr3 = meta;
+              waveform3_ready = true;
+            }
+            else
+              GR_LOG_INFO(d_logger, "WAVEFORM 3 Ruh-roh (LFM, no loopback)");
+          }
+          break;
+        }
+        }
       }
 
       // Clock Drift Logic
@@ -386,6 +458,9 @@ namespace gr
         pmt::pmt_t pmt_cb1 = pmt::dict_ref(meta, PMT_HARMONIA_CB_SDR1, pmt::PMT_NIL);
         pmt::pmt_t pmt_cb2 = pmt::dict_ref(meta, PMT_HARMONIA_CB_SDR2, pmt::PMT_NIL);
         pmt::pmt_t pmt_cb3 = pmt::dict_ref(meta, PMT_HARMONIA_CB_SDR3, pmt::PMT_NIL);
+        pmt::pmt_t pmt_R12 = pmt::dict_ref(meta, PMT_HARMONIA_R_SDR12, pmt::PMT_NIL);
+        pmt::pmt_t pmt_R13 = pmt::dict_ref(meta, PMT_HARMONIA_R_SDR13, pmt::PMT_NIL);
+        pmt::pmt_t pmt_R23 = pmt::dict_ref(meta, PMT_HARMONIA_R_SDR23, pmt::PMT_NIL);
 
         if (pmt::is_number(pmt_cb1))
         {
@@ -402,18 +477,43 @@ namespace gr
           cb3_est = pmt::to_double(pmt_cb3);
           cb3_ready = true;
         }
+
+        if (pmt::is_number(pmt_R12))
+        {
+          R12_est = pmt::to_double(pmt_R12);
+        }
+        if (pmt::is_number(pmt_R13))
+        {
+          R13_est = pmt::to_double(pmt_R13);
+        }
+        if (pmt::is_number(pmt_R23))
+        {
+          R23_est = pmt::to_double(pmt_R23);
+        }
       }
 
       // Checks what run to start
       check_cd_ready();
-      // check_cb_ready();
+      check_cb_ready();
 
-      // if (carrier_phase_enabled && !cp_run_executed)
-      // {
-      //   GR_LOG_INFO(d_logger, "Carrier Phase enabled. Launching cd_run.");
-      //   cp_run_executed = true;
-      //   cp_run();
-      // }
+      if (carrier_phase_enabled && !cp_run_executed)
+      {
+        GR_LOG_INFO(d_logger, "Carrier Phase enabled. Launching final_run.");
+        cp_run_executed = true;
+        cp_run();
+      }
+
+      if (cp_run_executed && !cp_run2_executed)
+      {
+        cp_run2();
+        cp_run2_executed = true;
+      }
+
+      if (cp_run2_executed && !cp_run3_executed)
+      {
+        cp_run3();
+        cp_run3_executed = true;
+      }
     }
 
     void usrp_radar_all_impl::check_cd_ready()
@@ -519,6 +619,10 @@ namespace gr
       usrp_3->set_rx_freq(sdr3_freq);
       usrp_3->set_tx_gain(sdr3_gain);
       usrp_3->set_rx_gain(sdr3_gain);
+
+      // usrp_1->set_tx_antenna("TX/RX", 0);
+      // usrp_2->set_rx_antenna("TX/RX", 0);
+      // usrp_3->set_rx_antenna("TX/RX", 0);
 
       // Sets USRPs Clock Source
       usrp_1->set_clock_source("external");
@@ -626,6 +730,90 @@ namespace gr
       }
     }
 
+    void usrp_radar_all_impl::run_loopback()
+    {
+      uhd::rx_streamer::sptr rx1_stream, rx2_stream, rx3_stream;
+      uhd::tx_streamer::sptr tx1_stream, tx2_stream, tx3_stream;
+      setup_streamers(rx1_stream, rx2_stream, rx3_stream, tx1_stream, tx2_stream, tx3_stream);
+
+      /***********************************************************************
+       * Thread Implementations
+       **********************************************************************/
+      double sdr1_begin = usrp_1->get_time_now().get_real_secs();
+      double sdr2_begin = usrp_2->get_time_now().get_real_secs();
+      double sdr3_begin = usrp_3->get_time_now().get_real_secs();
+
+      std::cout << std::fixed << std::setprecision(12)
+                << "[SDR1] Start Time: " << sdr1_begin << "\n"
+                << "[SDR2] Start Time: " << sdr2_begin << "\n"
+                << "[SDR3] Start Time: " << sdr3_begin << std::endl;
+
+      // Transmit and Receive Times
+      double sdr1_tx1 = start_delay + TDMA_time;
+      double sdr1_rx1 = start_delay + TDMA_time;
+
+      double sdr2_tx1 = start_delay + TDMA_time * 2;
+      double sdr2_rx1 = start_delay + TDMA_time * 2;
+
+      double sdr3_tx1 = start_delay + TDMA_time * 3;
+      double sdr3_rx1 = start_delay + TDMA_time * 3 - wait_time;
+
+      // Rounded Down Version
+      double resolution = 1.0 / sdr1_rate;
+      double r1_tx1_err = std::remainder(sdr1_tx1, resolution);
+      double r2_rx1_err = std::remainder(sdr2_rx1, resolution);
+      double r3_rx1_err = std::remainder(sdr3_rx1, resolution);
+      double r2_tx1_err = std::remainder(sdr2_tx1, resolution);
+      double r1_rx1_err = std::remainder(sdr1_rx1, resolution);
+      double r3_tx1_err = std::remainder(sdr3_tx1, resolution);
+
+      std::vector<double> sdr1_tx_times = {sdr1_tx1};
+      std::vector<double> sdr2_tx_times = {sdr2_tx1};
+      std::vector<double> sdr3_tx_times = {sdr3_tx1};
+
+      std::vector<double> sdr1_rx_times = {sdr1_rx1};
+      std::vector<double> sdr2_rx_times = {sdr2_rx1};
+      std::vector<double> sdr3_rx_times = {sdr3_rx1};
+
+      // TX and RX Time Errors due to time resolution
+      std::vector<double> sdr1_tx_times_err = {-r1_tx1_err};
+      std::vector<double> sdr2_tx_times_err = {-r2_tx1_err};
+      std::vector<double> sdr3_tx_times_err = {-r3_tx1_err};
+
+      std::vector<double> sdr1_rx_times_err = {-r1_rx1_err};
+      std::vector<double> sdr2_rx_times_err = {-r2_rx1_err};
+      std::vector<double> sdr3_rx_times_err = {-r3_rx1_err};
+
+      // Threads
+      sdr1_tx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::transmit_all, this, usrp_1, tx1_stream, sdr1_tx_times, sdr1_tx_times_err, 1);
+
+      sdr1_rx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::receive_all,
+          this, usrp_1, rx1_stream, sdr1_rx_times, sdr1_rx_times_err, 1);
+
+      sdr2_tx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::transmit_all, this, usrp_2, tx2_stream, sdr2_tx_times, sdr2_tx_times_err, 2);
+
+      sdr2_rx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::receive_all,
+          this, usrp_2, rx2_stream, sdr2_rx_times, sdr2_rx_times_err, 2);
+
+      sdr3_tx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::transmit_all, this, usrp_3, tx3_stream, sdr3_tx_times, sdr3_tx_times_err, 3);
+
+      sdr3_rx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::receive_all,
+          this, usrp_3, rx3_stream, sdr3_rx_times, sdr3_rx_times_err, 3);
+
+      sdr1_tx_thread.join();
+      sdr1_rx_thread.join();
+      sdr2_tx_thread.join();
+      sdr2_rx_thread.join();
+      sdr3_tx_thread.join();
+      sdr3_rx_thread.join();
+    }
+
     void usrp_radar_all_impl::run()
     {
       uhd::rx_streamer::sptr rx1_stream, rx2_stream, rx3_stream;
@@ -658,18 +846,18 @@ namespace gr
       double sdr2_rx2 = start_delay + TDMA_time * 3 - wait_time;
 
       // Rounded Down Version
-      double resolution = 1 / sdr1_rate;
-      double r1_tx1_err = std::fmod(sdr1_tx1, resolution);
-      double r2_rx1_err = std::fmod(sdr2_rx1, resolution);
-      double r3_rx1_err = std::fmod(sdr3_rx1, resolution);
+      double resolution = 1.0 / sdr1_rate;
+      double r1_tx1_err = std::remainder(sdr1_tx1, resolution);
+      double r2_rx1_err = std::remainder(sdr2_rx1, resolution);
+      double r3_rx1_err = std::remainder(sdr3_rx1, resolution);
 
-      double r2_tx1_err = std::fmod(sdr2_tx1, resolution);
-      double r1_rx1_err = std::fmod(sdr1_rx1, resolution);
-      double r3_rx2_err = std::fmod(sdr3_rx2, resolution);
+      double r2_tx1_err = std::remainder(sdr2_tx1, resolution);
+      double r1_rx1_err = std::remainder(sdr1_rx1, resolution);
+      double r3_rx2_err = std::remainder(sdr3_rx2, resolution);
 
-      double r3_tx1_err = std::fmod(sdr3_tx1, resolution);
-      double r1_rx2_err = std::fmod(sdr1_rx2, resolution);
-      double r2_rx2_err = std::fmod(sdr2_rx2, resolution);
+      double r3_tx1_err = std::remainder(sdr3_tx1, resolution);
+      double r1_rx2_err = std::remainder(sdr1_rx2, resolution);
+      double r2_rx2_err = std::remainder(sdr2_rx2, resolution);
 
       std::vector<double> sdr1_tx_times = {sdr1_tx1};
       std::vector<double> sdr2_tx_times = {sdr2_tx1};
@@ -725,61 +913,31 @@ namespace gr
       setup_streamers(rx1_stream, rx2_stream, rx3_stream, tx1_stream, tx2_stream, tx3_stream);
 
       // TX And RX Times
-      double sdr1_tx1 = (start_delay * 2 + TDMA_time - wdelay_tx1) / cd1_est;
-      double sdr2_rx1 = (start_delay * 2 + TDMA_time - wait_time - wdelay_rx2) / cd2_est;
-      double sdr3_rx1 = (start_delay * 2 + TDMA_time - wait_time - wdelay_rx3) / cd3_est;
+      double sdr1_tx1 = (start_delay * 2 + TDMA_time - wdelay_tx1) * cd1_est;
+      double sdr2_rx1 = (start_delay * 2 + TDMA_time - wait_time + wdelay_rx2) * cd2_est;
+      double sdr3_rx1 = (start_delay * 2 + TDMA_time - wait_time + wdelay_rx3) * cd3_est;
 
-      double sdr2_tx1 = (start_delay * 2 + TDMA_time * 2 - wdelay_tx2) / cd2_est;
-      double sdr1_rx1 = (start_delay * 2 + TDMA_time * 2 - wait_time - wdelay_rx1) / cd1_est;
-      double sdr3_rx2 = (start_delay * 2 + TDMA_time * 2 - wait_time - wdelay_rx3) / cd3_est;
+      double sdr2_tx1 = (start_delay * 2 + TDMA_time * 2 - wdelay_tx2) * cd2_est;
+      double sdr1_rx1 = (start_delay * 2 + TDMA_time * 2 - wait_time + wdelay_rx1) * cd1_est;
+      double sdr3_rx2 = (start_delay * 2 + TDMA_time * 2 - wait_time + wdelay_rx3) * cd3_est;
 
-      double sdr3_tx1 = (start_delay * 2 + TDMA_time * 3 - wdelay_tx3) / cd3_est;
-      double sdr1_rx2 = (start_delay * 2 + TDMA_time * 3 - wait_time - wdelay_rx1) / cd1_est;
-      double sdr2_rx2 = (start_delay * 2 + TDMA_time * 3 - wait_time - wdelay_rx2) / cd2_est;
+      double sdr3_tx1 = (start_delay * 2 + TDMA_time * 3 - wdelay_tx3) * cd3_est;
+      double sdr1_rx2 = (start_delay * 2 + TDMA_time * 3 - wait_time + wdelay_rx1) * cd1_est;
+      double sdr2_rx2 = (start_delay * 2 + TDMA_time * 3 - wait_time + wdelay_rx2) * cd2_est;
 
       // Rounded Down to nearest time resolution
-      double resolution = 1 / sdr1_rate;
-      double r1_tx1_err = std::fmod(sdr1_tx1, resolution);
-      double r2_rx1_err = std::fmod(sdr2_rx1, resolution);
-      double r3_rx1_err = std::fmod(sdr3_rx1, resolution);
+      double resolution = 1.0 / sdr1_rate;
+      double r1_tx1_err = std::remainder(sdr1_tx1, resolution);
+      double r2_rx1_err = std::remainder(sdr2_rx1, resolution);
+      double r3_rx1_err = std::remainder(sdr3_rx1, resolution);
 
-      double r2_tx1_err = std::fmod(sdr2_tx1, resolution);
-      double r1_rx1_err = std::fmod(sdr1_rx1, resolution);
-      double r3_rx2_err = std::fmod(sdr3_rx2, resolution);
+      double r2_tx1_err = std::remainder(sdr2_tx1, resolution);
+      double r1_rx1_err = std::remainder(sdr1_rx1, resolution);
+      double r3_rx2_err = std::remainder(sdr3_rx2, resolution);
 
-      double r3_tx1_err = std::fmod(sdr3_tx1, resolution);
-      double r1_rx2_err = std::fmod(sdr1_rx2, resolution);
-      double r2_rx2_err = std::fmod(sdr2_rx2, resolution);
-
-      // // — print them out —
-      // std::cout << std::fixed << std::setprecision(12)
-      //           << "resdr1_tx1 = " << r1_tx1_err << "\n"
-      //           << "resdr2_rx1 = " << r2_rx1_err << "\n"
-      //           << "resdr3_rx1 = " << r3_rx1_err << "\n\n"
-
-      //           << "resdr2_tx1 = " << r2_tx1_err << "\n"
-      //           << "resdr1_rx1 = " << r1_rx1_err << "\n"
-      //           << "resdr3_rx2 = " << r3_rx2_err << "\n\n"
-
-      //           << "resdr3_tx1 = " << r3_tx1_err << "\n"
-      //           << "resdr1_rx2 = " << r1_rx2_err << "\n"
-      //           << "resdr2_rx2 = " << r2_rx2_err << "\n"
-      //           << std::endl;
-
-      // — print them out —
-      std::cout << std::fixed << std::setprecision(12)
-                << "sdr1_tx1 = " << sdr1_tx1 << "\n"
-                << "sdr2_rx1 = " << sdr2_rx1 << "\n"
-                << "sdr3_rx1 = " << sdr3_rx1 << "\n\n"
-
-                << "sdr2_tx1 = " << sdr2_tx1 << "\n"
-                << "sdr1_rx1 = " << sdr1_rx1 << "\n"
-                << "sdr3_rx2 = " << sdr3_rx2 << "\n\n"
-
-                << "sdr3_tx1 = " << sdr3_tx1 << "\n"
-                << "sdr1_rx2 = " << sdr1_rx2 << "\n"
-                << "sdr2_rx2 = " << sdr2_rx2 << "\n"
-                << std::endl;
+      double r3_tx1_err = std::remainder(sdr3_tx1, resolution);
+      double r1_rx2_err = std::remainder(sdr1_rx2, resolution);
+      double r2_rx2_err = std::remainder(sdr2_rx2, resolution);
 
       // TX and RX Time Vectors
       std::vector<double> sdr1_tx_times = {sdr1_tx1};
@@ -798,24 +956,6 @@ namespace gr
       std::vector<double> sdr1_rx_times_err = {-r1_rx1_err, -r1_rx2_err};
       std::vector<double> sdr2_rx_times_err = {-r2_rx1_err, -r2_rx2_err};
       std::vector<double> sdr3_rx_times_err = {-r3_rx1_err, -r3_rx2_err};
-
-      /////////////////////////////////////////////////////////////////////
-      // // Print with std::cout
-      // auto print_vec = [&](const std::string &name, const std::vector<double> &v)
-      // {
-      //   std::cout << name << ":";
-      //   for (double t : v)
-      //     std::cout << " " << std::fixed << std::setprecision(12) << t;
-      //   std::cout << std::endl;
-      // };
-      // print_vec("sdr1_tx_times", sdr1_tx_times);
-      // print_vec("sdr2_tx_times", sdr2_tx_times);
-      // print_vec("sdr3_tx_times", sdr3_tx_times);
-
-      // print_vec("sdr1_rx_times", sdr1_rx_times);
-      // print_vec("sdr2_rx_times", sdr2_rx_times);
-      // print_vec("sdr3_rx_times", sdr3_rx_times);
-      ///////////////////////////////////////////////////////////////////
 
       // Threads
       cd_sdr1_tx_thread = gr::thread::thread(
@@ -855,46 +995,32 @@ namespace gr
       uhd::tx_streamer::sptr tx1_stream, tx2_stream, tx3_stream;
       setup_streamers(rx1_stream, rx2_stream, rx3_stream, tx1_stream, tx2_stream, tx3_stream);
 
-      // TX and RX Times  **REMOVE WAIT_TIME or MAKE SMALLER??????
-      double sdr1_tx1 = (start_delay * 3 + TDMA_time2 - wdelay_tx1 + cb1_est) / cd1_est;
-      double sdr2_rx1 = (start_delay * 3 + TDMA_time2 - wdelay_rx2 + cb2_est) / cd2_est;
-      double sdr3_rx1 = (start_delay * 3 + TDMA_time2 - wdelay_rx3 + cb3_est) / cd3_est;
+      // TX and RX Times
+      double sdr1_tx1 = (start_delay * 3 + TDMA_time - wdelay_tx1 + cb1_est) * cd1_est;
+      double sdr2_rx1 = (start_delay * 3 + TDMA_time + wdelay_rx2 + cb2_est) * cd2_est;
+      double sdr3_rx1 = (start_delay * 3 + TDMA_time + wdelay_rx3 + cb3_est) * cd3_est;
 
-      double sdr2_tx1 = (start_delay * 3 + TDMA_time2 * 2 - wdelay_tx2 + cb2_est) / cd2_est;
-      double sdr1_rx1 = (start_delay * 3 + TDMA_time2 * 2 - wdelay_rx1 + cb1_est) / cd1_est;
-      double sdr3_rx2 = (start_delay * 3 + TDMA_time2 * 2 - wdelay_rx3 + cb3_est) / cd3_est;
+      double sdr2_tx1 = (start_delay * 3 + TDMA_time * 2 - wdelay_tx2 + cb2_est) * cd2_est;
+      double sdr1_rx1 = (start_delay * 3 + TDMA_time * 2 + wdelay_rx1 + cb1_est) * cd1_est;
+      double sdr3_rx2 = (start_delay * 3 + TDMA_time * 2 + wdelay_rx3 + cb3_est) * cd3_est;
 
-      double sdr3_tx1 = (start_delay * 3 + TDMA_time2 * 3 - wdelay_tx3 + cb3_est) / cd3_est;
-      double sdr1_rx2 = (start_delay * 3 + TDMA_time2 * 3 - wdelay_rx1 + cb1_est) / cd1_est;
-      double sdr2_rx2 = (start_delay * 3 + TDMA_time2 * 3 - wdelay_rx2 + cb2_est) / cd2_est;
-
-      std::cout << std::fixed << std::setprecision(12)
-                << "sdr1_tx1 = " << sdr1_tx1 << "\n"
-                << "sdr2_rx1 = " << sdr2_rx1 << "\n"
-                << "sdr3_rx1 = " << sdr3_rx1 << "\n\n"
-
-                << "sdr2_tx1 = " << sdr2_tx1 << "\n"
-                << "sdr1_rx1 = " << sdr1_rx1 << "\n"
-                << "sdr3_rx2 = " << sdr3_rx2 << "\n\n"
-
-                << "sdr3_tx1 = " << sdr3_tx1 << "\n"
-                << "sdr1_rx2 = " << sdr1_rx2 << "\n"
-                << "sdr2_rx2 = " << sdr2_rx2 << "\n"
-                << std::endl;
+      double sdr3_tx1 = (start_delay * 3 + TDMA_time * 3 - wdelay_tx3 + cb3_est) * cd3_est;
+      double sdr1_rx2 = (start_delay * 3 + TDMA_time * 3 + wdelay_rx1 + cb1_est) * cd1_est;
+      double sdr2_rx2 = (start_delay * 3 + TDMA_time * 3 + wdelay_rx2 + cb2_est) * cd2_est;
 
       // Rounded Down nearest time resolution
-      double resolution = 1 / sdr1_rate;
-      double r1_tx1_err = std::fmod(sdr1_tx1, resolution);
-      double r2_rx1_err = std::fmod(sdr2_rx1, resolution);
-      double r3_rx1_err = std::fmod(sdr3_rx1, resolution);
+      double resolution = 1.0 / sdr1_rate;
+      double r1_tx1_err = std::remainder(sdr1_tx1, resolution);
+      double r2_rx1_err = std::remainder(sdr2_rx1, resolution);
+      double r3_rx1_err = std::remainder(sdr3_rx1, resolution);
 
-      double r2_tx1_err = std::fmod(sdr2_tx1, resolution);
-      double r1_rx1_err = std::fmod(sdr1_rx1, resolution);
-      double r3_rx2_err = std::fmod(sdr3_rx2, resolution);
+      double r2_tx1_err = std::remainder(sdr2_tx1, resolution);
+      double r1_rx1_err = std::remainder(sdr1_rx1, resolution);
+      double r3_rx2_err = std::remainder(sdr3_rx2, resolution);
 
-      double r3_tx1_err = std::fmod(sdr3_tx1, resolution);
-      double r1_rx2_err = std::fmod(sdr1_rx2, resolution);
-      double r2_rx2_err = std::fmod(sdr2_rx2, resolution);
+      double r3_tx1_err = std::remainder(sdr3_tx1, resolution);
+      double r1_rx2_err = std::remainder(sdr1_rx2, resolution);
+      double r2_rx2_err = std::remainder(sdr2_rx2, resolution);
 
       // TX and RX Time Vectors
       std::vector<double> sdr1_tx_times = {sdr1_tx1};
@@ -952,93 +1078,114 @@ namespace gr
       uhd::tx_streamer::sptr tx1_stream, tx2_stream, tx3_stream;
       setup_streamers(rx1_stream, rx2_stream, rx3_stream, tx1_stream, tx2_stream, tx3_stream);
 
-      // TX and RX Times  **REMOVE WAIT_TIME or MAKE SMALLER??????
-      double sdr1_tx1 = (start_delay * 4 + TDMA_time2 - wdelay_tx1 + cb1_est) / cd1_est;
-      double sdr2_rx1 = (start_delay * 4 + TDMA_time2 - wait_time2 - wdelay_rx2 + cb2_est) / cd2_est;
-      double sdr3_rx1 = (start_delay * 4 + TDMA_time2 - wait_time2 - wdelay_rx3 + cb3_est) / cd3_est;
-
-      double sdr2_tx1 = (start_delay * 4 + TDMA_time2 * 2 - wdelay_tx2 + cb2_est) / cd2_est;
-      double sdr1_rx1 = (start_delay * 4 + TDMA_time2 * 2 - wait_time2 - wdelay_rx1 + cb1_est) / cd1_est;
-      double sdr3_rx2 = (start_delay * 4 + TDMA_time2 * 2 - wait_time2 - wdelay_rx3 + cb3_est) / cd3_est;
-
-      double sdr3_tx1 = (start_delay * 4 + TDMA_time2 * 3 - wdelay_tx3 + cb3_est) / cd3_est;
-      double sdr1_rx2 = (start_delay * 4 + TDMA_time2 * 3 - wait_time2 - wdelay_rx1 + cb1_est) / cd1_est;
-      double sdr2_rx2 = (start_delay * 4 + TDMA_time2 * 3 - wait_time2 - wdelay_rx2 + cb2_est) / cd2_est;
-
-      std::cout << std::fixed << std::setprecision(12)
-                << "sdr1_tx1 = " << sdr1_tx1 << "\n"
-                << "sdr2_rx1 = " << sdr2_rx1 << "\n"
-                << "sdr3_rx1 = " << sdr3_rx1 << "\n\n"
-
-                << "sdr2_tx1 = " << sdr2_tx1 << "\n"
-                << "sdr1_rx1 = " << sdr1_rx1 << "\n"
-                << "sdr3_rx2 = " << sdr3_rx2 << "\n\n"
-
-                << "sdr3_tx1 = " << sdr3_tx1 << "\n"
-                << "sdr1_rx2 = " << sdr1_rx2 << "\n"
-                << "sdr2_rx2 = " << sdr2_rx2 << "\n"
-                << std::endl;
+      // TX and RX Times
+      double sdr1_rx1 = (start_delay * 4 + TDMA_time2 + wdelay_rx1 + cb1_est) * cd1_est;
+      double sdr2_tx1 = (start_delay * 4 + TDMA_time2 - wdelay_tx2 + cb2_est - R12_est / c) * cd2_est;
 
       // Rounded Down nearest time resolution
-      double resolution = 1 / sdr1_rate;
-      double r1_tx1_err = std::fmod(sdr1_tx1, resolution);
-      double r2_rx1_err = std::fmod(sdr2_rx1, resolution);
-      double r3_rx1_err = std::fmod(sdr3_rx1, resolution);
-
-      double r2_tx1_err = std::fmod(sdr2_tx1, resolution);
-      double r1_rx1_err = std::fmod(sdr1_rx1, resolution);
-      double r3_rx2_err = std::fmod(sdr3_rx2, resolution);
-
-      double r3_tx1_err = std::fmod(sdr3_tx1, resolution);
-      double r1_rx2_err = std::fmod(sdr1_rx2, resolution);
-      double r2_rx2_err = std::fmod(sdr2_rx2, resolution);
+      double resolution = 1.0 / sdr1_rate;
+      double r1_rx1_err = std::remainder(sdr1_rx1, resolution);
+      double r2_tx1_err = std::remainder(sdr2_tx1, resolution);
 
       // TX and RX Time Vectors
-      std::vector<double> sdr1_tx_times = {sdr1_tx1};
+      std::vector<double> sdr1_rx_times = {sdr1_rx1};
       std::vector<double> sdr2_tx_times = {sdr2_tx1};
-      std::vector<double> sdr3_tx_times = {sdr3_tx1};
-
-      std::vector<double> sdr1_rx_times = {sdr1_rx1, sdr1_rx2};
-      std::vector<double> sdr2_rx_times = {sdr2_rx1, sdr2_rx2};
-      std::vector<double> sdr3_rx_times = {sdr3_rx1, sdr3_rx2};
 
       // TX and RX Errors due to time resolution for FFT-based Fractionally Delaying the Signals
-      std::vector<double> sdr1_tx_times_err = {-r1_tx1_err};
+      std::vector<double> sdr1_rx_times_err = {-r1_rx1_err};
       std::vector<double> sdr2_tx_times_err = {-r2_tx1_err};
-      std::vector<double> sdr3_tx_times_err = {-r3_tx1_err};
-
-      std::vector<double> sdr1_rx_times_err = {-r1_rx1_err, -r1_rx2_err};
-      std::vector<double> sdr2_rx_times_err = {-r2_rx1_err, -r2_rx2_err};
-      std::vector<double> sdr3_rx_times_err = {-r3_rx1_err, -r3_rx2_err};
 
       // Threads
-      cp_sdr1_tx_thread = gr::thread::thread(
-          &usrp_radar_all_impl::transmit_all, this, usrp_1, tx1_stream, sdr1_tx_times, sdr1_tx_times_err, 1);
-
       cp_sdr1_rx_thread = gr::thread::thread(
-          &usrp_radar_all_impl::receive_all,
-          this, usrp_1, rx1_stream, sdr1_rx_times, sdr1_rx_times_err, 1);
+          &usrp_radar_all_impl::receive_all, this, usrp_1, rx1_stream, sdr1_rx_times, sdr1_rx_times_err, 1);
 
       cp_sdr2_tx_thread = gr::thread::thread(
           &usrp_radar_all_impl::transmit_all, this, usrp_2, tx2_stream, sdr2_tx_times, sdr2_tx_times_err, 2);
 
-      cp_sdr2_rx_thread = gr::thread::thread(
-          &usrp_radar_all_impl::receive_all,
-          this, usrp_2, rx2_stream, sdr2_rx_times, sdr2_rx_times_err, 2);
+      cp_sdr1_rx_thread.join();
+      cp_sdr2_tx_thread.join();
+
+      GR_LOG_INFO(d_logger, "Final TX/RX sequence completed.");
+    }
+
+    // Post synchronization pulse 2: Node 2 and 3 TX
+    void usrp_radar_all_impl::cp_run2()
+    {
+      uhd::rx_streamer::sptr rx1_stream, rx2_stream, rx3_stream;
+      uhd::tx_streamer::sptr tx1_stream, tx2_stream, tx3_stream;
+      setup_streamers(rx1_stream, rx2_stream, rx3_stream, tx1_stream, tx2_stream, tx3_stream);
+
+      // TX and RX Times
+      double sdr1_rx1 = (start_delay * 5 + TDMA_time2 + wdelay_rx1 + cb1_est) * cd1_est;
+      double sdr2_tx1 = (start_delay * 5 + TDMA_time2 - wdelay_tx2 + cb2_est - R12_est / c) * cd2_est;
+      double sdr3_tx1 = (start_delay * 5 + TDMA_time2 - wdelay_tx3 + cb3_est - R13_est / c) * cd3_est;
+
+      // Rounded Down nearest time resolution
+      double resolution = 1.0 / sdr1_rate;
+      double r1_rx1_err = std::remainder(sdr1_rx1, resolution);
+      double r2_tx1_err = std::remainder(sdr2_tx1, resolution);
+      double r3_tx1_err = std::remainder(sdr3_tx1, resolution);
+
+      // TX and RX Time Vectors
+      std::vector<double> sdr1_rx_times = {sdr1_rx1};
+      std::vector<double> sdr2_tx_times = {sdr2_tx1};
+      std::vector<double> sdr3_tx_times = {sdr3_tx1};
+
+      // TX and RX Errors due to time resolution for FFT-based Fractionally Delaying the Signals
+      std::vector<double> sdr1_rx_times_err = {-r1_rx1_err};
+      std::vector<double> sdr2_tx_times_err = {-r2_tx1_err};
+      std::vector<double> sdr3_tx_times_err = {-r3_tx1_err};
+
+      // Threads
+      cp_sdr1_rx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::receive_all, this, usrp_1, rx1_stream, sdr1_rx_times, sdr1_rx_times_err, 1);
+
+      cp_sdr2_tx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::transmit_all, this, usrp_2, tx2_stream, sdr2_tx_times, sdr2_tx_times_err, 2);
 
       cp_sdr3_tx_thread = gr::thread::thread(
           &usrp_radar_all_impl::transmit_all, this, usrp_3, tx3_stream, sdr3_tx_times, sdr3_tx_times_err, 3);
 
-      cp_sdr3_rx_thread = gr::thread::thread(
-          &usrp_radar_all_impl::receive_all,
-          this, usrp_3, rx3_stream, sdr3_rx_times, sdr3_rx_times_err, 3);
-
-      cp_sdr1_tx_thread.join();
-      cp_sdr2_rx_thread.join();
+      cp_sdr1_rx_thread.join();
       cp_sdr2_tx_thread.join();
+      cp_sdr3_tx_thread.join();
+
+      GR_LOG_INFO(d_logger, "Final TX/RX sequence completed.");
+    }
+
+    // Post synchronization pulse 3: Node 3 TX
+    void usrp_radar_all_impl::cp_run3()
+    {
+      uhd::rx_streamer::sptr rx1_stream, rx2_stream, rx3_stream;
+      uhd::tx_streamer::sptr tx1_stream, tx2_stream, tx3_stream;
+      setup_streamers(rx1_stream, rx2_stream, rx3_stream, tx1_stream, tx2_stream, tx3_stream);
+
+      // TX and RX Times
+      double sdr1_rx1 = (start_delay * 6 + TDMA_time2 + wdelay_rx1 + cb1_est) * cd1_est;
+      double sdr3_tx1 = (start_delay * 6 + TDMA_time2 - wdelay_tx3 + cb3_est - R13_est / c) * cd3_est;
+
+      // Rounded Down nearest time resolution
+      double resolution = 1.0 / sdr1_rate;
+      double r1_rx1_err = std::remainder(sdr1_rx1, resolution);
+      double r3_tx1_err = std::remainder(sdr3_tx1, resolution);
+
+      // TX and RX Time Vectors
+      std::vector<double> sdr1_rx_times = {sdr1_rx1};
+      std::vector<double> sdr3_tx_times = {sdr3_tx1};
+
+      // TX and RX Errors due to time resolution for FFT-based Fractionally Delaying the Signals
+      std::vector<double> sdr1_rx_times_err = {-r1_rx1_err};
+      std::vector<double> sdr3_tx_times_err = {-r3_tx1_err};
+
+      // Threads
+      cp_sdr1_rx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::receive_all, this, usrp_1, rx1_stream, sdr1_rx_times, sdr1_rx_times_err, 1);
+
+      cp_sdr3_tx_thread = gr::thread::thread(
+          &usrp_radar_all_impl::transmit_all, this, usrp_3, tx3_stream, sdr3_tx_times, sdr3_tx_times_err, 3);
+
       cp_sdr1_rx_thread.join();
       cp_sdr3_tx_thread.join();
-      cp_sdr3_rx_thread.join();
 
       GR_LOG_INFO(d_logger, "Final TX/RX sequence completed.");
     }
@@ -1107,10 +1254,6 @@ namespace gr
         return;
       }
 
-      double rx_time_secs = usrp_tx->get_time_now().get_real_secs();
-      pmt::pmt_t rx_time = pmt::from_double(rx_time_secs);
-      std::cout << "USRP TX Time: " << rx_time_secs << std::endl;
-
       // Transmit Data Vector
       std::vector<gr_complex> tx_data_vector(raw, raw + len);
 
@@ -1138,14 +1281,8 @@ namespace gr
       md.has_time_spec = true;
 
       long long ticks_req = (long long)std::floor(start_time * sdr1_rate);
-      // double t_sched = double(ticks_req) / sdr1_rate;
-
-      // std::cout << std::fixed << std::setprecision(12)
-      //           << "tx time = " << t_sched << "\n";
       auto tspec = uhd::time_spec_t::from_ticks(ticks_req, sdr1_rate);
       md.time_spec = tspec;
-
-      // md.time_spec = uhd::time_spec_t(start_time);
 
       double timeout = 0.0;
       tx_stream->send(tx_buffs[0].data(), tx_buffs[0].size(), md, timeout);
@@ -1160,9 +1297,9 @@ namespace gr
 
       // Total samples to receive based on capture time
       if (carrier_phase_enabled)
-        total_samps_to_rx = cap_length2 * sdr1_rate; // sdr1_rate shoulld be the same as sdr2,3,.....N
+        total_samps_to_rx = cap_length2 * sdr1_rate;
       else
-        total_samps_to_rx = cap_length * sdr1_rate; // sdr1_rate shoulld be the same as sdr2,3,.....N
+        total_samps_to_rx = cap_length * sdr1_rate;
 
       size_t samps_received = 0;
 
@@ -1170,22 +1307,9 @@ namespace gr
       uhd::stream_cmd_t cmd(uhd::stream_cmd_t::STREAM_MODE_NUM_SAMPS_AND_DONE);
       cmd.num_samps = total_samps_to_rx;
       cmd.stream_now = usrp_rx->get_time_now().get_real_secs() >= start_time;
-      // cmd.stream_now = false;
 
-
-      ////////////////////////////////////////////////////////////////////
-      double rx_time_secs = usrp_rx->get_time_now().get_real_secs();
-      pmt::pmt_t rx_time = pmt::from_double(rx_time_secs);
-      std::cout << "USRP RX Time: " << rx_time_secs << std::endl;
-      ////////////////////////////////////////////////////////////////////
-
-      // cmd.time_spec = uhd::time_spec_t(start_time);
       long long ticks_req = (long long)std::floor(start_time * sdr1_rate);
-      // double t_sched = double(ticks_req) / sdr1_rate;
-      // std::cout << std::fixed << std::setprecision(12)
-      //           << "rx time = " << t_sched << "\n";
       auto tspec = uhd::time_spec_t::from_ticks(ticks_req, sdr1_rate);
-      // double fractional_sec = start_time - t_sched;
       cmd.time_spec = tspec;
 
       rx_stream->issue_stream_cmd(cmd);
@@ -1231,7 +1355,7 @@ namespace gr
           break;
         }
       }
-      else if (clock_drift_enabled && clock_bias_enabled)
+      else if (clock_bias_enabled && !carrier_phase_enabled)
       {
         // GR_LOG_INFO(d_logger, "CLOCK BIAS OUT" );
         switch (sdr_rx)
@@ -1247,9 +1371,9 @@ namespace gr
           break;
         }
       }
-      else if (clock_drift_enabled && clock_bias_enabled && carrier_phase_enabled)
+      else if (carrier_phase_enabled)
       {
-        // GR_LOG_INFO(d_logger, "CLOCK BIAS OUT" );
+        // GR_LOG_INFO(d_logger, "CARRIER PHASE OUT" );
         switch (sdr_rx)
         {
         case 1:

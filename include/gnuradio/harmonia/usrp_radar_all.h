@@ -53,7 +53,9 @@ namespace gr
                        const double wait_time2,
                        const double TDMA_time,
                        const double TDMA_time2,
-                       const bool verbose);
+                       const bool verbose,
+                       const bool loopback,
+                       const bool lfm_only);
       virtual void set_metadata_keys(const std::string &sdr1_freq_key,
                                      const std::string &sdr2_freq_key,
                                      const std::string &sample_start_key,

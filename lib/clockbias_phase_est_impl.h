@@ -37,7 +37,7 @@ namespace gr
       std::vector<bool> check_phase;
       double alpha1, alpha2, alpha3;
       af::array TOF_est, Phase_est;
-      af::array cb_est, x_gamma_est;
+      af::array cb_est, x_gamma_est, R_est_lower;
       
       // Object and data
       pmt::pmt_t d_data;

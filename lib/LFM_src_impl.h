@@ -29,11 +29,12 @@ namespace gr
       double pulse_width2;
       double samp_rate;
       double prf;
+      int zeropad;
       int sdr_id;
 
       // Waveform object and IQ data
       pmt::pmt_t d_data;
-      double alpha_hat, phi_hat, gamma_hat;
+      double alpha_hat, phi_hat, gamma_hat, R_hat;
       af::array waveform;
       
       // Metadata fields
@@ -46,6 +47,7 @@ namespace gr
       pmt::pmt_t cd_val;
       pmt::pmt_t cb_val;
       pmt::pmt_t cp_val;
+      pmt::pmt_t R_val;
 
       void handle_msg(pmt::pmt_t msg);
 
@@ -57,6 +59,7 @@ namespace gr
                    double pulse_width2,
                    double samp_rate,
                    double prf,
+                   int zeropad,
                    int sdr_id);
       ~LFM_src_impl();
 

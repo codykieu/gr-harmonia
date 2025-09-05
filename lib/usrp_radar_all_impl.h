@@ -47,7 +47,7 @@ namespace gr
       std::string sdr1_device_addr, sdr2_device_addr, sdr3_device_addr;
       std::string sdr1_cpu_format, sdr2_cpu_format, sdr3_cpu_format;
       std::string sdr1_otw_format, sdr2_otw_format, sdr3_otw_format;
-      bool verbose;
+      bool verbose, loopback, lfm_only;
       size_t n_delay;
 
       // Clock Drift/Bias Params
@@ -57,8 +57,11 @@ namespace gr
       bool cd_run_executed = false;
       bool cb_run_executed = false;
       bool cp_run_executed = false;
+      bool cp_run2_executed = false;
+      bool cp_run3_executed = false;
       double cd1_est, cd2_est, cd3_est;
       double cb1_est, cb2_est, cb3_est;
+      double R12_est, R13_est, R23_est;
       double alpha, phi;
       bool cd1_ready = false;
       bool cd2_ready = false;
@@ -205,14 +208,19 @@ namespace gr
                           const double wait_time2,
                           const double TDMA_time,
                           const double TDMA_time2,
-                          const bool verbose);
+                          const bool verbose,
+                          const bool loopback,
+                          const bool lfm_only);
       ~usrp_radar_all_impl();
+      void run_loopback();
       void run();
       void check_cd_ready();
       void check_cb_ready();
       void cd_run();
       void cb_run();
       void cp_run();
+      void cp_run2();
+      void cp_run3();
       bool start() override;
       bool stop() override;
       void handle_message(const pmt::pmt_t &msg, int sdr_id);

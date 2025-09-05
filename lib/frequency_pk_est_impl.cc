@@ -153,7 +153,7 @@ namespace gr
             // Generate frequency axis
             af::array f_axis =
                 (-samp_rate / 2.0) + ((af::seq(0, NFFT - 1)) * (samp_rate / (NFFT)));
-
+            f_axis = f_axis.as(f64);
             af::array f_pk = f_axis(max_idx); // Get the value at max_idx as an af::array
             // af_print(f_pk);
 
@@ -179,6 +179,7 @@ namespace gr
 
             // Output vector of points around max index
             af::array nlls_y = af_abs_fft(max_vector - nlls_ind);
+            nlls_y = af::flip(nlls_y, 0);
             nlls_y = nlls_y.as(f64);
             // af_print(nlls_y);
 

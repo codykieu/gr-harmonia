@@ -1,0 +1,48 @@
+[run 17] starting...
+[INFO] [UHD] linux; GNU C++ version 14.2.0; Boost_108300; DPDK_23.11; UHD_4.7.0.HEAD-0-ga5ed1872
+[INFO] [X300] X300 initialization sequence...
+[INFO] [X300] Maximum frame size: 8000 bytes.
+[INFO] [X300] Radio 1x clock: 200 MHz
+[INFO] [X300] X300 initialization sequence...
+[INFO] [X300] Maximum frame size: 8000 bytes.
+[INFO] [X300] Radio 1x clock: 200 MHz
+[INFO] [X300] X300 initialization sequence...
+[INFO] [X300] Maximum frame size: 8000 bytes.
+[INFO] [X300] Radio 1x clock: 200 MHz
+[SDR1] Start Time: 0.926180450000
+[SDR2] Start Time: 0.923566315000
+[SDR3] Start Time: 0.925051770000
+x_alpha (Hz):
+1.0000000000000
+1.0000000103960
+1.0000000118812
+usrp_radar_all :info: Clock drift enabled. Launching cd_run.
+usrp_radar_all :info: Drift TX/RX sequence completed.
+cb_est
+[3 1 1 1]
+    0.0014 
+   -0.0014 
+    0.0000 
+
+R_est_lower
+[3 1 1 1]
+    0.7370 
+    1.2514 
+    0.9259 
+
+usrp_radar_all :info: Clock bias enabled. Launching cb_run.
+usrp_radar_all :info: Bias TX/RX sequence completed.
+x_gamma_est
+[6 1 1 1]
+    0.0000 
+    0.0771 
+   -1.2824 
+    2.6976 
+   -2.2524 
+   -0.3961 
+
+usrp_radar_all :info: Carrier Phase enabled. Launching final_run.
+usrp_radar_all :info: Final TX/RX sequence completed.
+usrp_radar_all :info: Final TX/RX sequence completed.
+usrp_radar_all :info: Final TX/RX sequence completed.
+[run 17] finished cleanly.

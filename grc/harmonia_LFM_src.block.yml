@@ -33,6 +33,11 @@ parameters:
     dtype: float
     default: 0
     hide: ${ ('part' if prf == 0 else 'none') }
+  - id: zeropad
+    label: Buffer
+    dtype: int
+    default: 0
+    hide: ${ ('part' if prf == 0 else 'none') }
   - id: sdr_id
     label: SDR Number
     dtype: int
@@ -87,7 +92,7 @@ outputs:
 templates:
   imports: from gnuradio import harmonia
   make: |-
-    harmonia.LFM_src(${bandwidth}, ${start_freq}, ${center_freq}, ${pulse_width}, ${pulse_width2}, ${samp_rate}, ${prf}, ${sdr_id})
+    harmonia.LFM_src(${bandwidth}, ${start_freq}, ${center_freq}, ${pulse_width}, ${pulse_width2}, ${samp_rate}, ${prf}, ${zeropad}, ${sdr_id})
     self.${id}.init_meta_dict(${bandwidth_key}, ${duration_key}, ${sample_rate_key}, ${label_key}, ${prf_key})
 
 documentation: |-

@@ -97,12 +97,12 @@ namespace gr
           return; // wait until this SDR’s data arrives
         auto tmpf = pmt::f32vector_elements(vec_pmt);
         if (tmpf.size() != 1)
-          return;               // expect exactly one value
-        double f_est = tmpf[0]; // our frequency offset
+          return;               
+        double f_est = tmpf[0]; 
 
         int idx = idx_map[rx][tx];
-        d_store[idx] = f_est + center_freq; // store + center
-        d_got[idx] = true;                  // mark ready
+        d_store[idx] = f_est + center_freq; 
+        d_got[idx] = true;                  
       }
 
       // Wait until all six values have been received
@@ -168,6 +168,7 @@ namespace gr
       // Matrix for Linear System of Equations
       af::dim4 dims(A_est.size(), num_platforms);
       A_mat = af::array(dims, flat.data(), afHost);
+      A_mat = A_mat.as(f64);
       // af_print(A_mat);
 
       af::array y = af::join(0, af::constant(0.0, A_est.size() - 1, f64), af::constant(center_freq, 1, f64));
@@ -201,7 +202,7 @@ namespace gr
       // Publish results once
       meta = pmt::dict_add(meta, PMT_HARMONIA_SDR1, pmt::from_double(1.0));
       meta = pmt::dict_add(meta, PMT_HARMONIA_SDR2, pmt::from_double(1.0));
-      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR3, pmt::from_double(1.0));
+      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR3, pmt::from_double(1.0000));
       // meta = pmt::dict_add(meta, PMT_HARMONIA_SDR1, pmt::from_double(x_host[0]));
       // meta = pmt::dict_add(meta, PMT_HARMONIA_SDR2, pmt::from_double(x_host[1]));
       // meta = pmt::dict_add(meta, PMT_HARMONIA_SDR3, pmt::from_double(x_host[2]));

@@ -139,19 +139,6 @@ namespace gr
         return;
       }
 
-      // FFT-base Fractional Delay
-      af::array X = af::fft(af_input, len);
-      X = ::plasma::fftshift(X, 0);
-      af::array f = (-samp_rate / 2.0) + ((af::seq(0, len - 1)) * (samp_rate / len));
-      af::array X_delay = X * af::exp(1.0 * af::Im * 2.0 * M_PI * f * (t_delay));
-      X_delay = ::plasma::ifftshift(X_delay, 0);
-      af::array x_delay = af::ifft(X_delay);
-
-      // Output Data
-      pmt::pmt_t vec = pmt::make_c32vector(len, gr_complex{0, 0});
-      gr_complex *out_ptr = pmt::c32vector_writable_elements(vec, len);
-      x_delay.host(reinterpret_cast<af::cfloat *>(out_ptr));
-
       // Update Clock Drift Value
       if (alpha_ready)
       {
@@ -176,11 +163,24 @@ namespace gr
       else
         gamma_hat = 0.0;
 
+      // FFT-base Fractional Delay
+      af::array X = af::fft(af_input, len);
+      X = ::plasma::fftshift(X, 0);
+      af::array f = (-samp_rate / 2.0) + ((af::seq(0, len - 1)) * (samp_rate / len));
+      af::array X_delay = X * af::exp(1.0 * af::Im * 2.0 * M_PI * f * (t_delay));
+      X_delay = ::plasma::ifftshift(X_delay, 0);
+      af::array x_delay = af::ifft(X_delay);
+
+      // Output Data
+      pmt::pmt_t vec = pmt::make_c32vector(len, gr_complex{0, 0});
+      gr_complex *out_ptr = pmt::c32vector_writable_elements(vec, len);
+      x_delay.host(reinterpret_cast<af::cfloat *>(out_ptr));
+
       // Phase adjustment variables
       std::vector<gr_complex> host(len);
       const double constant = 2.0 * M_PI * center_freq;
       const double Ts = 1.0 / samp_rate;
-      
+
       // Phase adjusting signal
       for (size_t n = 0; n < len; ++n)
       {

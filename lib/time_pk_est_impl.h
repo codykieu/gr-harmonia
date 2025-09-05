@@ -13,6 +13,12 @@
 #include <gnuradio/harmonia/pmt_constants.h>
 #include <plasma_dsp/fft.h>
 #include <arrayfire.h>
+#include <cmath>
+#include <algorithm>
+#include <array>
+#include <vector>
+#include <complex>
+#include <stdexcept>
 
 namespace gr
 {

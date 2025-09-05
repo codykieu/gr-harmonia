@@ -117,9 +117,6 @@ namespace gr
       alpha1 = pmt::to_double(pmt::dict_ref(msg, PMT_HARMONIA_SDR1, pmt::from_double(default_alpha)));
       alpha2 = pmt::to_double(pmt::dict_ref(msg, PMT_HARMONIA_SDR2, pmt::from_double(default_alpha)));
       alpha3 = pmt::to_double(pmt::dict_ref(msg, PMT_HARMONIA_SDR3, pmt::from_double(default_alpha)));
-      // alpha1 = 1.0;
-      // alpha2 = 1.0;
-      // alpha3 = 1.0;
       // std::cout << std::fixed << std::setprecision(12)
       // << "alpha1 = " << alpha1 << "\n"
       // << "alpha2 = " << alpha2 << "\n"
@@ -214,7 +211,7 @@ namespace gr
 
       // AF time and phase matrix
       af::array m_est = to_af_array(time_matrix);
-      af_print(m_est);
+      // af_print(m_est);
       af::array phase_est = to_af_array(phase_matrix);
       // af_print(phase_est);
       af::array phase_est_wrap = wrapToPi_af(phase_est);
@@ -223,16 +220,63 @@ namespace gr
       af::array TOF_est = (m_est + m_est.T()) / 2.0;
       af::array PHI_est = (m_est - m_est.T()) / 2.0;
       af::array R_est = TOF_est * 299792458.0;
-      af_print(R_est);
 
       // af_print(TOF_est);
       // af_print(PHI_est);
 
+      //   af::dim4 dims = TOF_est.dims();
+      //   std::vector<double> tof_host(dims.elements());
+      //   std::vector<double> phi_host(dims.elements());
+      //   std::vector<double> m_host(dims.elements());
+
+      //   TOF_est.as(f64).host(tof_host.data());
+      //   PHI_est.as(f64).host(phi_host.data());
+      //   m_est.as(f64).host(m_host.data());
+
+      //  std::cout << std::setprecision(15) << "m_est = \n";
+      //   for (int i = 0; i < dims[0]; ++i)
+      //   {
+      //     for (int j = 0; j < dims[1]; ++j)
+      //     {
+      //       std::cout << m_host[j * dims[0] + i] << " ";
+      //     }
+      //     std::cout << std::endl;
+      //   }
+
+      //   std::cout << std::setprecision(15) << "TOF_est = \n";
+      //   for (int i = 0; i < dims[0]; ++i)
+      //   {
+      //     for (int j = 0; j < dims[1]; ++j)
+      //     {
+      //       std::cout << tof_host[j * dims[0] + i] << " ";
+      //     }
+      //     std::cout << std::endl;
+      //   }
+
+      //   std::cout << std::setprecision(15) << "\nPHI_est = \n";
+      //   for (int i = 0; i < dims[0]; ++i)
+      //   {
+      //     for (int j = 0; j < dims[1]; ++j)
+      //     {
+      //       std::cout << phi_host[j * dims[0] + i] << " ";
+      //     }
+      //     std::cout << std::endl;
+      //   }
+
       // ================================ CLOCK BIAS ESTIMATION ==================================
       if (bias_status)
+      {
         cb_est = af::sum(PHI_est, 1) / num_platforms;
-      // af_print(cb_est);
+        af_print(cb_est);
 
+        af::array nrows = af::iota(af::dim4(num_platforms, 1), af::dim4(1, 1), u32);
+        af::array rowInd = af::tile(nrows, af::dim4(1, num_platforms));
+        af::array ncols = af::iota(af::dim4(1, num_platforms), af::dim4(1, 1), u32);
+        af::array colInd = af::tile(ncols, af::dim4(num_platforms, 1));
+        af::array mask = rowInd > colInd;
+        R_est_lower = R_est(mask);
+        af_print(R_est_lower);
+      }
       ///////////////////// PRINT /////////////////////////
       // std::vector<double> host_phi(3);
       // cb_est.host(host_phi.data());
@@ -356,26 +400,23 @@ namespace gr
         af::array rhs = af::matmul(At_Cinv, (y_err_d + gamma_wrap));
         af::array x_gamma = af::matmul(inv_mid, rhs);
         x_gamma_est = wrapToPi_af(x_gamma);
+        af_print(x_gamma_est);
       }
-      // af_print(x_gamma_est);
-
-      //////////////////////////////////////////////////////////////////////////////
-      // double r10 = R_est(1, 0).scalar<double>();
-      // double r20 = R_est(2, 0).scalar<double>();
-      // double r21 = R_est(2, 1).scalar<double>();
-      // std::vector<double> ranges = {r10, r20, r21};
-      // pmt::pmt_t pmt_ranges = pmt::init_f64vector(ranges.size(), ranges.data());
-      // meta = pmt::dict_add(meta, pmt::intern("my_range_estimates"), pmt_ranges);
-      //////////////////////////////////////////////////////////////////////////////
 
       // =================================== OUTPUT ESTIMATES ====================================
       if (bias_status)
       {
         std::vector<double> x_host(cb_est.elements());
         cb_est.host(x_host.data());
+        std::vector<double> R_host(R_est_lower.elements());
+        R_est_lower.host(R_host.data());
+
         meta = pmt::dict_add(meta, PMT_HARMONIA_CB_SDR1, pmt::from_double(x_host[0]));
         meta = pmt::dict_add(meta, PMT_HARMONIA_CB_SDR2, pmt::from_double(x_host[1]));
         meta = pmt::dict_add(meta, PMT_HARMONIA_CB_SDR3, pmt::from_double(x_host[2]));
+        meta = pmt::dict_add(meta, PMT_HARMONIA_R_SDR12, pmt::from_double(R_host[0]));
+        meta = pmt::dict_add(meta, PMT_HARMONIA_R_SDR13, pmt::from_double(R_host[1]));
+        meta = pmt::dict_add(meta, PMT_HARMONIA_R_SDR23, pmt::from_double(R_host[2]));
         meta = pmt::dict_add(meta, pmt::intern("clock_bias_enable"), pmt::PMT_T);
       }
 

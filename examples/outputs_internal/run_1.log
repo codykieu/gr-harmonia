@@ -1,0 +1,21 @@
+[run 1] starting...
+[INFO] [UHD] linux; GNU C++ version 14.2.0; Boost_108300; DPDK_23.11; UHD_4.7.0.HEAD-0-ga5ed1872
+[ERROR] [UHD] Device discovery error: send_to: Network is unreachable [system:101 at /usr/local/include/boost/asio/detail/reactive_socket_service.hpp:261 in function 'send_to']
+[ERROR] [USRP2] USRP2 Network discovery error send_to: Network is unreachable [system:101 at /usr/local/include/boost/asio/detail/reactive_socket_service.hpp:261 in function 'send_to']
+[ERROR] [X300] X300 Network discovery error send_to: Network is unreachable [system:101 at /usr/local/include/boost/asio/detail/reactive_socket_service.hpp:261 in function 'send_to']
+Traceback (most recent call last):
+  File "/home/cody/gr-harmonia/examples/./run_sync_test.py", line 67, in <module>
+    main()
+  File "/home/cody/gr-harmonia/examples/./run_sync_test.py", line 60, in main
+    run_once(run_id=args.child, duration=args.duration)
+  File "/home/cody/gr-harmonia/examples/./run_sync_test.py", line 17, in run_once
+    tb = time_peak_estimation_test()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/cody/gr-harmonia/examples/time_peak_estimation_test.py", line 117, in __init__
+    self.harmonia_usrp_radar_all_0 = harmonia.usrp_radar_all("addr=192.168.40.2,ignore-cal-file=0", "addr=192.168.60.2,ignore-cal-file=0", "addr=192.168.80.2,ignore-cal-file=0", samp_rate, samp_rate, samp_rate, center_freq, center_freq, center_freq, 15,
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: LookupError: KeyError: No devices found for ----->
+Device Address:
+    addr: 192.168.40.2
+    ignore-cal-file: 0
+
