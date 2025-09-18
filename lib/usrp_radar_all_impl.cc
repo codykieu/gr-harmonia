@@ -868,13 +868,13 @@ namespace gr
       std::vector<double> sdr3_rx_times = {sdr3_rx1, sdr3_rx2};
 
       // TX and RX Time Errors due to time resolution
-      std::vector<double> sdr1_tx_times_err = {-r1_tx1_err};
-      std::vector<double> sdr2_tx_times_err = {-r2_tx1_err};
-      std::vector<double> sdr3_tx_times_err = {-r3_tx1_err};
+      std::vector<double> sdr1_tx_times_err = {r1_tx1_err};
+      std::vector<double> sdr2_tx_times_err = {r2_tx1_err};
+      std::vector<double> sdr3_tx_times_err = {r3_tx1_err};
 
-      std::vector<double> sdr1_rx_times_err = {-r1_rx1_err, -r1_rx2_err};
-      std::vector<double> sdr2_rx_times_err = {-r2_rx1_err, -r2_rx2_err};
-      std::vector<double> sdr3_rx_times_err = {-r3_rx1_err, -r3_rx2_err};
+      std::vector<double> sdr1_rx_times_err = {r1_rx1_err, r1_rx2_err};
+      std::vector<double> sdr2_rx_times_err = {r2_rx1_err, r2_rx2_err};
+      std::vector<double> sdr3_rx_times_err = {r3_rx1_err, r3_rx2_err};
 
       // Threads
       sdr1_tx_thread = gr::thread::thread(
@@ -949,13 +949,13 @@ namespace gr
       std::vector<double> sdr3_rx_times = {sdr3_rx1, sdr3_rx2};
 
       // TX and RX Errors due to time resolution for FFT-based Fractionally Delaying the Signals
-      std::vector<double> sdr1_tx_times_err = {-r1_tx1_err};
-      std::vector<double> sdr2_tx_times_err = {-r2_tx1_err};
-      std::vector<double> sdr3_tx_times_err = {-r3_tx1_err};
+      std::vector<double> sdr1_tx_times_err = {r1_tx1_err};
+      std::vector<double> sdr2_tx_times_err = {r2_tx1_err};
+      std::vector<double> sdr3_tx_times_err = {r3_tx1_err};
 
-      std::vector<double> sdr1_rx_times_err = {-r1_rx1_err, -r1_rx2_err};
-      std::vector<double> sdr2_rx_times_err = {-r2_rx1_err, -r2_rx2_err};
-      std::vector<double> sdr3_rx_times_err = {-r3_rx1_err, -r3_rx2_err};
+      std::vector<double> sdr1_rx_times_err = {r1_rx1_err, r1_rx2_err};
+      std::vector<double> sdr2_rx_times_err = {r2_rx1_err, r2_rx2_err};
+      std::vector<double> sdr3_rx_times_err = {r3_rx1_err, r3_rx2_err};
 
       // Threads
       cd_sdr1_tx_thread = gr::thread::thread(
@@ -996,17 +996,18 @@ namespace gr
       setup_streamers(rx1_stream, rx2_stream, rx3_stream, tx1_stream, tx2_stream, tx3_stream);
 
       // TX and RX Times
-      double sdr1_tx1 = (start_delay * 3 + TDMA_time - wdelay_tx1 + cb1_est) * cd1_est;
-      double sdr2_rx1 = (start_delay * 3 + TDMA_time + wdelay_rx2 + cb2_est) * cd2_est;
-      double sdr3_rx1 = (start_delay * 3 + TDMA_time + wdelay_rx3 + cb3_est) * cd3_est;
 
-      double sdr2_tx1 = (start_delay * 3 + TDMA_time * 2 - wdelay_tx2 + cb2_est) * cd2_est;
-      double sdr1_rx1 = (start_delay * 3 + TDMA_time * 2 + wdelay_rx1 + cb1_est) * cd1_est;
-      double sdr3_rx2 = (start_delay * 3 + TDMA_time * 2 + wdelay_rx3 + cb3_est) * cd3_est;
+      double sdr1_tx1 = (start_delay * 3 + TDMA_time2 - wdelay_tx1 + cb1_est) * cd1_est;
+      double sdr2_rx1 = (start_delay * 3 + TDMA_time2 + wdelay_rx2 + cb2_est) * cd2_est;
+      double sdr3_rx1 = (start_delay * 3 + TDMA_time2 + wdelay_rx3 + cb3_est) * cd3_est;
 
-      double sdr3_tx1 = (start_delay * 3 + TDMA_time * 3 - wdelay_tx3 + cb3_est) * cd3_est;
-      double sdr1_rx2 = (start_delay * 3 + TDMA_time * 3 + wdelay_rx1 + cb1_est) * cd1_est;
-      double sdr2_rx2 = (start_delay * 3 + TDMA_time * 3 + wdelay_rx2 + cb2_est) * cd2_est;
+      double sdr2_tx1 = (start_delay * 3 + TDMA_time2 * 2 - wdelay_tx2 + cb2_est) * cd2_est;
+      double sdr1_rx1 = (start_delay * 3 + TDMA_time2 * 2 + wdelay_rx1 + cb1_est) * cd1_est;
+      double sdr3_rx2 = (start_delay * 3 + TDMA_time2 * 2 + wdelay_rx3 + cb3_est) * cd3_est;
+
+      double sdr3_tx1 = (start_delay * 3 + TDMA_time2 * 3 - wdelay_tx3 + cb3_est) * cd3_est;
+      double sdr1_rx2 = (start_delay * 3 + TDMA_time2 * 3 + wdelay_rx1 + cb1_est) * cd1_est;
+      double sdr2_rx2 = (start_delay * 3 + TDMA_time2 * 3 + wdelay_rx2 + cb2_est) * cd2_est;
 
       // Rounded Down nearest time resolution
       double resolution = 1.0 / sdr1_rate;
@@ -1032,13 +1033,13 @@ namespace gr
       std::vector<double> sdr3_rx_times = {sdr3_rx1, sdr3_rx2};
 
       // TX and RX Errors due to time resolution for FFT-based Fractionally Delaying the Signals
-      std::vector<double> sdr1_tx_times_err = {-r1_tx1_err};
-      std::vector<double> sdr2_tx_times_err = {-r2_tx1_err};
-      std::vector<double> sdr3_tx_times_err = {-r3_tx1_err};
+      std::vector<double> sdr1_tx_times_err = {r1_tx1_err};
+      std::vector<double> sdr2_tx_times_err = {r2_tx1_err};
+      std::vector<double> sdr3_tx_times_err = {r3_tx1_err};
 
-      std::vector<double> sdr1_rx_times_err = {-r1_rx1_err, -r1_rx2_err};
-      std::vector<double> sdr2_rx_times_err = {-r2_rx1_err, -r2_rx2_err};
-      std::vector<double> sdr3_rx_times_err = {-r3_rx1_err, -r3_rx2_err};
+      std::vector<double> sdr1_rx_times_err = {r1_rx1_err, r1_rx2_err};
+      std::vector<double> sdr2_rx_times_err = {r2_rx1_err, r2_rx2_err};
+      std::vector<double> sdr3_rx_times_err = {r3_rx1_err, r3_rx2_err};
 
       // Threads
       cb_sdr1_tx_thread = gr::thread::thread(
@@ -1079,8 +1080,16 @@ namespace gr
       setup_streamers(rx1_stream, rx2_stream, rx3_stream, tx1_stream, tx2_stream, tx3_stream);
 
       // TX and RX Times
-      double sdr1_rx1 = (start_delay * 4 + TDMA_time2 + wdelay_rx1 + cb1_est) * cd1_est;
-      double sdr2_tx1 = (start_delay * 4 + TDMA_time2 - wdelay_tx2 + cb2_est - R12_est / c) * cd2_est;
+      double sdr1_rx1 = (start_delay * 4 + wdelay_rx1 + cb1_est) * cd1_est;
+      double sdr2_tx1 = (start_delay * 4 - wdelay_tx2 + cb2_est) * cd2_est - R12_est / c;
+
+      // double sdr1_rx1 = (start_delay * 4 + wdelay_rx1 + cb1_est) * cd1_est;
+      // double sdr2_tx1 = (start_delay * 4 - wdelay_tx2 + cb2_est - R12_est / c) * cd2_est;
+
+      // std::cout << std::fixed << std::setprecision(12)
+      //           << "sdr2_tx1 = " << sdr2_tx1 << "\n"
+      //           << "sdr1_rx1 = " << sdr1_rx1 << "\n\n"
+      //           << std::endl;
 
       // Rounded Down nearest time resolution
       double resolution = 1.0 / sdr1_rate;
@@ -1092,8 +1101,8 @@ namespace gr
       std::vector<double> sdr2_tx_times = {sdr2_tx1};
 
       // TX and RX Errors due to time resolution for FFT-based Fractionally Delaying the Signals
-      std::vector<double> sdr1_rx_times_err = {-r1_rx1_err};
-      std::vector<double> sdr2_tx_times_err = {-r2_tx1_err};
+      std::vector<double> sdr1_rx_times_err = {r1_rx1_err};
+      std::vector<double> sdr2_tx_times_err = {r2_tx1_err};
 
       // Threads
       cp_sdr1_rx_thread = gr::thread::thread(
@@ -1116,9 +1125,19 @@ namespace gr
       setup_streamers(rx1_stream, rx2_stream, rx3_stream, tx1_stream, tx2_stream, tx3_stream);
 
       // TX and RX Times
-      double sdr1_rx1 = (start_delay * 5 + TDMA_time2 + wdelay_rx1 + cb1_est) * cd1_est;
-      double sdr2_tx1 = (start_delay * 5 + TDMA_time2 - wdelay_tx2 + cb2_est - R12_est / c) * cd2_est;
-      double sdr3_tx1 = (start_delay * 5 + TDMA_time2 - wdelay_tx3 + cb3_est - R13_est / c) * cd3_est;
+      double sdr1_rx1 = (start_delay * 4.05 + wdelay_rx1 + cb1_est) * cd1_est;
+      double sdr2_tx1 = (start_delay * 4.05 - wdelay_tx2 + cb2_est) * cd2_est - R12_est / c;
+      double sdr3_tx1 = (start_delay * 4.05 - wdelay_tx3 + cb3_est) * cd3_est - R13_est / c;
+
+      // double sdr1_rx1 = (start_delay * 4.05 + wdelay_rx1 + cb1_est) * cd1_est;
+      // double sdr2_tx1 = (start_delay * 4.05 - wdelay_tx2 + cb2_est - R12_est / c) * cd2_est;
+      // double sdr3_tx1 = (start_delay * 4.05 - wdelay_tx3 + cb3_est - R13_est / c) * cd3_est;
+
+      // std::cout << std::fixed << std::setprecision(12)
+      //           << "sdr2_tx1 = " << sdr2_tx1 << "\n"
+      //           << "sdr3_tx1 = " << sdr3_tx1 << "\n"
+      //           << "sdr1_rx1 = " << sdr1_rx1 << "\n\n"
+      //           << std::endl;
 
       // Rounded Down nearest time resolution
       double resolution = 1.0 / sdr1_rate;
@@ -1132,9 +1151,9 @@ namespace gr
       std::vector<double> sdr3_tx_times = {sdr3_tx1};
 
       // TX and RX Errors due to time resolution for FFT-based Fractionally Delaying the Signals
-      std::vector<double> sdr1_rx_times_err = {-r1_rx1_err};
-      std::vector<double> sdr2_tx_times_err = {-r2_tx1_err};
-      std::vector<double> sdr3_tx_times_err = {-r3_tx1_err};
+      std::vector<double> sdr1_rx_times_err = {r1_rx1_err};
+      std::vector<double> sdr2_tx_times_err = {r2_tx1_err};
+      std::vector<double> sdr3_tx_times_err = {r3_tx1_err};
 
       // Threads
       cp_sdr1_rx_thread = gr::thread::thread(
@@ -1161,8 +1180,16 @@ namespace gr
       setup_streamers(rx1_stream, rx2_stream, rx3_stream, tx1_stream, tx2_stream, tx3_stream);
 
       // TX and RX Times
-      double sdr1_rx1 = (start_delay * 6 + TDMA_time2 + wdelay_rx1 + cb1_est) * cd1_est;
-      double sdr3_tx1 = (start_delay * 6 + TDMA_time2 - wdelay_tx3 + cb3_est - R13_est / c) * cd3_est;
+      double sdr1_rx1 = (start_delay * 4.1 + wdelay_rx1 + cb1_est) * cd1_est;
+      double sdr3_tx1 = (start_delay * 4.1 - wdelay_tx3 + cb3_est) * cd3_est - R13_est / c;
+
+      // double sdr1_rx1 = (start_delay * 4.1 + wdelay_rx1 + cb1_est) * cd1_est;
+      // double sdr3_tx1 = (start_delay * 4.1 - wdelay_tx3 + cb3_est - R13_est / c) * cd3_est;
+
+      // std::cout << std::fixed << std::setprecision(12)
+      //           << "sdr3_tx1 = " << sdr3_tx1 << "\n"
+      //           << "sdr1_rx1 = " << sdr1_rx1 << "\n\n"
+      //           << std::endl;
 
       // Rounded Down nearest time resolution
       double resolution = 1.0 / sdr1_rate;
@@ -1174,8 +1201,8 @@ namespace gr
       std::vector<double> sdr3_tx_times = {sdr3_tx1};
 
       // TX and RX Errors due to time resolution for FFT-based Fractionally Delaying the Signals
-      std::vector<double> sdr1_rx_times_err = {-r1_rx1_err};
-      std::vector<double> sdr3_tx_times_err = {-r3_tx1_err};
+      std::vector<double> sdr1_rx_times_err = {r1_rx1_err};
+      std::vector<double> sdr3_tx_times_err = {r3_tx1_err};
 
       // Threads
       cp_sdr1_rx_thread = gr::thread::thread(
@@ -1296,7 +1323,7 @@ namespace gr
       uhd::rx_metadata_t md;
 
       // Total samples to receive based on capture time
-      if (carrier_phase_enabled)
+      if (carrier_phase_enabled || clock_bias_enabled)
         total_samps_to_rx = cap_length2 * sdr1_rate;
       else
         total_samps_to_rx = cap_length * sdr1_rate;

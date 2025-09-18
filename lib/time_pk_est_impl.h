@@ -31,7 +31,6 @@ namespace gr
       // Parameters
       double samp_rate;
       double bandwidth;
-      double pulse_width;
       double wait_time;
       double sample_delay;
       double NLLS_iter;
@@ -39,7 +38,8 @@ namespace gr
       double wire_delay;
       double wire_delay_tx;
       double t_delay;
-      
+      bool enable_out;
+
       // Variables
       af::array d_match_filt;
       af::Backend d_backend;
@@ -53,6 +53,8 @@ namespace gr
       std::vector<double> d_sdr2_phase_est;
       std::vector<double> d_sdr3_phase_est;
       int d_rx_count;
+      double alpha1, alpha2, alpha3, alpha_hat;
+
 
       // Message Ports
       pmt::pmt_t d_tx_port;
@@ -70,9 +72,10 @@ namespace gr
 
       void handle_tx_msg(pmt::pmt_t);
       void handle_rx_msg(pmt::pmt_t);
+      void handle_clock_drift(pmt::pmt_t msg);
 
     public:
-      time_pk_est_impl(double samp_rate, double bandwidth, double pulse_width, double wait_time, double sample_delay, double NLLS_iter, int sdr_id);
+      time_pk_est_impl(double samp_rate, double bandwidth, double wait_time, double sample_delay, double NLLS_iter, int sdr_id, bool enable_out);
       ~time_pk_est_impl();
 
       void set_msg_queue_depth(size_t) override;

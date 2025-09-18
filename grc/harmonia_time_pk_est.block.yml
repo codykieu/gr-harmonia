@@ -11,10 +11,6 @@ parameters:
   label: Bandwidth
   dtype: float
   default: "bw"
-- id: pulse_width
-  label: Pulse Width
-  dtype: float
-  default: "Tp"
 - id: wait_time
   label: Wait Time
   dtype: float
@@ -36,10 +32,18 @@ parameters:
   dtype: enum
   options: [harmonia.Device.DEFAULT, harmonia.Device.CPU, harmonia.Device.CUDA, harmonia.Device.OPENCL]
   option_labels: [Default, CPU, Cuda, OpenCL]
+  hide: part
 - id: depth
   label: Message Queue Depth
   dtype: int
   default: 1
+  hide: part
+- id: enable_out
+  label: Enable "out" Message Port
+  dtype: bool
+  options: [True, False]
+  option_labels: ['Enabled', 'Disabled']
+  default: True
   hide: part
 
 inputs:
@@ -47,17 +51,20 @@ inputs:
   domain: message
 - id: rx
   domain: message
+- id: cd_in   
+  domain: message
 
 outputs:
 - id: tp_out
   domain: message
 - id: out
   domain: message
+  hide: ${ not enable_out }
 
 templates:
   imports: from gnuradio import harmonia
   make: |-
-    harmonia.time_pk_est(${samp_rate}, ${bandwidth}, ${pulse_width}, ${wait_time}, ${sample_delay}, ${NLLS_iter}, ${sdr_id})
+    harmonia.time_pk_est(${samp_rate}, ${bandwidth}, ${wait_time}, ${sample_delay}, ${NLLS_iter}, ${sdr_id}, ${enable_out})
     self.${id}.set_msg_queue_depth(${depth})
     self.${id}.set_backend(${backend})
 

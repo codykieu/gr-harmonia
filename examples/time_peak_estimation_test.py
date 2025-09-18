@@ -62,7 +62,7 @@ class time_peak_estimation_test(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.tdma_time2 = tdma_time2 = 50e-6
+        self.tdma_time2 = tdma_time2 = 1000e-6
         self.tdma_time = tdma_time = 15e-3
         self.samp_rate = samp_rate = 100e6
         self.run_id = run_id = 0
@@ -71,11 +71,12 @@ class time_peak_estimation_test(gr.top_block, Qt.QWidget):
         self.bw = bw = 25e6
         self.baseband_freq = baseband_freq = 10e6
         self.Zpad = Zpad = 400
-        self.Tw2 = Tw2 = 10e-6
+        self.Tw2 = Tw2 = 200e-6
         self.Tw = Tw = 4e-3
+        self.Tp_st = Tp_st = 1e-3
         self.Tp2 = Tp2 = 50e-6
-        self.Tp = Tp = 1e-3
-        self.Tc2 = Tc2 = 100e-6
+        self.Tp = Tp = 0.05e-3
+        self.Tc2 = Tc2 = 500e-6
         self.Tc = Tc = 9e-3
         self.NLLS_iter = NLLS_iter = 6
         self.FE_delay = FE_delay = 81.715
@@ -84,15 +85,9 @@ class time_peak_estimation_test(gr.top_block, Qt.QWidget):
         # Blocks
         ##################################################
 
-        self.plasma_pdu_file_sink_0_0_3_0_0_0_2 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/pulse2_comp1', '/home/cody/gr-MATLAB/TDMA_meta')
         self.plasma_pdu_file_sink_0_0_3_0_0_0_1_1_1 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/final_rx_comp3', '/home/cody/gr-MATLAB/TDMA_meta')
         self.plasma_pdu_file_sink_0_0_3_0_0_0_1_1_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/final_rx_comp2', '/home/cody/gr-MATLAB/TDMA_meta')
         self.plasma_pdu_file_sink_0_0_3_0_0_0_1_1 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/final_rx_comp1', '/home/cody/gr-MATLAB/TDMA_meta')
-        self.plasma_pdu_file_sink_0_0_3_0_0_0_1_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/pulse2_comp3', '/home/cody/gr-MATLAB/TDMA_meta')
-        self.plasma_pdu_file_sink_0_0_3_0_0_0_1 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/pulse_comp3', '/home/cody/gr-MATLAB/TDMA_meta')
-        self.plasma_pdu_file_sink_0_0_3_0_0_0_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/pulse2_comp2', '/home/cody/gr-MATLAB/TDMA_meta')
-        self.plasma_pdu_file_sink_0_0_3_0_0_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/pulse_comp2', '/home/cody/gr-MATLAB/TDMA_meta')
-        self.plasma_pdu_file_sink_0_0_3_0_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/pulse_comp1', '/home/cody/gr-MATLAB/TDMA_meta')
         self.plasma_pdu_file_sink_0_0_3_0_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/cb_lfm3', '/home/cody/gr-MATLAB/TDMA_meta')
         self.plasma_pdu_file_sink_0_0_3_0 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/cd_lfm3', '/home/cody/gr-MATLAB/meta_test3')
         self.plasma_pdu_file_sink_0_0_3 = plasma.pdu_file_sink(gr.sizeof_gr_complex,'/home/cody/gr-MATLAB/st3', '/home/cody/gr-MATLAB/TDMA_meta')
@@ -117,37 +112,37 @@ class time_peak_estimation_test(gr.top_block, Qt.QWidget):
         self.harmonia_usrp_radar_all_0 = harmonia.usrp_radar_all("addr=192.168.40.2,ignore-cal-file=0", "addr=192.168.60.2,ignore-cal-file=0", "addr=192.168.80.2,ignore-cal-file=0", samp_rate, samp_rate, samp_rate, center_freq, center_freq, center_freq, 15,
          15, 15, 1.5, Tc, Tc2, Tw, Tw2, tdma_time, tdma_time2, False, False, False)
         self.harmonia_usrp_radar_all_0.set_metadata_keys('core:tx_freq', 'core:rx_freq', 'core:sample_start', 'radar:prf')
-        self.harmonia_time_pk_est_0_2 = harmonia.time_pk_est(samp_rate, bw, Tp2, Tw2, FE_delay, NLLS_iter, 1)
+        self.harmonia_time_pk_est_0_2 = harmonia.time_pk_est(samp_rate, bw, Tw2, FE_delay, NLLS_iter, 1, False)
         self.harmonia_time_pk_est_0_2.set_msg_queue_depth(1)
         self.harmonia_time_pk_est_0_2.set_backend(harmonia.Device.DEFAULT)
-        self.harmonia_time_pk_est_0_1_0 = harmonia.time_pk_est(samp_rate, bw, Tp2, Tw2, FE_delay, NLLS_iter, 3)
+        self.harmonia_time_pk_est_0_1_0 = harmonia.time_pk_est(samp_rate, bw, Tw2, FE_delay, NLLS_iter, 3, False)
         self.harmonia_time_pk_est_0_1_0.set_msg_queue_depth(1)
         self.harmonia_time_pk_est_0_1_0.set_backend(harmonia.Device.DEFAULT)
-        self.harmonia_time_pk_est_0_1 = harmonia.time_pk_est(samp_rate, bw, Tp, Tw, FE_delay, NLLS_iter, 3)
+        self.harmonia_time_pk_est_0_1 = harmonia.time_pk_est(samp_rate, bw, Tw, FE_delay, NLLS_iter, 3, False)
         self.harmonia_time_pk_est_0_1.set_msg_queue_depth(1)
         self.harmonia_time_pk_est_0_1.set_backend(harmonia.Device.DEFAULT)
-        self.harmonia_time_pk_est_0_0_0 = harmonia.time_pk_est(samp_rate, bw, Tp2, Tw2, FE_delay, NLLS_iter, 2)
+        self.harmonia_time_pk_est_0_0_0 = harmonia.time_pk_est(samp_rate, bw, Tw2, FE_delay, NLLS_iter, 2, False)
         self.harmonia_time_pk_est_0_0_0.set_msg_queue_depth(1)
         self.harmonia_time_pk_est_0_0_0.set_backend(harmonia.Device.DEFAULT)
-        self.harmonia_time_pk_est_0_0 = harmonia.time_pk_est(samp_rate, bw, Tp, Tw, FE_delay , NLLS_iter, 2)
+        self.harmonia_time_pk_est_0_0 = harmonia.time_pk_est(samp_rate, bw, Tw, FE_delay , NLLS_iter, 2, False)
         self.harmonia_time_pk_est_0_0.set_msg_queue_depth(1)
         self.harmonia_time_pk_est_0_0.set_backend(harmonia.Device.DEFAULT)
-        self.harmonia_time_pk_est_0 = harmonia.time_pk_est(samp_rate, bw, Tp, Tw, FE_delay , NLLS_iter, 1)
+        self.harmonia_time_pk_est_0 = harmonia.time_pk_est(samp_rate, bw, Tw, FE_delay , NLLS_iter, 1, False)
         self.harmonia_time_pk_est_0.set_msg_queue_depth(1)
         self.harmonia_time_pk_est_0.set_backend(harmonia.Device.DEFAULT)
-        self.harmonia_single_tone_src_0_1 = harmonia.single_tone_src(baseband_freq, center_freq, 0, Tp, samp_rate, prf, 2)
+        self.harmonia_single_tone_src_0_1 = harmonia.single_tone_src(baseband_freq, center_freq, 0, Tp_st, samp_rate, prf, 2)
         self.harmonia_single_tone_src_0_1.init_meta_dict('radar:frequency', 'radar:phase', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
-        self.harmonia_single_tone_src_0_0 = harmonia.single_tone_src(baseband_freq, center_freq, 0, Tp, samp_rate, prf, 1)
+        self.harmonia_single_tone_src_0_0 = harmonia.single_tone_src(baseband_freq, center_freq, 0, Tp_st, samp_rate, prf, 1)
         self.harmonia_single_tone_src_0_0.init_meta_dict('radar:frequency', 'radar:phase', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
-        self.harmonia_single_tone_src_0 = harmonia.single_tone_src(baseband_freq, center_freq, 0, Tp, samp_rate, prf, 3)
+        self.harmonia_single_tone_src_0 = harmonia.single_tone_src(baseband_freq, center_freq, 0, Tp_st, samp_rate, prf, 3)
         self.harmonia_single_tone_src_0.init_meta_dict('radar:frequency', 'radar:phase', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
-        self.harmonia_frequency_pk_est_0_1 = harmonia.frequency_pk_est(12, Tp, Tc, samp_rate, 15, 2, False)
+        self.harmonia_frequency_pk_est_0_1 = harmonia.frequency_pk_est(12, Tp, Tc, samp_rate, NLLS_iter, 2, False)
         self.harmonia_frequency_pk_est_0_1.set_msg_queue_depth(1)
         self.harmonia_frequency_pk_est_0_1.set_backend(harmonia.Device.CPU)
-        self.harmonia_frequency_pk_est_0_0 = harmonia.frequency_pk_est(12, Tp, Tc, samp_rate, 15, 3, False)
+        self.harmonia_frequency_pk_est_0_0 = harmonia.frequency_pk_est(12, Tp, Tc, samp_rate, NLLS_iter, 3, False)
         self.harmonia_frequency_pk_est_0_0.set_msg_queue_depth(1)
         self.harmonia_frequency_pk_est_0_0.set_backend(harmonia.Device.CPU)
-        self.harmonia_frequency_pk_est_0 = harmonia.frequency_pk_est(12, Tp, Tc, samp_rate, 15, 1, False)
+        self.harmonia_frequency_pk_est_0 = harmonia.frequency_pk_est(12, Tp, Tc, samp_rate, NLLS_iter, 1, False)
         self.harmonia_frequency_pk_est_0.set_msg_queue_depth(1)
         self.harmonia_frequency_pk_est_0.set_backend(harmonia.Device.CPU)
         self.harmonia_compensation_0_2_0 = harmonia.compensation(center_freq, samp_rate, 1)
@@ -162,6 +157,10 @@ class time_peak_estimation_test(gr.top_block, Qt.QWidget):
         self.harmonia_clockbias_phase_est_0_0 = harmonia.clockbias_phase_est(3, center_freq, samp_rate, Tp2, 0, False, True)
         self.harmonia_clockbias_phase_est_0 = harmonia.clockbias_phase_est(3, center_freq, samp_rate, Tp, 0, True, False)
         self.harmonia_clock_drift_est_0 = harmonia.clock_drift_est(3, baseband_freq, center_freq, samp_rate, Tp, 0)
+        self.harmonia_LFM_src_0_2_0 = harmonia.LFM_src(bw, -bw/2, center_freq, Tp2, Tp2, samp_rate, 0, Zpad, 1)
+        self.harmonia_LFM_src_0_2_0.init_meta_dict('radar:bandwidth', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
+        self.harmonia_LFM_src_0_2 = harmonia.LFM_src(bw, -bw/2, center_freq, Tp, Tp2, samp_rate, 0, Zpad, 1)
+        self.harmonia_LFM_src_0_2.init_meta_dict('radar:bandwidth', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
         self.harmonia_LFM_src_0_1 = harmonia.LFM_src(bw, -bw/2, center_freq, Tp, Tp2, samp_rate, 0, Zpad, 3)
         self.harmonia_LFM_src_0_1.init_meta_dict('radar:bandwidth', 'radar:duration', 'core:sample_rate', 'core:label', 'radar:prf')
         self.harmonia_LFM_src_0_0 = harmonia.LFM_src(bw, -bw/2, center_freq, Tp, Tp2, samp_rate, 0, Zpad, 2)
@@ -173,18 +172,18 @@ class time_peak_estimation_test(gr.top_block, Qt.QWidget):
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.harmonia_LFM_src_0, 'out'), (self.harmonia_time_pk_est_0, 'tx'))
-        self.msg_connect((self.harmonia_LFM_src_0, 'out'), (self.harmonia_time_pk_est_0_2, 'tx'))
         self.msg_connect((self.harmonia_LFM_src_0, 'out'), (self.harmonia_usrp_radar_all_0, 'LFM_in'))
         self.msg_connect((self.harmonia_LFM_src_0, 'out'), (self.plasma_pdu_file_sink_0_0_0, 'in'))
-        self.msg_connect((self.harmonia_LFM_src_0_0, 'out'), (self.harmonia_time_pk_est_0_0, 'tx'))
-        self.msg_connect((self.harmonia_LFM_src_0_0, 'out'), (self.harmonia_time_pk_est_0_0_0, 'tx'))
         self.msg_connect((self.harmonia_LFM_src_0_0, 'out'), (self.harmonia_usrp_radar_all_0, 'LFM_in2'))
         self.msg_connect((self.harmonia_LFM_src_0_0, 'out'), (self.plasma_pdu_file_sink_0_0_0_1, 'in'))
-        self.msg_connect((self.harmonia_LFM_src_0_1, 'out'), (self.harmonia_time_pk_est_0_1, 'tx'))
-        self.msg_connect((self.harmonia_LFM_src_0_1, 'out'), (self.harmonia_time_pk_est_0_1_0, 'tx'))
         self.msg_connect((self.harmonia_LFM_src_0_1, 'out'), (self.harmonia_usrp_radar_all_0, 'LFM_in3'))
         self.msg_connect((self.harmonia_LFM_src_0_1, 'out'), (self.plasma_pdu_file_sink_0_0_0_2, 'in'))
+        self.msg_connect((self.harmonia_LFM_src_0_2, 'out'), (self.harmonia_time_pk_est_0, 'tx'))
+        self.msg_connect((self.harmonia_LFM_src_0_2, 'out'), (self.harmonia_time_pk_est_0_0, 'tx'))
+        self.msg_connect((self.harmonia_LFM_src_0_2, 'out'), (self.harmonia_time_pk_est_0_1, 'tx'))
+        self.msg_connect((self.harmonia_LFM_src_0_2_0, 'out'), (self.harmonia_time_pk_est_0_0_0, 'tx'))
+        self.msg_connect((self.harmonia_LFM_src_0_2_0, 'out'), (self.harmonia_time_pk_est_0_1_0, 'tx'))
+        self.msg_connect((self.harmonia_LFM_src_0_2_0, 'out'), (self.harmonia_time_pk_est_0_2, 'tx'))
         self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_LFM_src_0, 'cd_in'))
         self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_LFM_src_0_0, 'cd_in'))
         self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_LFM_src_0_1, 'cd_in'))
@@ -199,6 +198,12 @@ class time_peak_estimation_test(gr.top_block, Qt.QWidget):
         self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_compensation_0_1_0_0, 'cd_in'))
         self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_compensation_0_2, 'cd_in'))
         self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_compensation_0_2_0, 'cd_in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_time_pk_est_0, 'cd_in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_time_pk_est_0_0, 'cd_in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_time_pk_est_0_0_0, 'cd_in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_time_pk_est_0_1, 'cd_in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_time_pk_est_0_1_0, 'cd_in'))
+        self.msg_connect((self.harmonia_clock_drift_est_0, 'out'), (self.harmonia_time_pk_est_0_2, 'cd_in'))
         self.msg_connect((self.harmonia_clockbias_phase_est_0, 'out'), (self.harmonia_LFM_src_0, 'cb_in'))
         self.msg_connect((self.harmonia_clockbias_phase_est_0, 'out'), (self.harmonia_LFM_src_0_0, 'cb_in'))
         self.msg_connect((self.harmonia_clockbias_phase_est_0, 'out'), (self.harmonia_LFM_src_0_1, 'cb_in'))
@@ -236,17 +241,11 @@ class time_peak_estimation_test(gr.top_block, Qt.QWidget):
         self.msg_connect((self.harmonia_single_tone_src_0_0, 'out'), (self.harmonia_usrp_radar_all_0, 'in'))
         self.msg_connect((self.harmonia_single_tone_src_0_1, 'out'), (self.harmonia_usrp_radar_all_0, 'in2'))
         self.msg_connect((self.harmonia_time_pk_est_0, 'tp_out'), (self.harmonia_clockbias_phase_est_0, 'in'))
-        self.msg_connect((self.harmonia_time_pk_est_0, 'out'), (self.plasma_pdu_file_sink_0_0_3_0_0_0, 'in'))
         self.msg_connect((self.harmonia_time_pk_est_0_0, 'tp_out'), (self.harmonia_clockbias_phase_est_0, 'in2'))
-        self.msg_connect((self.harmonia_time_pk_est_0_0, 'out'), (self.plasma_pdu_file_sink_0_0_3_0_0_0_0, 'in'))
         self.msg_connect((self.harmonia_time_pk_est_0_0_0, 'tp_out'), (self.harmonia_clockbias_phase_est_0_0, 'in2'))
-        self.msg_connect((self.harmonia_time_pk_est_0_0_0, 'out'), (self.plasma_pdu_file_sink_0_0_3_0_0_0_0_0, 'in'))
         self.msg_connect((self.harmonia_time_pk_est_0_1, 'tp_out'), (self.harmonia_clockbias_phase_est_0, 'in3'))
-        self.msg_connect((self.harmonia_time_pk_est_0_1, 'out'), (self.plasma_pdu_file_sink_0_0_3_0_0_0_1, 'in'))
         self.msg_connect((self.harmonia_time_pk_est_0_1_0, 'tp_out'), (self.harmonia_clockbias_phase_est_0_0, 'in3'))
-        self.msg_connect((self.harmonia_time_pk_est_0_1_0, 'out'), (self.plasma_pdu_file_sink_0_0_3_0_0_0_1_0, 'in'))
         self.msg_connect((self.harmonia_time_pk_est_0_2, 'tp_out'), (self.harmonia_clockbias_phase_est_0_0, 'in'))
-        self.msg_connect((self.harmonia_time_pk_est_0_2, 'out'), (self.plasma_pdu_file_sink_0_0_3_0_0_0_2, 'in'))
         self.msg_connect((self.harmonia_usrp_radar_all_0, 'cd_out'), (self.harmonia_compensation_0, 'in'))
         self.msg_connect((self.harmonia_usrp_radar_all_0, 'cd_out2'), (self.harmonia_compensation_0_0, 'in'))
         self.msg_connect((self.harmonia_usrp_radar_all_0, 'cb_out2'), (self.harmonia_compensation_0_0_0, 'in'))
@@ -346,6 +345,12 @@ class time_peak_estimation_test(gr.top_block, Qt.QWidget):
 
     def set_Tw(self, Tw):
         self.Tw = Tw
+
+    def get_Tp_st(self):
+        return self.Tp_st
+
+    def set_Tp_st(self, Tp_st):
+        self.Tp_st = Tp_st
 
     def get_Tp2(self):
         return self.Tp2

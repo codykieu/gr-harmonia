@@ -200,8 +200,8 @@ namespace gr
         std::cout << std::fixed << std::setprecision(13) << val << std::endl;
 
       // Publish results once
-      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR1, pmt::from_double(1.0));
-      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR2, pmt::from_double(1.0));
+      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR1, pmt::from_double(1.00000));
+      meta = pmt::dict_add(meta, PMT_HARMONIA_SDR2, pmt::from_double(1.0000));
       meta = pmt::dict_add(meta, PMT_HARMONIA_SDR3, pmt::from_double(1.0000));
       // meta = pmt::dict_add(meta, PMT_HARMONIA_SDR1, pmt::from_double(x_host[0]));
       // meta = pmt::dict_add(meta, PMT_HARMONIA_SDR2, pmt::from_double(x_host[1]));

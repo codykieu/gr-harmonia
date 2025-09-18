@@ -34,25 +34,25 @@ namespace gr
       // LFM Phase
       af::array phase =
           af::Im * 2 * M_PI *
-          (start_freq * ((t) / alpha_hat) + bandwidth / (2 * pulse_width) * af::pow(((t) / alpha_hat), 2));
+          (start_freq * ((t) / alpha_hat) + bandwidth / (2.0 * pulse_width) * af::pow(((t) / alpha_hat), 2));
 
       // Clock Drift Phase Correction
-      af::array cd_correction = af::Im * (2 * M_PI * center_freq * ((1 / alpha_hat) - 1) * t);
+      af::array cd_correction = af::Im * (2.0 * M_PI * center_freq * ((1 / alpha_hat) - 1) * t);
 
       // Clock Bias Phase Correction
-      af::cdouble cb_scalar(0.0, 2 * M_PI * center_freq * phi_hat);
+      af::cdouble cb_scalar(0.0, -2.0 * M_PI * center_freq * phi_hat);
       af::array cb_correction = af::constant(cb_scalar, 1, 1);
 
       // Range Phase Correction
-      af::cdouble range_scalar(0.0, 2 * M_PI * center_freq * R_hat/c);
+      af::cdouble range_scalar(0.0, 2.0 * M_PI * center_freq * R_hat/c);
       af::array range_correction = af::constant(range_scalar, 1, 1);
 
       // Carrier Phase Correction
-      af::cdouble phase_scalar(0.0, gamma_hat);
+      af::cdouble phase_scalar(0.0, -gamma_hat);
       af::array phase_correction = af::constant(phase_scalar, 1, 1);
 
       // Create LFM
-      af::array x = af::exp(phase + cd_correction - cb_correction - phase_correction + range_correction);
+      af::array x = af::exp(phase + cd_correction + cb_correction + phase_correction + range_correction);
 
       // Zero-pad to PRF
       if (prf > 0)

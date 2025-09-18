@@ -155,6 +155,8 @@ namespace gr
       else
         phi_hat = 0.0;
 
+      // GR_LOG_INFO(d_logger, "SDR: " + std::to_string(sdr_id) + "Clock Drift: " + std::to_string(alpha_hat) + "Clock Bias: " + std::to_string(phi_hat));
+
       // Update Carrier Phase Value
       if (gamma_ready)
       {
@@ -185,7 +187,7 @@ namespace gr
       for (size_t n = 0; n < len; ++n)
       {
         double tau = n * Ts;
-        double phase = constant * ((alpha_hat - 1.0) * tau + phi_hat) + gamma_hat;
+        double phase = constant * ((alpha_hat - 1.0) * tau/alpha_hat + phi_hat) + gamma_hat;
         std::complex<float> phcorr = std::exp(std::complex<float>(0.0, float(phase)));
         host[n] = out_ptr[n] * phcorr;
       }

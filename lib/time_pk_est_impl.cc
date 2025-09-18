@@ -18,19 +18,19 @@ namespace gr
 
     time_pk_est::sptr time_pk_est::make(double samp_rate,
                                         double bandwidth,
-                                        double pulse_width,
                                         double wait_time,
                                         double sample_delay,
                                         double NLLS_iter,
-                                        int sdr_id)
+                                        int sdr_id,
+                                        bool enable_out)
     {
       return gnuradio::make_block_sptr<time_pk_est_impl>(samp_rate,
                                                          bandwidth,
-                                                         pulse_width,
                                                          wait_time,
                                                          sample_delay,
                                                          NLLS_iter,
-                                                         sdr_id);
+                                                         sdr_id,
+                                                         enable_out);
     }
 
     /*
@@ -38,21 +38,21 @@ namespace gr
      */
     time_pk_est_impl::time_pk_est_impl(double samp_rate,
                                        double bandwidth,
-                                       double pulse_width,
                                        double wait_time,
                                        double sample_delay,
                                        double NLLS_iter,
-                                       int sdr_id)
+                                       int sdr_id,
+                                       bool enable_out)
         : gr::block("time_pk_est",
                     gr::io_signature::make(0, 0, 0),
                     gr::io_signature::make(0, 0, 0)),
           samp_rate(samp_rate),
           bandwidth(bandwidth),
-          pulse_width(pulse_width),
           wait_time(wait_time),
           sample_delay(sample_delay),
           NLLS_iter(NLLS_iter),
           sdr_id(sdr_id),
+          enable_out(enable_out),
           d_rx_count(0)
     {
       d_data = pmt::make_c32vector(0, 0);
@@ -62,16 +62,23 @@ namespace gr
       d_tx_port = PMT_HARMONIA_TX;
       d_rx_port = PMT_HARMONIA_RX;
       // Output Ports
-      d_out_port = PMT_HARMONIA_OUT;
       d_tp_out_port = PMT_HARMONIA_TP_OUT;
       message_port_register_in(d_tx_port);
       message_port_register_in(d_rx_port);
+      message_port_register_in(PMT_HARMONIA_CD_IN);
+
       message_port_register_out(d_tp_out_port);
-      message_port_register_out(d_out_port);
+      if (enable_out)
+      {
+        d_out_port = PMT_HARMONIA_OUT;
+        message_port_register_out(d_out_port);
+      }
       set_msg_handler(d_tx_port, [this](pmt::pmt_t msg)
                       { handle_tx_msg(msg); });
       set_msg_handler(d_rx_port, [this](pmt::pmt_t msg)
                       { handle_rx_msg(msg); });
+      set_msg_handler(PMT_HARMONIA_CD_IN, [this](pmt::pmt_t msg)
+                      { handle_clock_drift(msg); });
     }
 
     /*
@@ -85,7 +92,25 @@ namespace gr
       return af::select(x == 0.0, 1.0, af::sin(M_PI * x) / (M_PI * x));
     }
 
-    
+    void time_pk_est_impl::handle_clock_drift(pmt::pmt_t msg)
+    {
+      // Validate message is a PDU
+      if (!pmt::is_pair(msg))
+      {
+        GR_LOG_ERROR(d_logger, "Expected message to be a PDU");
+        return;
+      }
+
+      double default_alpha = 1.0;
+      alpha1 = pmt::to_double(pmt::dict_ref(msg, PMT_HARMONIA_SDR1, pmt::from_double(default_alpha)));
+      alpha2 = pmt::to_double(pmt::dict_ref(msg, PMT_HARMONIA_SDR2, pmt::from_double(default_alpha)));
+      alpha3 = pmt::to_double(pmt::dict_ref(msg, PMT_HARMONIA_SDR3, pmt::from_double(default_alpha)));
+      // std::cout << std::fixed << std::setprecision(12)
+      // << "alpha1 = " << alpha1 << "\n"
+      // << "alpha2 = " << alpha2 << "\n"
+      // << "alpha3 = " << alpha3 << std::endl;
+    }
+
     void time_pk_est_impl::handle_tx_msg(pmt::pmt_t msg)
     {
       pmt::pmt_t samples;
@@ -152,6 +177,7 @@ namespace gr
           wire_delay = 1.4e-9;
         else
           wire_delay = 1.4e-9;
+        alpha_hat = alpha1;
         break;
       case 2:
         sdr_pmt = PMT_HARMONIA_SDR2;
@@ -159,6 +185,7 @@ namespace gr
           wire_delay = 1.4e-9;
         else
           wire_delay = 1.4e-9;
+        alpha_hat = alpha2;
         break;
       case 3:
         sdr_pmt = PMT_HARMONIA_SDR3;
@@ -166,6 +193,7 @@ namespace gr
           wire_delay = 1.4e-9;
         else
           wire_delay = 1.4e-9;
+        alpha_hat = alpha3;
         break;
       }
 
@@ -207,7 +235,11 @@ namespace gr
       size_t out_io = 0;
       gr_complex *out = pmt::c32vector_writable_elements(d_data, out_io);
       mf_resp.host(reinterpret_cast<af::cfloat *>(out));
-      message_port_pub(d_out_port, pmt::cons(d_meta, d_data));
+
+      if (enable_out)
+      {
+        message_port_pub(d_out_port, pmt::cons(d_meta, d_data));
+      }
 
       // Output max and index of data
       double max_val = 0.0;
@@ -221,10 +253,10 @@ namespace gr
       // std::cout << "Phase: " << p_est << std::endl;
 
       // Generate time axis
-      af::array t = (af::seq(0, nconv - 1)) * 1.0 / samp_rate;
+      af::array t = ((af::seq(0, nconv - 1)) * 1.0 / samp_rate)/alpha_hat;
       t = t.as(f64);
 
-      af::array t_pk = t(max_idx) - (wait_time) - (sample_delay / samp_rate) - wire_delay;
+      af::array t_pk = t(max_idx) - (wait_time) - (sample_delay / samp_rate);
       t_pk = t_pk.as(f64);
       // af_print(t_pk);
       // float t_pk_val = t_pk.scalar<float>();
@@ -303,7 +335,6 @@ namespace gr
       // af_print(t_est_arr);
       // Extract scalar value from ArrayFire array
       t_est_arr.host(&t_est);
-
 
       if (d_rx_count < 2)
       {

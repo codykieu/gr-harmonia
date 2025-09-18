@@ -28,6 +28,7 @@ parameters:
   dtype: enum
   options: [harmonia.Device.DEFAULT, harmonia.Device.CPU, harmonia.Device.CUDA, harmonia.Device.OPENCL]
   option_labels: [Default, CPU, Cuda, OpenCL]
+  hide: part
 - id: depth
   label: Message queue depth
   dtype: int
@@ -43,6 +44,7 @@ parameters:
   options: [True, False]
   option_labels: ['Enabled', 'Disabled']
   default: True
+  hide: part
 
 inputs:
 -   domain: message

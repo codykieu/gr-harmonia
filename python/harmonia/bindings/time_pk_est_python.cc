@@ -16,7 +16,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0) */
 /* BINDTOOL_USE_PYGCCXML(0) */
 /* BINDTOOL_HEADER_FILE(time_pk_est.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(f474b8e93fe28e52cbc352a1cb9abd56) */
+/* BINDTOOL_HEADER_FILE_HASH(5190fdb7139000f9b26169700522e868) */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -37,8 +37,8 @@ void bind_time_pk_est(py::module &m) {
              std::shared_ptr<time_pk_est>>(m, "time_pk_est", D(time_pk_est))
 
       .def(py::init(&time_pk_est::make), py::arg("samp_rate"),
-           py::arg("bandwidth"), py::arg("pulse_width"), py::arg("wait_time"),
-           py::arg("sample_delay"), py::arg("NLLS_iter"), py::arg("sdr_id"),
+           py::arg("bandwidth"), py::arg("wait_time"), py::arg("sample_delay"),
+           py::arg("NLLS_iter"), py::arg("sdr_id"), py::arg("enable_out"),
            D(time_pk_est, make))
 
       .def("set_msg_queue_depth", &time_pk_est::set_msg_queue_depth,
