@@ -1,4 +1,4 @@
-# gr-harmonia: A GNU Radio module for synchronizing software-defined radios (SDRs) in a distributed network
+# gr-harmonia: A GNU Radio module for digital synchronization of software-defined radios (SDRs) in a wireless distributed network
 
 The following features have been implemented:
 
